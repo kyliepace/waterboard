@@ -8,10 +8,10 @@ var Selection = function(props){
 			<h4>{props.line}</h4>
 			<Row className='options'>
 				<div className='option'>
-					<p>{props.option1}</p>
+					<h5>{props.option1}</h5>
 				</div>
 				<div className='option'>
-					<p>{props.option2}</p>
+					<h5>{props.option2}</h5>
 				</div>
 			</Row>
 		</div>

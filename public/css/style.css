@@ -36,7 +36,7 @@ section {
 .question {
   text-align: center;
   border: 2px solid white;
-  padding: 5rem 0px;
+  padding: 5rem 0px 0px;
 }
 .question .input {
   width: 60%;

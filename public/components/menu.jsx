@@ -14,10 +14,9 @@ var Menu = function(props){
 	    			</Link>
 	    		</Col>	    		
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={2}>
-	    			<h2>Claim or Apply for Water Right
-	    				
-	    			</h2>
-	    			
+	    			<Link to='/waterRights'>
+	    				<h2>Claim or Apply for Water Right</h2>
+	    			</Link>
 	    		</Col>
 	    	</Row>
 
@@ -28,9 +27,9 @@ var Menu = function(props){
 	    			</Link>
 	    		</Col>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
-	    			<h3>What is a water right and do I need one?
-						
-	    			</h3>
+	    			<Link to='/waterRightsFaq'>
+	    				<h3>What is a water right and do I need one?</h3>
+	    			</Link>
 	    		</Col>
 	    	</Row>
 

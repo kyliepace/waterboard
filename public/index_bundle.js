@@ -66,7 +66,7 @@
 	var InfoOrder = __webpack_require__(486);
 	var WaterRights = __webpack_require__(488);
 	var WaterRightsFaq = __webpack_require__(489);
-	var InfoOrderFaq = __webpack_require__(490);
+	var InfoOrderFaq = __webpack_require__(491);
 
 	var routes = React.createElement(
 					Provider,
@@ -45750,9 +45750,13 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 4, xsOffset: 1, mdOffset: 2 },
 					React.createElement(
-						'h2',
-						null,
-						'Claim or Apply for Water Right'
+						Link,
+						{ to: '/waterRights' },
+						React.createElement(
+							'h2',
+							null,
+							'Claim or Apply for Water Right'
+						)
 					)
 				)
 			),
@@ -45776,9 +45780,13 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						'h3',
-						null,
-						'What is a water right and do I need one?'
+						Link,
+						{ to: '/waterRightsFaq' },
+						React.createElement(
+							'h3',
+							null,
+							'What is a water right and do I need one?'
+						)
 					)
 				)
 			)
@@ -45858,50 +45866,81 @@
 
 /***/ },
 /* 488 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	var React = __webpack_require__(2);
+	var Row = __webpack_require__(269).Row;
+	var Col = __webpack_require__(269).Col;
+	var Question = __webpack_require__(487);
+	var Button = __webpack_require__(269).Button;
+
+	var WaterRights = function (props) {
+				return React.createElement(
+							'section',
+							null,
+							React.createElement(
+										Col,
+										{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+										React.createElement(
+													'form',
+													{ className: 'question' },
+													React.createElement(Question, { line: 'Application ID' }),
+													React.createElement(Question, { line: 'Password' }),
+													React.createElement(
+																Button,
+																{ type: 'submit' },
+																React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+													)
+										)
+							),
+							React.createElement(
+										Col,
+										{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+										React.createElement(
+													'h4',
+													null,
+													'Water Rights Reporting'
+										)
+							)
+				);
+	};
+
+	module.exports = WaterRights;
 
 /***/ },
 /* 489 */
-/***/ function(module, exports) {
-
-	
-
-/***/ },
-/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
 	var Col = __webpack_require__(269).Col;
-	var Selection = __webpack_require__(491);
+	var Selection = __webpack_require__(490);
 	var Button = __webpack_require__(269).Button;
 
-	var InfoOrderFaq = function (props) {
+	var WaterRightsFaq = function (props) {
 		return React.createElement(
 			'section',
 			null,
-			React.createElement(
-				Col,
-				{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
-				React.createElement(Selection, { line: 'The Info Order is...', option1: 'ok but', option2: 'or what about' })
-			),
 			React.createElement(
 				Col,
 				{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
 				React.createElement(
 					'h4',
 					null,
-					'What is the Info Order?'
+					'What is a water right and do I need one?'
 				)
+			),
+			React.createElement(
+				Col,
+				{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+				React.createElement(Selection, { line: 'A water right is required before you can use water from streams, and most springs, in California.', option1: 'ok but', option2: 'or what about' })
 			)
 		);
 	};
 
-	module.exports = InfoOrderFaq;
+	module.exports = WaterRightsFaq;
 
 /***/ },
-/* 491 */
+/* 490 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -45924,7 +45963,7 @@
 					'div',
 					{ className: 'option' },
 					React.createElement(
-						'p',
+						'h5',
 						null,
 						props.option1
 					)
@@ -45933,7 +45972,7 @@
 					'div',
 					{ className: 'option' },
 					React.createElement(
-						'p',
+						'h5',
 						null,
 						props.option2
 					)
@@ -45943,6 +45982,38 @@
 	};
 
 	module.exports = Selection;
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Col = __webpack_require__(269).Col;
+	var Selection = __webpack_require__(490);
+	var Button = __webpack_require__(269).Button;
+
+	var InfoOrderFaq = function (props) {
+		return React.createElement(
+			'section',
+			null,
+			React.createElement(
+				Col,
+				{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+				React.createElement(
+					'h4',
+					null,
+					'What is the Info Order?'
+				)
+			),
+			React.createElement(
+				Col,
+				{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+				React.createElement(Selection, { line: 'The Info Order is...', option1: 'ok but', option2: 'or what about' })
+			)
+		);
+	};
+
+	module.exports = InfoOrderFaq;
 
 /***/ }
 /******/ ]);
