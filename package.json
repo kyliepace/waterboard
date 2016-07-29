@@ -1,0 +1,45 @@
+{
+  "name": "waterboard",
+  "version": "1.0.0",
+  "description": "final Thinkful project",
+  "main": "public/index_bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "less": "lessc public/css/style.less public/css/style.css",
+    "start": "npm run less && node server.js"
+  },
+  "keywords": [
+    "React",
+    "Redux",
+    "California",
+    "State",
+    "Water",
+    "Board"
+  ],
+  "babel": {
+    "presets": [
+      "react"
+    ]
+  },
+  "author": "Kylie Pace",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2016": "^6.11.3",
+    "babel-preset-react": "^6.11.1",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "html-webpack-plugin": "^2.22.0",
+    "less": "^2.7.1",
+    "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.6.0",
+    "redux": "^3.5.2"
+  }
+}
