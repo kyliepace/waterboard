@@ -24,12 +24,30 @@ section{
 	align-items: baseline;
 }
 .menu{
-	min-height: 20rem;
+	height: 20rem;
 	border: @border;
 	text-align: center;
-	padding: 5rem 6rem;
 	margin-bottom: 5rem;
 	&:hover, &:active{
+		box-shadow: 1px 0px 20px white;
+	}
+	h2, h3{
+		padding: 5rem 6rem;
+	}
+}
+.question{
+	text-align: center;
+	border: @border;
+	padding: 5rem;
+	.input{
+		width: 60%;
+		margin-left: 20%;
+		text-align: center;
+		padding: 5px;
+	}
+}
+button{
+	&:hover{
 		box-shadow: 1px 0px 20px white;
 	}
 }

@@ -63,7 +63,10 @@
 	var store = __webpack_require__(264);
 	var Main = __webpack_require__(267);
 	var Menu = __webpack_require__(485);
-	var infoOrder = __webpack_require__(486);
+	var InfoOrder = __webpack_require__(486);
+	var WaterRights = __webpack_require__(488);
+	var WaterRightsFaq = __webpack_require__(489);
+	var InfoOrderFaq = __webpack_require__(490);
 
 	var routes = React.createElement(
 					Provider,
@@ -74,7 +77,11 @@
 									React.createElement(
 													Route,
 													{ path: '/', component: Main },
-													React.createElement(IndexRoute, { component: Menu })
+													React.createElement(IndexRoute, { component: Menu }),
+													React.createElement(Route, { path: '/infoOrder', component: InfoOrder }),
+													React.createElement(Route, { path: '/waterRights', component: WaterRights }),
+													React.createElement(Route, { path: '/infoOrderFaq', component: InfoOrderFaq }),
+													React.createElement(Route, { path: '/waterRightsFaq', component: WaterRightsFaq })
 									)
 					)
 	);
@@ -28493,7 +28500,7 @@
 
 	var reducers = __webpack_require__(265);
 
-	var store = createStore(reducers.firstReducer);
+	var store = createStore(reducers.reducer);
 	module.exports  = store;
 
 /***/ },
@@ -28502,9 +28509,26 @@
 
 	var actions = __webpack_require__(266);
 
-	var initialRepositoryState = [];
+	var initialRepositoryState = {
+		infoOrder: {
+			questions: [],
+			counter: 0
+		},
+		waterRights: {
+			questions: [],
+			counter: 0
+		},
+		infoOrderFaq: {
+			questions: [],
+			counter: 0
+		},
+		waterRightsFaq: {
+			questions: [],
+			counter: 0
+		}
+	};
 
-	var firstReducer = function(state, action) {
+	var infoOrderReducer= function(state, action) {
 	    state = state || initialRepositoryState;
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        return state;
@@ -28513,14 +28537,42 @@
 	    return state;
 	};
 
-	// var combineReducers = require('redux').combineReducers;
-	// var reducer = combineReducers({
-	//     board: boardReducer,
-	//     list: listReducer,
-	//     card: cardReducer
-	// });
+	var infoOrderFaqReducer= function(state, action) {
+	    state = state || initialRepositoryState;
+	    if (action.type === actions.SUBMIT_ANSWER) {
+	        return state;
+	    }
+	   
+	    return state;
+	};
 
-	exports.firstReducer = firstReducer;
+	var waterRightsReducer= function(state, action) {
+	    state = state || initialRepositoryState;
+	    if (action.type === actions.SUBMIT_ANSWER) {
+	        return state;
+	    }
+	   
+	    return state;
+	};
+
+	var waterRightsFaqReducer= function(state, action) {
+	    state = state || initialRepositoryState;
+	    if (action.type === actions.SUBMIT_ANSWER) {
+	        return state;
+	    }
+	   
+	    return state;
+	};
+
+	var combineReducers = __webpack_require__(180).combineReducers;
+	var reducer = combineReducers({
+	    infoOrder: infoOrderReducer,
+	    waterRights: waterRightsReducer,
+	    infoOrderFaq: infoOrderFaqReducer,
+	    waterRightsFaq: waterRightsFaqReducer
+	});
+
+	exports.reducer = reducer;
 
 /***/ },
 /* 266 */
@@ -45671,6 +45723,8 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(269).Row;
 	var Col = __webpack_require__(269).Col;
+	var router = __webpack_require__(201);
+	var Link = router.Link;
 
 	var Menu = function (props) {
 		return React.createElement(
@@ -45683,9 +45737,14 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 4, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						'h2',
-						null,
-						'Respond to Info Order'
+						Link,
+						{ to: '/infoOrder' },
+						React.createElement(
+							'h2',
+							null,
+							'Respond to Info Order'
+						),
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 					)
 				),
 				React.createElement(
@@ -45694,7 +45753,8 @@
 					React.createElement(
 						'h2',
 						null,
-						'Claim or Apply for Water Right'
+						'Claim or Apply for Water Right',
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 					)
 				)
 			),
@@ -45705,18 +45765,20 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						'h2',
+						'h3',
 						null,
-						'What is this Info Order all about?'
+						'What is this Info Order all about?',
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 					)
 				),
 				React.createElement(
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						'h2',
+						'h3',
 						null,
-						'What is a water right and do I need one?'
+						'What is a water right and do I need one?',
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 					)
 				)
 			)
@@ -45727,6 +45789,78 @@
 
 /***/ },
 /* 486 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Row = __webpack_require__(269).Row;
+	var Col = __webpack_require__(269).Col;
+	var Question = __webpack_require__(487);
+	var Button = __webpack_require__(269).Button;
+
+	var InfoOrder = function (props) {
+				return React.createElement(
+							'section',
+							null,
+							React.createElement(
+										Col,
+										{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+										React.createElement(
+													'form',
+													{ className: 'question' },
+													React.createElement(Question, { line: 'APN/ID Code' }),
+													React.createElement(Question, { line: 'Password' }),
+													React.createElement(
+																Button,
+																{ type: 'submit' },
+																React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+													)
+										)
+							)
+				);
+	};
+
+	module.exports = InfoOrder;
+
+/***/ },
+/* 487 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+
+	var FormGroup = __webpack_require__(269).FormGroup;
+	var ControlLabel = __webpack_require__(269).ControlLabel;
+	var FormControl = __webpack_require__(269).FormControl;
+
+	var Question = function (props) {
+		return React.createElement(
+			FormGroup,
+			null,
+			React.createElement(
+				ControlLabel,
+				null,
+				props.line
+			),
+			React.createElement(FormControl, { className: 'input', type: 'text', value: props.value, onChange: props.handleChange }),
+			React.createElement(FormControl.Feedback, null)
+		);
+	};
+
+	module.exports = Question;
+
+/***/ },
+/* 488 */
+/***/ function(module, exports) {
+
+	
+
+/***/ },
+/* 489 */
+/***/ function(module, exports) {
+
+	
+
+/***/ },
+/* 490 */
 /***/ function(module, exports) {
 
 	

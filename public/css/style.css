@@ -7,6 +7,9 @@ header {
   background-color: #8A25E8;
   padding: 1rem 0;
 }
+header h3 {
+  font-family: "Montserrat";
+}
 section {
   margin-top: 5rem;
   flex: 1;
@@ -17,14 +20,27 @@ section {
   align-items: baseline;
 }
 .menu {
-  min-height: 20rem;
+  height: 20rem;
   border: 2px solid white;
   text-align: center;
-  padding: 5rem 6rem;
   margin-bottom: 5rem;
 }
 .menu:hover,
 .menu:active {
+  box-shadow: 1px 0px 20px white;
+}
+.menu h2,
+.menu h3 {
+  padding: 5rem 6rem;
+}
+.question {
+  text-align: center;
+  border: 2px solid white;
+}
+.question .input {
+  width: 50%;
+}
+button:hover {
   box-shadow: 1px 0px 20px white;
 }
 footer {
