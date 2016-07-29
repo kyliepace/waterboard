@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "less": "lessc public/css/style.less public/css/style.css",
-    "start": "npm run less && node server.js"
+    "start": "webpack && npm run less && node server.js"
   },
   "keywords": [
     "React",
@@ -37,6 +37,7 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.2.1",
+    "react-bootstrap": "^0.30.0",
     "react-dom": "^15.2.1",
     "react-redux": "^4.4.5",
     "react-router": "^2.6.0",

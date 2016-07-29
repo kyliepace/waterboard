@@ -1,8 +1,18 @@
 var React = require('react');
 var connect = require('react-redux').connect;
+var Header = require('./header.jsx');
+var Footer = require('./footer.jsx');
 
-var Component = React.createClass({
-    ...
+var Main = React.createClass({
+    render: function(){
+    	return(
+    		<div>
+    			<Header />
+    			{this.props.children}
+    			<Footer />
+    		</div>
+    	);
+    }
 });
 
 var mapStateToProps = function(state, props) {
@@ -11,6 +21,6 @@ var mapStateToProps = function(state, props) {
     };
 };
 
-var Container = connect(mapStateToProps)(Component);
+var Container = connect(mapStateToProps)(Main);
 
 module.exports = Container;
