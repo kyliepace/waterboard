@@ -11,12 +11,11 @@ var Menu = function(props){
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={1}>
 	    			<Link to='/infoOrder'>
 	    				<h2>Respond to Info Order</h2>
-	    				<span className='glyphicon glyphicon-question-sign' aria-hidden='true'></span>
 	    			</Link>
 	    		</Col>	    		
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={2}>
 	    			<h2>Claim or Apply for Water Right
-	    				<span className='glyphicon glyphicon-question-sign' aria-hidden='true'></span>
+	    				
 	    			</h2>
 	    			
 	    		</Col>
@@ -24,13 +23,13 @@ var Menu = function(props){
 
 	    	<Row>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
-	    			<h3>What is this Info Order all about?
-	    				<span className='glyphicon glyphicon-question-sign' aria-hidden='true'></span>
-	    			</h3>
+	    			<Link to='/infoOrderFaq'>
+	    				<h3>What is this Info Order all about?</h3>
+	    			</Link>
 	    		</Col>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
 	    			<h3>What is a water right and do I need one?
-						<span className='glyphicon glyphicon-question-sign' aria-hidden='true'></span>
+						
 	    			</h3>
 	    		</Col>
 	    	</Row>

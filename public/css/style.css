@@ -36,9 +36,24 @@ section {
 .question {
   text-align: center;
   border: 2px solid white;
+  padding: 5rem 0px;
 }
 .question .input {
-  width: 50%;
+  width: 60%;
+  margin-left: 20%;
+  text-align: center;
+  padding: 5px;
+}
+.question .options {
+  display: flex;
+  justify-content: space-around;
+}
+.question .options .option {
+  border: 2px solid white;
+  width: 200px;
+  height: 150px;
+  padding: 2rem;
+  margin: 2rem;
 }
 button:hover {
   box-shadow: 1px 0px 20px white;

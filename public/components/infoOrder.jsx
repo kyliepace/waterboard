@@ -7,7 +7,7 @@ var Button = require('react-bootstrap').Button;
 var InfoOrder = function(props){
 	return(
 	    <section>
-	    	<h4>Info Order Form</h4>
+	    	
     		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
     			<form className='question'>
 	    			<Question line={'APN/ID Code'} />
@@ -15,6 +15,10 @@ var InfoOrder = function(props){
 	    			<Button type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
     			</form>
     		</Col>
+
+    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
+	    		<h4>Info Order Form</h4>
+	    	</Col>
 	    </section>
 	)
 };

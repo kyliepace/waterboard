@@ -45743,8 +45743,7 @@
 							'h2',
 							null,
 							'Respond to Info Order'
-						),
-						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						)
 					)
 				),
 				React.createElement(
@@ -45753,8 +45752,7 @@
 					React.createElement(
 						'h2',
 						null,
-						'Claim or Apply for Water Right',
-						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						'Claim or Apply for Water Right'
 					)
 				)
 			),
@@ -45765,10 +45763,13 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						'h3',
-						null,
-						'What is this Info Order all about?',
-						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						Link,
+						{ to: '/infoOrderFaq' },
+						React.createElement(
+							'h3',
+							null,
+							'What is this Info Order all about?'
+						)
 					)
 				),
 				React.createElement(
@@ -45777,8 +45778,7 @@
 					React.createElement(
 						'h3',
 						null,
-						'What is a water right and do I need one?',
-						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						'What is a water right and do I need one?'
 					)
 				)
 			)
@@ -45814,6 +45814,15 @@
 																{ type: 'submit' },
 																React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 													)
+										)
+							),
+							React.createElement(
+										Col,
+										{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+										React.createElement(
+													'h4',
+													null,
+													'Info Order Form'
 										)
 							)
 				);
@@ -45861,9 +45870,79 @@
 
 /***/ },
 /* 490 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	var React = __webpack_require__(2);
+	var Col = __webpack_require__(269).Col;
+	var Selection = __webpack_require__(491);
+	var Button = __webpack_require__(269).Button;
+
+	var InfoOrderFaq = function (props) {
+		return React.createElement(
+			'section',
+			null,
+			React.createElement(
+				Col,
+				{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+				React.createElement(Selection, { line: 'The Info Order is...', option1: 'ok but', option2: 'or what about' })
+			),
+			React.createElement(
+				Col,
+				{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+				React.createElement(
+					'h4',
+					null,
+					'What is the Info Order?'
+				)
+			)
+		);
+	};
+
+	module.exports = InfoOrderFaq;
+
+/***/ },
+/* 491 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Col = __webpack_require__(269).Col;
+	var Row = __webpack_require__(269).Row;
+
+	var Selection = function (props) {
+		return React.createElement(
+			'div',
+			{ className: 'question' },
+			React.createElement(
+				'h4',
+				null,
+				props.line
+			),
+			React.createElement(
+				Row,
+				{ className: 'options' },
+				React.createElement(
+					'div',
+					{ className: 'option' },
+					React.createElement(
+						'p',
+						null,
+						props.option1
+					)
+				),
+				React.createElement(
+					'div',
+					{ className: 'option' },
+					React.createElement(
+						'p',
+						null,
+						props.option2
+					)
+				)
+			)
+		);
+	};
+
+	module.exports = Selection;
 
 /***/ }
 /******/ ]);
