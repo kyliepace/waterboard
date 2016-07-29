@@ -1,0 +1,44 @@
+@purple: #8A25E8;
+@border: 2px solid white;
+
+.main{
+	min-height: 800px;
+	display: flex;
+	flex-direction: column;
+}
+
+header{
+	background-color: @purple;
+	padding: 1rem 0;
+	h3{
+		font-family: "Montserrat"
+	}
+}
+section{
+	margin-top: 5rem;
+	flex: 1;
+}
+.row{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+}
+.menu{
+	min-height: 20rem;
+	border: @border;
+	text-align: center;
+	padding: 5rem 6rem;
+	margin-bottom: 5rem;
+	&:hover, &:active{
+		box-shadow: 1px 0px 20px white;
+	}
+}
+
+footer{
+	background-color: @purple;
+	text-align: center;
+	line-height: 0.5rem;
+	padding: 1rem;
+	// align-self: flex-end;
+	// width: 100%;
+}

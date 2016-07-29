@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=9994e0f6e8820ee2505f05b00efdfbdf)
- * Config saved to config.json and https://gist.github.com/9994e0f6e8820ee2505f05b00efdfbdf
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=994e547846119e1f255889850499f8ea)
+ * Config saved to config.json and https://gist.github.com/994e547846119e1f255889850499f8ea
  */
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -1091,8 +1091,8 @@ body {
   font-family: "Lato", sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #717fe8;
-  background-color: #4416ff;
+  color: #ffffff;
+  background-color: #8a25e8;
 }
 input,
 button,
@@ -1134,7 +1134,7 @@ img {
 .img-thumbnail {
   padding: 4px;
   line-height: 1.42857143;
-  background-color: #4416ff;
+  background-color: #8a25e8;
   border: 1px solid #dddddd;
   border-radius: 4px;
   -webkit-transition: all 0.2s ease-in-out;
@@ -2296,7 +2296,7 @@ th {
   border-top: 2px solid #dddddd;
 }
 .table .table {
-  background-color: #4416ff;
+  background-color: #8a25e8;
 }
 .table-condensed > thead > tr > th,
 .table-condensed > tbody > tr > th,
@@ -2914,7 +2914,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #dfe2fa;
+  color: #ffffff;
 }
 @media (min-width: 768px) {
   .form-inline .form-group {
@@ -3896,7 +3896,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   color: #555555;
-  background-color: #4416ff;
+  background-color: #8a25e8;
   border: 1px solid #dddddd;
   border-bottom-color: transparent;
   cursor: default;
@@ -3942,7 +3942,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   .nav-tabs.nav-justified > .active > a,
   .nav-tabs.nav-justified > .active > a:hover,
   .nav-tabs.nav-justified > .active > a:focus {
-    border-bottom-color: #4416ff;
+    border-bottom-color: #8a25e8;
   }
 }
 .nav-pills > li {
@@ -4010,7 +4010,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   .nav-tabs-justified > .active > a,
   .nav-tabs-justified > .active > a:hover,
   .nav-tabs-justified > .active > a:focus {
-    border-bottom-color: #4416ff;
+    border-bottom-color: #8a25e8;
   }
 }
 .tab-content > .tab-pane {
@@ -4864,7 +4864,7 @@ a.badge:focus {
   padding: 4px;
   margin-bottom: 20px;
   line-height: 1.42857143;
-  background-color: #4416ff;
+  background-color: #8a25e8;
   border: 1px solid #dddddd;
   border-radius: 4px;
   -webkit-transition: border 0.2s ease-in-out;
@@ -4883,7 +4883,7 @@ a.thumbnail.active {
 }
 .thumbnail .caption {
   padding: 9px;
-  color: #717fe8;
+  color: #ffffff;
 }
 .alert {
   padding: 15px;

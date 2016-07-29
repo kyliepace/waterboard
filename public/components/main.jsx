@@ -6,7 +6,7 @@ var Footer = require('./footer.jsx');
 var Main = React.createClass({
     render: function(){
     	return(
-    		<div>
+    		<div className='main'>
     			<Header />
     			{this.props.children}
     			<Footer />

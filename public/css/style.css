@@ -1,0 +1,35 @@
+.main {
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  background-color: #8A25E8;
+  padding: 1rem 0;
+}
+section {
+  margin-top: 5rem;
+  flex: 1;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.menu {
+  min-height: 20rem;
+  border: 2px solid white;
+  text-align: center;
+  padding: 5rem 6rem;
+  margin-bottom: 5rem;
+}
+.menu:hover,
+.menu:active {
+  box-shadow: 1px 0px 20px white;
+}
+footer {
+  background-color: #8A25E8;
+  text-align: center;
+  line-height: 0.5rem;
+  padding: 1rem;
+}
