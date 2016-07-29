@@ -1,5 +1,4 @@
 var React = require('react');
-var connect = require('react-redux').connect;
 var Header = require('./header.jsx');
 var Footer = require('./footer.jsx');
 
@@ -15,12 +14,4 @@ var Main = React.createClass({
     }
 });
 
-var mapStateToProps = function(state, props) {
-    return {
-        repositories: state
-    };
-};
-
-var Container = connect(mapStateToProps)(Main);
-
-module.exports = Container;
+module.exports = Main;
