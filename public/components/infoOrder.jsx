@@ -8,7 +8,8 @@ var actions=require('../redux/actions.js');
 
 var InfoOrder = React.createClass({
 	handleClick: function(e){
-		this.props.dispatch(actions.showPopover(e));
+		console.log(e);
+		this.props.dispatch(actions.showPopover(e, 'infoOrder')); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
 		this.props.dispatch(actions.changeInput(e));
@@ -16,20 +17,22 @@ var InfoOrder = React.createClass({
 	onSubmit: function(){
 		this.props.dispatch(actions.submitAnswer);
 	},
-	render: function(){
-		var questions = function(){
-			var questions = this.props.infoOrder.questions;
-			var index = this.props.infoOrder.counter;
-			var showQuestions = questions[index].map(function(question){
-				return <Question key={question.key} line={question.line} handleClick={this.handleClick} handleChange={this.handleChange}
-				show={question.show} popover={question.popover}/>
-			});
-			
+	render: function(props){
+		console.log(this.props.infoOrder);
+		var that = this;
+		var questions = this.props.infoOrder.questions;
+		var index = this.props.infoOrder.counter;
+		console.log(questions);
+		console.log(questions[index]);
+		var showQuestions = questions[index].map(function(question){
+			return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
+			show={question.show} target={question.target} popover={question.popover}/>);
 		});
+			
 		return(
 		    <section>
 	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-	    			<form className='question'>
+	    			<form className='questionView'>
 		    			{showQuestions}
 		    			<Button onSubmit = {this.onSubmit} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 	    			</form>
@@ -41,11 +44,11 @@ var InfoOrder = React.createClass({
 		    </section>
 		)
 	}
-};
+});
 
 var mapStateToProps = function(state, props) {
     return {
-        infoOrder: state.infoOrder
+        infoOrder: state.infoOrder.infoOrder
     };
 };
 

@@ -3,23 +3,31 @@ var actions = require('./actions.js');
 var initialRepositoryState = {
 	infoOrder: {
 		questions: [
-            {   0:{line: 'APN', 
+             [  {id: 0,
+                line: 'APN', 
                 value: "",
                 show: false, 
+                target: "",
                 popover: 'found on your letter. For most people, this is the same as your Accessor\'s Parcel Number'
                 }, 
-                1:{line: 'password', 
+                {id: 1,
+                line: 'password', 
                 value: "",
                 show: false,
+                target: "",
                 popover: 'found on your letter. Capitalization does matter'
                 }
-            },
-            {   0:{line: 'How many sources of water do you have?',
+            ],
+            
+            [   {id:0,
+                line: 'How many sources of water do you have?',
                 value: "",
+                target:"",
                 show: false,
                 popover: ''
                 }
-        }],
+            ]
+        ],
 		counter: 0
 	},
 	waterRights: {
@@ -42,11 +50,24 @@ var infoOrderReducer= function(state, action) {
         //send infoOrder.questions[counter] to server and increase infoOrder.counter ++
         return state;
     }
-    if (action.type === actions.SHOW_POPOVER){
-        //change the infoOrder.questions[counter].key.show to true or false
+    if (action.type === actions.SHOW_POPOVER){ 
+    //change the infoOrder.questions[counter].id.show to true or false
+    //by rebuilding the relevent question and concating it into the state    
+        var questionSet = action.questionSet;
+        var counter = state[questionSet].counter;
+        var id = action.id;
+        var target = action.target; //get all the information passed from the component
+        var question = state[questionSet].questions[counter][id]; //id the question
+        
+        var newPopover = Object.assign({}, question, {show: !question.show, target: target});
+        var before = state[questionSet].questions[counter].slice(0,counter); //cut out the selected question from that view's list of questions
+        var after = state[questionSet].questions[counter].slice(counter+1);
+        var newView = before.concat(newPopover, after);
+        console.log(newView);
+        return state;
     }
     if (action.type === actions.CHANGE_INPUT){
-        //change the infoOrder.questions[counter].key.value to the e.target.value
+        //change the infoOrder.questions[counter].id.value to the e.target.value
     }
     return state;
 };

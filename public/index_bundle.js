@@ -28511,7 +28511,32 @@
 
 	var initialRepositoryState = {
 		infoOrder: {
-			questions: [],
+			questions: [
+	             [  {id: 0,
+	                line: 'APN', 
+	                value: "",
+	                show: false, 
+	                target: "",
+	                popover: 'found on your letter. For most people, this is the same as your Accessor\'s Parcel Number'
+	                }, 
+	                {id: 1,
+	                line: 'password', 
+	                value: "",
+	                show: false,
+	                target: "",
+	                popover: 'found on your letter. Capitalization does matter'
+	                }
+	            ],
+	            
+	            [   {id:0,
+	                line: 'How many sources of water do you have?',
+	                value: "",
+	                target:"",
+	                show: false,
+	                popover: ''
+	                }
+	            ]
+	        ],
 			counter: 0
 		},
 		waterRights: {
@@ -28531,9 +28556,28 @@
 	var infoOrderReducer= function(state, action) {
 	    state = state || initialRepositoryState;
 	    if (action.type === actions.SUBMIT_ANSWER) {
+	        //send infoOrder.questions[counter] to server and increase infoOrder.counter ++
 	        return state;
 	    }
-	   
+	    if (action.type === actions.SHOW_POPOVER){ 
+	    //change the infoOrder.questions[counter].id.show to true or false
+	    //by rebuilding the relevent question and concating it into the state    
+	        var questionSet = action.questionSet;
+	        var counter = state[questionSet].counter;
+	        var id = action.id;
+	        var target = action.target; //get all the information passed from the component
+	        var question = state[questionSet].questions[counter][id]; //id the question
+	        
+	        var newPopover = Object.assign({}, question, {show: !question.show, target: target});
+	        var before = state[questionSet].questions[counter].slice(0,counter); //cut out the selected question from that view's list of questions
+	        var after = state[questionSet].questions[counter].slice(counter+1);
+	        var newView = before.concat(newPopover, after);
+	        console.log(newView);
+	        return state;
+	    }
+	    if (action.type === actions.CHANGE_INPUT){
+	        //change the infoOrder.questions[counter].id.value to the e.target.value
+	    }
 	    return state;
 	};
 
@@ -28584,9 +28628,32 @@
 	        type: SUBMIT_ANSWER
 	    }
 	};
-
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 	exports.submitAnswer = submitAnswer;
+
+	var SHOW_POPOVER='SHOW_POPOVER';
+	var showPopover = function(e, set){
+		console.log(e.target.id);
+		console.log(e.target);
+		return{
+			type: SHOW_POPOVER,
+			target: e.target,
+			questionSet: set, 
+			id: e.target.id
+		}
+	};
+	exports.SHOW_POPOVER = SHOW_POPOVER;
+	exports.showPopover = showPopover;
+
+	var CHANGE_INPUT = 'CHANGE_INPUT';
+	var changeInput = function(e){
+		return{
+			type: CHANGE_INPUT, 
+			question: e
+		}
+	};
+	exports.CHANGE_INPUT = CHANGE_INPUT;
+	exports.changeInput = changeInput;
 
 
 /***/ },
@@ -28594,7 +28661,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
-	var connect = __webpack_require__(173).connect;
 	var Header = __webpack_require__(268);
 	var Footer = __webpack_require__(484);
 
@@ -28612,15 +28678,7 @@
 	    }
 	});
 
-	var mapStateToProps = function (state, props) {
-	    return {
-	        repositories: state
-	    };
-	};
-
-	var Container = connect(mapStateToProps)(Main);
-
-	module.exports = Container;
+	module.exports = Main;
 
 /***/ },
 /* 268 */
@@ -45804,39 +45862,73 @@
 	var Col = __webpack_require__(269).Col;
 	var Question = __webpack_require__(487);
 	var Button = __webpack_require__(269).Button;
+	var connect = __webpack_require__(173).connect;
+	var actions = __webpack_require__(266);
 
-	var InfoOrder = function (props) {
-				return React.createElement(
-							'section',
-							null,
-							React.createElement(
-										Col,
-										{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
-										React.createElement(
-													'form',
-													{ className: 'question' },
-													React.createElement(Question, { line: 'APN/ID Code' }),
-													React.createElement(Question, { line: 'Password' }),
-													React.createElement(
-																Button,
-																{ type: 'submit' },
-																React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-													)
-										)
-							),
-							React.createElement(
-										Col,
-										{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
-										React.createElement(
-													'h4',
-													null,
-													'Info Order Form'
-										)
-							)
-				);
+	var InfoOrder = React.createClass({
+		displayName: 'InfoOrder',
+
+		handleClick: function (e) {
+			console.log(e);
+			this.props.dispatch(actions.showPopover(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+		},
+		handleChange: function (e) {
+			this.props.dispatch(actions.changeInput(e));
+		},
+		onSubmit: function () {
+			this.props.dispatch(actions.submitAnswer);
+		},
+		render: function (props) {
+			console.log(this.props.infoOrder);
+			var that = this;
+			var questions = this.props.infoOrder.questions;
+			var index = this.props.infoOrder.counter;
+			console.log(questions);
+			console.log(questions[index]);
+			var showQuestions = questions[index].map(function (question) {
+				return React.createElement(Question, { questionId: question.id, line: question.line, handleClick: that.handleClick, handleChange: that.handleChange,
+					show: question.show, target: question.target, popover: question.popover });
+			});
+
+			return React.createElement(
+				'section',
+				null,
+				React.createElement(
+					Col,
+					{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+					React.createElement(
+						'form',
+						{ className: 'questionView' },
+						showQuestions,
+						React.createElement(
+							Button,
+							{ onSubmit: this.onSubmit, type: 'submit' },
+							React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+						)
+					)
+				),
+				React.createElement(
+					Col,
+					{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+					React.createElement(
+						'h4',
+						null,
+						'Info Order Form'
+					)
+				)
+			);
+		}
+	});
+
+	var mapStateToProps = function (state, props) {
+		return {
+			infoOrder: state.infoOrder.infoOrder
+		};
 	};
 
-	module.exports = InfoOrder;
+	var Container = connect(mapStateToProps)(InfoOrder);
+
+	module.exports = Container;
 
 /***/ },
 /* 487 */
@@ -45847,22 +45939,46 @@
 	var FormGroup = __webpack_require__(269).FormGroup;
 	var ControlLabel = __webpack_require__(269).ControlLabel;
 	var FormControl = __webpack_require__(269).FormControl;
+	var Overlay = __webpack_require__(269).Overlay;
+	var OverlayTrigger = __webpack_require__(269).OverlayTrigger;
+	var Popover = __webpack_require__(269).Popover;
+	var Button = __webpack_require__(269).Button;
+	var ButtonToolbar = __webpack_require__(269).ButtonToolbar;
+
+	var overlay = React.createElement(Popover, { id: 'popover-trigger-click' });
 
 	var Question = function (props) {
 		return React.createElement(
 			FormGroup,
-			null,
+			{ className: 'question' },
 			React.createElement(
-				ControlLabel,
-				null,
-				props.line
+				ButtonToolbar,
+				{ className: 'questionLine' },
+				React.createElement(FormControl, { placeholder: props.line, className: 'input', type: 'text', onChange: props.handleChange }),
+				React.createElement(
+					OverlayTrigger,
+					{ trigger: 'click', placement: 'top', overlay: React.createElement(
+							Popover,
+							{ id: 'popover-trigger-click' },
+							props.popover
+						) },
+					React.createElement(
+						Button,
+						null,
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true', onClick: props.handleClick })
+					)
+				)
 			),
-			React.createElement(FormControl, { className: 'input', type: 'text', value: props.value, onChange: props.handleChange }),
 			React.createElement(FormControl.Feedback, null)
 		);
 	};
 
 	module.exports = Question;
+
+	// <Overlay target={props.target} show={props.show} placement="right" container={this} containerPadding={10}>
+
+	// 				</Overlay>
+	// <ControlLabel>{props.line}</ControlLabel>
 
 /***/ },
 /* 488 */

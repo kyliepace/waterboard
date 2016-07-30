@@ -33,30 +33,36 @@ section {
 .menu h3 {
   padding: 5rem 6rem;
 }
-.question {
+.questionView {
   text-align: center;
   border: 2px solid white;
   padding: 5rem 0px 0px;
 }
-.question .input {
+.questionView .question {
+  text-align: center;
+}
+.questionView .input {
   width: 60%;
   margin-left: 20%;
   text-align: center;
   padding: 5px;
 }
-.question .options {
+.questionView .questionLine {
+  text-align: center;
+}
+.questionView .glyphicon {
+  font-size: 2rem;
+}
+.questionView .options {
   display: flex;
   justify-content: space-around;
 }
-.question .options .option {
+.questionView .options .option {
   border: 2px solid white;
   width: 200px;
   height: 150px;
   padding: 2rem;
   margin: 2rem;
-}
-button:hover {
-  box-shadow: 1px 0px 20px white;
 }
 footer {
   background-color: #8A25E8;

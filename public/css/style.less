@@ -35,15 +35,24 @@ section{
 		padding: 5rem 6rem;
 	}
 }
-.question{
+.questionView{
 	text-align: center;
 	border: @border;
 	padding: 5rem 0px 0px;
+	.question{
+		text-align: center;
+	}
 	.input{
 		width: 60%;
 		margin-left: 20%;
 		text-align: center;
 		padding: 5px;
+	}
+	.questionLine{
+		text-align: center;
+	}
+	.glyphicon{
+		font-size: 2rem;
 	}
 	.options{
 		display: flex;
@@ -57,12 +66,7 @@ section{
 		}
 	}
 }
-button{
-	&:hover{
-		box-shadow: 1px 0px 20px white;
-	}
-	margin-bottom: 5px;
-}
+
 
 footer{
 	background-color: @purple;
