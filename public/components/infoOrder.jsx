@@ -11,7 +11,8 @@ var InfoOrder = React.createClass({
 		return{
 			input: false,
 			selection: false,
-			dropdown: false
+			dropdown: false,
+			disabled: false
 		};
 	},
 	handleClick: function(e){
@@ -22,33 +23,34 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.changeInput(e));
 	},
 	onSubmit: function(){
-		this.props.dispatch(actions.submitAnswer);
+		console.log("submit");
+		this.props.dispatch(actions.submitAnswer('infoOrder'));
 	},
 	prevQuestion: function(){
 		//dispatch an action that will reduce the counter by the amount that was just added to it
 	},
 	render: function(props){
-		console.log(this.props.infoOrder);
 		var that = this;
-		var questions = this.props.infoOrder.questions;
-		var index = this.props.infoOrder.counter;
+		console.log(that.props.infoOrder);
+		var questions = that.props.infoOrder.questions;
+		var index = that.props.infoOrder.counter;
 		console.log(questions);
 		console.log(questions[index]);
 
 		var showQuestions = questions[index].map(function(question){
 			return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
-			show={question.show} target={question.target} popover={question.popover}
+			show={question.show} key={question.key} target={question.target} popover={question.popover}
 			input={question.input} selection={question.selection}/>);
 		});
 			
 		return(
 		    <section>
 	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-	    			<form className='questionView'>
+	    			<form className='questionView' onSubmit = {that.onSubmit}>
 		    			{showQuestions}
 		    			<div className='flex'>
-		    				<Button className='button' onClick = {this.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-	    					<Button className='button' onSubmit = {this.onSubmit} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
+	    					<Button className='button' type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		    			</div>
 	    			</form>
 	    		</Col>

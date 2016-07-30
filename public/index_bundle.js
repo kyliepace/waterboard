@@ -28528,24 +28528,47 @@
 
 	var infoOrderReducer= function(state, action) {
 	    state = state || initialRepositoryState;
+	    
 	    if (action.type === actions.SUBMIT_ANSWER) {
-	        //send infoOrder.questions[counter] to server and increase infoOrder.counter ++
-	        return state;
+	        var questionSet = action.questionSet;
+	        var counter = state[questionSet].counter;
+	        var question = state[questionSet].questions[counter][id]; //id the question
+	        //send infoOrder.questions[counter] to server 
+
+	        //increase infoOrder.counter ++
+	        var answer = state[questionSet].questions[counter]; //gets the set of questions on view
+	        var index = 0;
+	        for (var i=0; i<answer.length; i++){
+	            if(answer[i].selection){
+	                index = answer[i].selection.indexOf(answer[i].answer); //find which of the selection choices was clicked
+	            }
+	        } //if the question has a drop-down list or a set of possible answer, update the index to reflect whichever was chosen
+	        console.log(index);
+	        var changeCounterBy = function(){
+	            return answer[0].changeCounter[index]; //appropriate number to add to counter
+	        }
+	        console.log(changeCounterBy());
+	        counter += changeCounterBy();
+	        var newCounter = Object.assign({}, state[questionSet], {counter: counter}); //update state with new counter
+	        // var before = state[questionSet].slice(0, state[questionSet].length - 1);
+	        // var after = state[questionSet].slice(state[questionSet].length);
+	        // before.concat(newCounter, after);
+	        // console.log(before);
+	        return Object.assign({}, state, {[questionSet]: newCounter});
+	      
 	    }
 	    if (action.type === actions.SHOW_POPOVER){ 
-	    //change the infoOrder.questions[counter].id.show to true or false
-	    //by rebuilding the relevent question and concating it into the state    
 	        var questionSet = action.questionSet;
 	        var counter = state[questionSet].counter;
 	        var id = action.id;
-	        var target = action.target; //get all the information passed from the component
 	        var question = state[questionSet].questions[counter][id]; //id the question
-	        
+	    //change the infoOrder.questions[counter].id.show to true or false by rebuilding the relevent question and concating it into the state    
+	        var target = action.target; //get all the information passed from the component
 	        var newPopover = Object.assign({}, question, {show: !question.show, target: target});
 	        var before = state[questionSet].questions[counter].slice(0,counter); //cut out the selected question from that view's list of questions
 	        var after = state[questionSet].questions[counter].slice(counter+1);
 	        var newView = before.concat(newPopover, after);
-	        console.log(newView);
+	        console.log('popover'+newView);
 	        return state;
 	    }
 	    if (action.type === actions.CHANGE_INPUT){
@@ -28596,9 +28619,11 @@
 /***/ function(module, exports) {
 
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-	var submitAnswer = function() {
+	var submitAnswer = function(set) {
+		console.log('action: submitAnswer');
 	    return {
-	        type: SUBMIT_ANSWER
+	        type: SUBMIT_ANSWER,
+	        questionSet: set
 	    }
 	};
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
@@ -28642,7 +28667,8 @@
 	                show: false, 
 	                target: "",
 	                popover: 'This is printed on the letter you should have received in the mail. \
-	                For most people, this is the same as your property\'s Accessor\'s Parcel Number'
+	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
+	                changeCounter: [1]
 	                }, 
 	                {id: 1,
 	                line: 'password', 
@@ -28660,7 +28686,8 @@
 	                show: false,
 	                popover: 'Examples of water sources include water companies that you pay monthly, a river or\
 	                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source.',
-	                selection: ['Yes', 'No']
+	                selection: ['Yes', 'No'],
+	                changeCounter: [1, 100]
 	                }
 	            ],
 	            [   {id:0,
@@ -28669,7 +28696,8 @@
 	                target: "",
 	                show: false,
 	                popover: 'Examples of water sources include water companies, rivers or streams, \
-	                wells, springs, ponds...'
+	                wells, springs, ponds...',
+	                changeCounter: [1]
 	                }
 	            ],
 	             [   {id:0,
@@ -28681,7 +28709,8 @@
 	                show: false,
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
-	                water comes all the way to the surface'
+	                water comes all the way to the surface',
+	                changeCounter: [1, 2, 4]
 	                }
 	            ],
 	            [   {id:0,
@@ -28690,7 +28719,8 @@
 	                input: true,
 	                target: "",
 	                show: false,
-	                popover: 'Please provide as much of the following information as you know'
+	                popover: 'Please provide as much of the following information as you know',
+	                changeCounter: [8]
 	                },
 	                {id:1,
 	                line: 'Please find the <a href="#"> coordinates </a> of the well\'s location',
@@ -28732,7 +28762,8 @@
 	                show: false,
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
-	                water comes all the way to the surface'
+	                water comes all the way to the surface',
+	                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
 	                }
 	            ],
 	            [   {id:0,
@@ -28740,9 +28771,10 @@
 	                Please describe as much as you know.',
 	                target: "",
 	                show: false,
-	                popover: 'If you don\'t know some details, that\'s ok.'
+	                popover: 'If you don\'t know some details, that\'s ok.',
+	                changeCounter: [6] //go to water use
 	                },
-	                {id:01,
+	                {id: 1,
 	                line: 'What is the individual water supplier\'s name?',
 	                input: true,
 	                target: "",
@@ -28765,9 +28797,10 @@
 	                show: false,
 	                popover: 'The system of water rights is confusing, but it helps make sure that \
 	                high-priority uses like domestic use get enough water. We don\'t want anyone\
-	                to be thirsty!'
+	                to be thirsty!',
+	                changeCounter: [1,2]
 	                },
-	                {id:01,
+	                {id:1,
 	                line: 'Have you already applied for or claimed a water right?',
 	                selection: ['Yes', 'No'],
 	                target: "",
@@ -28782,7 +28815,8 @@
 	                target: "",
 	                show: false,
 	                popover: 'The application number usually starts with a letter and looks like \
-	                A111111 or S111111, for example'
+	                A111111 or S111111, for example',
+	                changeCounter: [100] //go to confirmation
 	                }
 	            ],
 	            [   {id:0,
@@ -28791,7 +28825,8 @@
 	                selection: ['Yes', 'No'],
 	                target: "",
 	                show: false,
-	                popover: 'Adjacent as in the property touches the stream.'
+	                popover: 'Adjacent as in the property touches the stream.',
+	                changeCounter: [1,2]
 	                }
 	            ],
 	            [   {id:0,
@@ -28803,7 +28838,8 @@
 	                show: false,
 	                popover: 'Filing the statement of use is free and is required if you are using \
 	                surface water from an adjacent stream. Claiming this water right will protect your \
-	                water source from over-allocation.'
+	                water source from over-allocation.',
+	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
 	                }
 	            ],
 	            [   {id:0,
@@ -28811,14 +28847,17 @@
 	                you need to apply for a water right.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
 	                'But this is only for a small, domestic property'],
+	                answer: "",
 	                target: "",
 	                show: false,
 	                popover: 'If you have questions, which you probably do, please call the \
-	                Division of Water Rights Help Line at (916) 341-5300'
+	                Division of Water Rights Help Line at (916) 341-5300',
+	                changeCounter: [200, -100, 200]
 	                }
 	            ],
 	        ],
-			counter: 0
+			disabled: false,
+			counter: 0,
 	};
 
 	module.exports = infoOrderState;
@@ -46040,7 +46079,8 @@
 			return {
 				input: false,
 				selection: false,
-				dropdown: false
+				dropdown: false,
+				disabled: false
 			};
 		},
 		handleClick: function (e) {
@@ -46051,22 +46091,23 @@
 			this.props.dispatch(actions.changeInput(e));
 		},
 		onSubmit: function () {
-			this.props.dispatch(actions.submitAnswer);
+			console.log("submit");
+			this.props.dispatch(actions.submitAnswer('infoOrder'));
 		},
 		prevQuestion: function () {
 			//dispatch an action that will reduce the counter by the amount that was just added to it
 		},
 		render: function (props) {
-			console.log(this.props.infoOrder);
 			var that = this;
-			var questions = this.props.infoOrder.questions;
-			var index = this.props.infoOrder.counter;
+			console.log(that.props.infoOrder);
+			var questions = that.props.infoOrder.questions;
+			var index = that.props.infoOrder.counter;
 			console.log(questions);
 			console.log(questions[index]);
 
 			var showQuestions = questions[index].map(function (question) {
 				return React.createElement(Question, { questionId: question.id, line: question.line, handleClick: that.handleClick, handleChange: that.handleChange,
-					show: question.show, target: question.target, popover: question.popover,
+					show: question.show, key: question.key, target: question.target, popover: question.popover,
 					input: question.input, selection: question.selection });
 			});
 
@@ -46078,19 +46119,19 @@
 					{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
 					React.createElement(
 						'form',
-						{ className: 'questionView' },
+						{ className: 'questionView', onSubmit: that.onSubmit },
 						showQuestions,
 						React.createElement(
 							'div',
 							{ className: 'flex' },
 							React.createElement(
 								Button,
-								{ onClick: this.prevQuestion, type: 'button' },
+								{ className: 'button', onClick: that.prevQuestion, type: 'button' },
 								React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
 							),
 							React.createElement(
 								Button,
-								{ onSubmit: this.onSubmit, type: 'submit' },
+								{ className: 'button', type: 'submit' },
 								React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 							)
 						)
@@ -46170,7 +46211,7 @@
 							) },
 						React.createElement(
 							Button,
-							null,
+							{ className: 'button' },
 							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true', onClick: props.handleClick })
 						)
 					)

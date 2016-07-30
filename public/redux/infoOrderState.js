@@ -7,7 +7,8 @@ var infoOrderState = {
                 show: false, 
                 target: "",
                 popover: 'This is printed on the letter you should have received in the mail. \
-                For most people, this is the same as your property\'s Accessor\'s Parcel Number'
+                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
+                changeCounter: [1]
                 }, 
                 {id: 1,
                 line: 'password', 
@@ -25,7 +26,8 @@ var infoOrderState = {
                 show: false,
                 popover: 'Examples of water sources include water companies that you pay monthly, a river or\
                  stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source.',
-                selection: ['Yes', 'No']
+                selection: ['Yes', 'No'],
+                changeCounter: [1, 100]
                 }
             ],
             [   {id:0,
@@ -34,7 +36,8 @@ var infoOrderState = {
                 target: "",
                 show: false,
                 popover: 'Examples of water sources include water companies, rivers or streams, \
-                wells, springs, ponds...'
+                wells, springs, ponds...',
+                changeCounter: [1]
                 }
             ],
              [   {id:0,
@@ -46,7 +49,8 @@ var infoOrderState = {
                 show: false,
                 popover: 'Select the type of water source from the drop-down list. A spring \
                 is usually either a surface diversion or a well, depending on whether the \
-                water comes all the way to the surface'
+                water comes all the way to the surface',
+                changeCounter: [1, 2, 4]
                 }
             ],
             [   {id:0,
@@ -55,7 +59,8 @@ var infoOrderState = {
                 input: true,
                 target: "",
                 show: false,
-                popover: 'Please provide as much of the following information as you know'
+                popover: 'Please provide as much of the following information as you know',
+                changeCounter: [8]
                 },
                 {id:1,
                 line: 'Please find the <a href="#"> coordinates </a> of the well\'s location',
@@ -97,7 +102,8 @@ var infoOrderState = {
                 show: false,
                 popover: 'Select the type of water source from the drop-down list. A spring \
                 is usually either a surface diversion or a well, depending on whether the \
-                water comes all the way to the surface'
+                water comes all the way to the surface',
+                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
                 }
             ],
             [   {id:0,
@@ -105,9 +111,10 @@ var infoOrderState = {
                 Please describe as much as you know.',
                 target: "",
                 show: false,
-                popover: 'If you don\'t know some details, that\'s ok.'
+                popover: 'If you don\'t know some details, that\'s ok.',
+                changeCounter: [6] //go to water use
                 },
-                {id:01,
+                {id: 1,
                 line: 'What is the individual water supplier\'s name?',
                 input: true,
                 target: "",
@@ -130,9 +137,10 @@ var infoOrderState = {
                 show: false,
                 popover: 'The system of water rights is confusing, but it helps make sure that \
                 high-priority uses like domestic use get enough water. We don\'t want anyone\
-                to be thirsty!'
+                to be thirsty!',
+                changeCounter: [1,2]
                 },
-                {id:01,
+                {id:1,
                 line: 'Have you already applied for or claimed a water right?',
                 selection: ['Yes', 'No'],
                 target: "",
@@ -147,7 +155,8 @@ var infoOrderState = {
                 target: "",
                 show: false,
                 popover: 'The application number usually starts with a letter and looks like \
-                A111111 or S111111, for example'
+                A111111 or S111111, for example',
+                changeCounter: [100] //go to confirmation
                 }
             ],
             [   {id:0,
@@ -156,7 +165,8 @@ var infoOrderState = {
                 selection: ['Yes', 'No'],
                 target: "",
                 show: false,
-                popover: 'Adjacent as in the property touches the stream.'
+                popover: 'Adjacent as in the property touches the stream.',
+                changeCounter: [1,2]
                 }
             ],
             [   {id:0,
@@ -168,7 +178,8 @@ var infoOrderState = {
                 show: false,
                 popover: 'Filing the statement of use is free and is required if you are using \
                 surface water from an adjacent stream. Claiming this water right will protect your \
-                water source from over-allocation.'
+                water source from over-allocation.',
+                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
                 }
             ],
             [   {id:0,
@@ -176,14 +187,17 @@ var infoOrderState = {
                 you need to apply for a water right.',
                 selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
                 'But this is only for a small, domestic property'],
+                answer: "",
                 target: "",
                 show: false,
                 popover: 'If you have questions, which you probably do, please call the \
-                Division of Water Rights Help Line at (916) 341-5300'
+                Division of Water Rights Help Line at (916) 341-5300',
+                changeCounter: [200, -100, 200]
                 }
             ],
         ],
-		counter: 0
+		disabled: false,
+		counter: 0,
 };
 
 module.exports = infoOrderState;

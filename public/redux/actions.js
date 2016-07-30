@@ -1,7 +1,9 @@
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-var submitAnswer = function() {
+var submitAnswer = function(set) {
+	console.log('action: submitAnswer');
     return {
-        type: SUBMIT_ANSWER
+        type: SUBMIT_ANSWER,
+        questionSet: set
     }
 };
 exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
