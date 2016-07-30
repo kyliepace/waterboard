@@ -6,6 +6,12 @@
 	display: flex;
 	flex-direction: column;
 }
+.hidden{
+	display:none;
+}
+.button{
+	border: 0px;
+}
 
 header{
 	background-color: @purple;
@@ -36,23 +42,23 @@ section{
 	}
 }
 .questionView{
-	text-align: center;
 	border: @border;
-	padding: 5rem 0px 0px;
-	.question{
-		text-align: center;
-	}
+	padding: 5rem 0px 10px;
 	.input{
 		width: 60%;
-		margin-left: 20%;
 		text-align: center;
 		padding: 5px;
 	}
-	.questionLine{
-		text-align: center;
+	.flex{
+		display: flex;
+  		align-items: flex-end;
+  		justify-content: center;
 	}
 	.glyphicon{
 		font-size: 2rem;
+	}
+	.popover-trigger-click{
+		color: #717FE8;
 	}
 	.options{
 		display: flex;

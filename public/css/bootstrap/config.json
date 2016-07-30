@@ -13,9 +13,8 @@
     "@brand-danger": "#d9534f",
     "@body-bg": "#8A25E8",
     "@text-color": "lighten(#717FE8, 40%)",
-    "@link-color": "#E356FF",
+    "@link-color": "lighten(#717FE8, 40%)",
     "@link-hover-color": "darken(@link-color, 15%)",
-    "@link-hover-decoration": "underline",
     "@font-family-sans-serif": "\"Lato\", sans-serif",
     "@font-family-serif": "\"Montserrat\", sans-serif",
     "@font-family-monospace": "Menlo, Monaco, Consolas, \"Courier New\", monospace",
@@ -65,10 +64,8 @@
     "@btn-font-weight": "normal",
     "@btn-default-color": "#717FE8",
     "@btn-default-bg": "#8A25E8",
-    "@btn-default-border": "#ccc",
     "@btn-primary-color": "#8A25E8",
     "@btn-primary-bg": "@brand-primary",
-    "@btn-primary-border": "#717FE8",
     "@btn-success-color": "#0971FF",
     "@btn-success-bg": "@brand-success",
     "@btn-success-border": "darken(@btn-success-bg, 5%)",
@@ -251,8 +248,8 @@
     "@label-info-bg": "@brand-info",
     "@label-warning-bg": "@brand-warning",
     "@label-danger-bg": "@brand-danger",
-    "@label-color": "#fff",
-    "@label-link-hover-color": "#fff",
+    "@label-color": "#717FE8",
+    "@label-link-hover-color": "#717FE8",
     "@modal-inner-padding": "15px",
     "@modal-title-padding": "15px",
     "@modal-title-line-height": "@line-height-base",
@@ -416,5 +413,5 @@
     "modals.less"
   ],
   "js": [],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=994e547846119e1f255889850499f8ea"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=aac6e615fd66c416f7498c6851f3e88a"
 }

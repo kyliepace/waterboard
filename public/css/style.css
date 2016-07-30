@@ -3,6 +3,9 @@
   display: flex;
   flex-direction: column;
 }
+.hidden {
+  display: none;
+}
 header {
   background-color: #8A25E8;
   padding: 1rem 0;
@@ -38,17 +41,15 @@ section {
   border: 2px solid white;
   padding: 5rem 0px 0px;
 }
-.questionView .question {
-  text-align: center;
-}
 .questionView .input {
   width: 60%;
   margin-left: 20%;
   text-align: center;
   padding: 5px;
 }
-.questionView .questionLine {
-  text-align: center;
+.questionView .flex {
+  display: flex;
+  align-items: flex-end;
 }
 .questionView .glyphicon {
   font-size: 2rem;

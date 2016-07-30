@@ -1,35 +1,8 @@
 var actions = require('./actions.js');
+var infoOrder = require('./infoOrderState.js');
 
 var initialRepositoryState = {
-	infoOrder: {
-		questions: [
-             [  {id: 0,
-                line: 'APN', 
-                value: "",
-                show: false, 
-                target: "",
-                popover: 'found on your letter. For most people, this is the same as your Accessor\'s Parcel Number'
-                }, 
-                {id: 1,
-                line: 'password', 
-                value: "",
-                show: false,
-                target: "",
-                popover: 'found on your letter. Capitalization does matter'
-                }
-            ],
-            
-            [   {id:0,
-                line: 'How many sources of water do you have?',
-                value: "",
-                target:"",
-                show: false,
-                popover: ''
-                }
-            ]
-        ],
-		counter: 0
-	},
+	infoOrder: infoOrder,
 	waterRights: {
 		questions: [],
 		counter: 0

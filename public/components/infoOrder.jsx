@@ -7,6 +7,13 @@ var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 
 var InfoOrder = React.createClass({
+	getDefaultProps: function(){
+		return{
+			input: false,
+			selection: false,
+			dropdown: false
+		};
+	},
 	handleClick: function(e){
 		console.log(e);
 		this.props.dispatch(actions.showPopover(e, 'infoOrder')); //send the glyphicon's html and key value to the action
@@ -17,6 +24,9 @@ var InfoOrder = React.createClass({
 	onSubmit: function(){
 		this.props.dispatch(actions.submitAnswer);
 	},
+	prevQuestion: function(){
+		//dispatch an action that will reduce the counter by the amount that was just added to it
+	},
 	render: function(props){
 		console.log(this.props.infoOrder);
 		var that = this;
@@ -24,9 +34,11 @@ var InfoOrder = React.createClass({
 		var index = this.props.infoOrder.counter;
 		console.log(questions);
 		console.log(questions[index]);
+
 		var showQuestions = questions[index].map(function(question){
 			return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
-			show={question.show} target={question.target} popover={question.popover}/>);
+			show={question.show} target={question.target} popover={question.popover}
+			input={question.input} selection={question.selection}/>);
 		});
 			
 		return(
@@ -34,7 +46,10 @@ var InfoOrder = React.createClass({
 	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
 	    			<form className='questionView'>
 		    			{showQuestions}
-		    			<Button onSubmit = {this.onSubmit} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		    			<div className='flex'>
+		    				<Button className='button' onClick = {this.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
+	    					<Button className='button' onSubmit = {this.onSubmit} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		    			</div>
 	    			</form>
 	    		</Col>
 
