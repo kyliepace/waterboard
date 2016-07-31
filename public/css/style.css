@@ -39,6 +39,9 @@ section {
 .menu h3 {
   padding: 5rem 6rem;
 }
+.glyphicon {
+  font-size: 2rem;
+}
 .questionView {
   border: 2px solid white;
   padding: 5rem 0px 10px;
@@ -53,19 +56,37 @@ section {
   align-items: flex-end;
   justify-content: center;
 }
-.questionView .glyphicon {
-  font-size: 2rem;
+.questionView .selector {
+  text-align: center;
 }
-.questionView .options {
+.questionView .selector .options {
   display: flex;
   justify-content: space-around;
 }
-.questionView .options .option {
+.questionView .selector .options .option {
   border: 2px solid white;
   width: 200px;
   height: 150px;
   padding: 2rem;
   margin: 2rem;
+  text-align: center;
+}
+.questionView .selector .options .option:hover,
+.questionView .selector .options .option:active {
+  box-shadow: 1px 0px 20px white;
+}
+.questionView .selector .options .glowOption {
+  box-shadow: 1px 0px 20px white;
+  border: 2px solid white;
+  width: 200px;
+  height: 150px;
+  padding: 2rem;
+  margin: 2rem;
+  text-align: center;
+}
+.questionView .selector .options .glowOption:hover,
+.questionView .selector .options .glowOption:active {
+  box-shadow: none;
 }
 .popover {
   color: black;

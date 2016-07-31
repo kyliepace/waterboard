@@ -12,34 +12,41 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 //create a component with a popover and an input bar
 var Question = function(props){
+	//if the question is multiple choice, create a box for each option
 	if(props.selection){
-		var options = props.selection.map(function(choice){
-			return(
-				<div className='option'>
-						<h5>{choice}</h5>
-				</div>
+		var options = [];
+		for (var i=0; i<props.selection.length; i++){
+			options.push(
+				<Button className={"option"} type='button' id={[props.questionId, i]} onClick={props.handleClick}>
+					<h3>{props.selection[i]}</h3>
+				</Button>
 			)
-		}); //for selection-type questions
+		}
 	}
 	
 	return(
 	<div>
-		<FormGroup className={props.input ? "":"hidden"}>
+		<FormGroup className={props.input ? "":"hidden"}> 
 			<ButtonToolbar className='flex'>
 				<FormControl placeholder={props.line} className='input' type='text' onChange={props.handleChange}/>
 				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.popover}</Popover>}>
-				<Button className='button'><span className='glyphicon glyphicon-question-sign' id={props.questionId} aria-hidden='true' onClick={props.handleClick}></span></Button>
+				<Button className='button'><span className='glyphicon glyphicon-question-sign' id={props.questionId} aria-hidden='true' ></span></Button>
 				</OverlayTrigger>
 			</ButtonToolbar>
 			<FormControl.Feedback />
 		</FormGroup>
 
-		<div className={props.selection ? '': 'hidden'}>
-			<h4>{props.line}</h4>
+		<FormGroup className={props.selection ? 'selector': 'hidden'}>
+			<ButtonToolbar className='flex'>
+				<h4>{props.line}</h4>
+				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.popover}</Popover>}>
+					<Button className='button'><span className='glyphicon glyphicon-question-sign' id={props.questionId} aria-hidden='true' ></span></Button>
+				</OverlayTrigger>
+			</ButtonToolbar>
 			<Row className='options'>
 				{options}
 			</Row>
-		</div>
+		</FormGroup>
 	</div>
 	);		
 };

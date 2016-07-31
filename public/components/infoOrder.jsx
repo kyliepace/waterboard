@@ -17,7 +17,7 @@ var InfoOrder = React.createClass({
 	},
 	handleClick: function(e){
 		console.log(e);
-		this.props.dispatch(actions.showPopover(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+		this.props.dispatch(actions.chooseOption(e, 'infoOrder')); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
 		this.props.dispatch(actions.changeInput(e));
@@ -31,18 +31,28 @@ var InfoOrder = React.createClass({
 	},
 	render: function(props){
 		var that = this;
-		console.log(that.props.infoOrder);
+		console.log(that.props.infoOrder); //becomes undefined when I try to render the 3rd question
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.infoOrder.counter;
+		var singleQuestion = questions[index];
 		console.log(questions);
 		console.log(questions[index]);
 
-		var showQuestions = questions[index].map(function(question){
-			return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
-			show={question.show} key={question.key} target={question.target} popover={question.popover}
-			input={question.input} selection={question.selection}/>);
-		});
-			
+		if(questions[index].length>1){
+			var showQuestions = questions[index].map(function(question){
+				return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
+				key={question.key} target={question.target} popover={question.popover}
+				input={question.input} selection={question.selection}/>);
+			});
+		}
+		else{
+			var showQuestions = (
+				<Question questionId={singleQuestion.id} line={singleQuestion.line} handleClick={that.handleClick} handleChange={that.handleChange}
+				show={singleQuestion.show} key={questions[index].key} target={singleQuestion.target} popover={singleQuestion.popover}
+				input={singleQuestion.input} selection={singleQuestion.selection}/>
+			)
+		}
+
 		return(
 		    <section>
 	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>

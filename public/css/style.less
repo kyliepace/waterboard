@@ -1,5 +1,6 @@
 @purple: #8A25E8;
 @border: 2px solid white;
+@shadow: 1px 0px 20px white;
 
 .main{
 	min-height: 800px;
@@ -35,11 +36,14 @@ section{
 	text-align: center;
 	margin-bottom: 5rem;
 	&:hover, &:active{
-		box-shadow: 1px 0px 20px white;
+		box-shadow: @shadow;
 	}
 	h2, h3{
 		padding: 5rem 6rem;
 	}
+}
+.glyphicon{
+		font-size: 2rem;
 }
 .questionView{
 	border: @border;
@@ -54,19 +58,35 @@ section{
   		align-items: flex-end;
   		justify-content: center;
 	}
-	.glyphicon{
-		font-size: 2rem;
-	}
 	
-	.options{
-		display: flex;
-		justify-content: space-around;
-		.option{
-			border: @border;
-			width: 200px;
-			height: 150px;
-			padding: 2rem;
-			margin: 2rem;
+	.selector{
+		text-align: center;
+		.options{
+			display: flex;
+			justify-content: space-around;
+			.option{
+				border: @border;
+				width: 200px;
+				height: 150px;
+				padding: 2rem;
+				margin: 2rem;
+				text-align: center;
+				&:hover, &:active{
+					box-shadow: @shadow;
+				}
+			}
+			.glowOption{
+				box-shadow: @shadow;
+				border: @border;
+				width: 200px;
+				height: 150px;
+				padding: 2rem;
+				margin: 2rem;
+				text-align: center;
+				&:hover, &:active{
+					box-shadow: none;
+				}
+			}
 		}
 	}
 }

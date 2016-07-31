@@ -28511,41 +28511,41 @@
 	var infoOrder = __webpack_require__(267);
 
 	var initialRepositoryState = {
-		infoOrder: infoOrder,
-		waterRights: {
-			questions: [],
-			counter: 0
-		},
-		infoOrderFaq: {
-			questions: [],
-			counter: 0
-		},
-		waterRightsFaq: {
-			questions: [],
-			counter: 0
-		}
+	    infoOrder: infoOrder,
+	    waterRights: {
+	        questions: [],
+	        counter: 0
+	    },
+	    infoOrderFaq: {
+	        questions: [],
+	        counter: 0
+	    },
+	    waterRightsFaq: {
+	        questions: [],
+	        counter: 0
+	    }
 	};
 
 	var infoOrderReducer= function(state, action) {
 	    state = state || initialRepositoryState;
 	    
+	    /////////// SUBMIT ANSWER ////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        var questionSet = action.questionSet;
 	        var counter = state[questionSet].counter;
-	        var question = state[questionSet].questions[counter][id]; //id the question
+	        var question = state[questionSet].questions[counter]; //which question?
 	        //send infoOrder.questions[counter] to server 
 
 	        //increase infoOrder.counter ++
-	        var answer = state[questionSet].questions[counter]; //gets the set of questions on view
 	        var index = 0;
-	        for (var i=0; i<answer.length; i++){
-	            if(answer[i].selection){
-	                index = answer[i].selection.indexOf(answer[i].answer); //find which of the selection choices was clicked
+	        for (var i=0; i<question.length; i++){
+	            if(question[i].selection){
+	                index = question[i].selection.indexOf(question[i].question); //find which of the selection choices was clicked
 	            }
 	        } //if the question has a drop-down list or a set of possible answer, update the index to reflect whichever was chosen
 	        console.log(index);
 	        var changeCounterBy = function(){
-	            return answer[0].changeCounter[index]; //appropriate number to add to counter
+	            return question[0].changeCounter[index]; //appropriate number to add to counter
 	        }
 	        console.log(changeCounterBy());
 	        counter += changeCounterBy();
@@ -28557,22 +28557,35 @@
 	        return Object.assign({}, state, {[questionSet]: newCounter});
 	      
 	    }
-	    if (action.type === actions.SHOW_POPOVER){ 
-	        var questionSet = action.questionSet;
-	        var counter = state[questionSet].counter;
-	        var id = action.id;
-	        var question = state[questionSet].questions[counter][id]; //id the question
-	    //change the infoOrder.questions[counter].id.show to true or false by rebuilding the relevent question and concating it into the state    
-	        var target = action.target; //get all the information passed from the component
-	        var newPopover = Object.assign({}, question, {show: !question.show, target: target});
-	        var before = state[questionSet].questions[counter].slice(0,counter); //cut out the selected question from that view's list of questions
-	        var after = state[questionSet].questions[counter].slice(counter+1);
-	        var newView = before.concat(newPopover, after);
-	        console.log('popover'+newView);
-	        return state;
-	    }
+
 	    if (action.type === actions.CHANGE_INPUT){
 	        //change the infoOrder.questions[counter].id.value to the e.target.value
+	    }
+
+	    if (action.type === actions.CHOOSE_OPTION){
+	        //change the answer value
+	        var questionSet = action.questionSet;
+	        var counter = state[questionSet].counter;
+	        var question = state[questionSet].questions[counter]; //which question?
+	        console.log(question);
+	        var answer = action.answer;
+	        console.log('answer:'+answer);
+
+	        //increase infoOrder.counter ++
+	        var changeCounterBy = function(){
+	            return question.changeCounter[answer]; //appropriate number to add to counter
+	        }
+	        console.log(question.changeCounter);
+	        console.log(changeCounterBy());
+	        counter += changeCounterBy();
+	        console.log(counter);
+	        var newQuestion = Object.assign({}, question, {answer: answer});
+	        
+	        var before = state[questionSet].questions.slice(0, counter);
+	        var after = state[questionSet].questions.slice(counter+1);
+	        var newQuestions = before.concat(newQuestion, after);
+	        var newObject = {questions: newQuestions, counter: counter};
+	        return Object.assign({}, state, {[questionSet]: newObject});
 	    }
 	    return state;
 	};
@@ -28629,25 +28642,27 @@
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 	exports.submitAnswer = submitAnswer;
 
-	var SHOW_POPOVER='SHOW_POPOVER';
-	var showPopover = function(e, set){
-		console.log(e.target.id);
-		console.log(e.target);
+
+	var CHOOSE_OPTION = 'CHOOSE_OPTION';
+	var chooseOption = function(e, set){
 		return{
-			type: SHOW_POPOVER,
-			target: e.target,
-			questionSet: set, 
-			id: e.target.id
+			type: CHOOSE_OPTION,
+			questionSet: set,
+			id: e.target.id[0], //which line of the question array
+			answer: e.target.id[2] //which option of the selection array
 		}
-	};
-	exports.SHOW_POPOVER = SHOW_POPOVER;
-	exports.showPopover = showPopover;
+	}
+	exports.CHOOSE_OPTION = CHOOSE_OPTION;
+	exports.chooseOption = chooseOption;
 
 	var CHANGE_INPUT = 'CHANGE_INPUT';
-	var changeInput = function(e){
+	var changeInput = function(e, set){
+		console.log(e.target.id);
 		return{
 			type: CHANGE_INPUT, 
-			question: e
+			questionSet: set,
+			id: e.target.id,
+			answer: e.target.value
 		}
 	};
 	exports.CHANGE_INPUT = CHANGE_INPUT;
@@ -28679,18 +28694,18 @@
 	                }
 	            ],
 	            
-	            [   {id:0,
+	             {id:0,
 	                line: 'Is this parcel connected to a water source?',
-	                input: true,
+	                input: false,
 	                target:"",
 	                show: false,
-	                popover: 'Examples of water sources include water companies that you pay monthly, a river or\
-	                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source.',
+	                popover: 'Examples of water sources include water utilities, a river or\
+	                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
 	                selection: ['Yes', 'No'],
 	                changeCounter: [1, 100]
 	                }
-	            ],
-	            [   {id:0,
+	            ,
+	               {id:0,
 	                line: 'How many sources supply water to this parcel?',
 	                input: true,
 	                target: "",
@@ -28699,7 +28714,7 @@
 	                wells, springs, ponds...',
 	                changeCounter: [1]
 	                }
-	            ],
+	            ,
 	             [   {id:0,
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
@@ -28861,7 +28876,6 @@
 	};
 
 	module.exports = infoOrderState;
-
 
 /***/ },
 /* 268 */
@@ -46085,7 +46099,7 @@
 		},
 		handleClick: function (e) {
 			console.log(e);
-			this.props.dispatch(actions.showPopover(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+			this.props.dispatch(actions.chooseOption(e, 'infoOrder')); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
 			this.props.dispatch(actions.changeInput(e));
@@ -46099,17 +46113,24 @@
 		},
 		render: function (props) {
 			var that = this;
-			console.log(that.props.infoOrder);
+			console.log(that.props.infoOrder); //becomes undefined when I try to render the 3rd question
 			var questions = that.props.infoOrder.questions;
 			var index = that.props.infoOrder.counter;
+			var singleQuestion = questions[index];
 			console.log(questions);
 			console.log(questions[index]);
 
-			var showQuestions = questions[index].map(function (question) {
-				return React.createElement(Question, { questionId: question.id, line: question.line, handleClick: that.handleClick, handleChange: that.handleChange,
-					show: question.show, key: question.key, target: question.target, popover: question.popover,
-					input: question.input, selection: question.selection });
-			});
+			if (questions[index].length > 1) {
+				var showQuestions = questions[index].map(function (question) {
+					return React.createElement(Question, { questionId: question.id, line: question.line, handleClick: that.handleClick, handleChange: that.handleChange,
+						key: question.key, target: question.target, popover: question.popover,
+						input: question.input, selection: question.selection });
+				});
+			} else {
+				var showQuestions = React.createElement(Question, { questionId: singleQuestion.id, line: singleQuestion.line, handleClick: that.handleClick, handleChange: that.handleChange,
+					show: singleQuestion.show, key: questions[index].key, target: singleQuestion.target, popover: singleQuestion.popover,
+					input: singleQuestion.input, selection: singleQuestion.selection });
+			}
 
 			return React.createElement(
 				'section',
@@ -46178,18 +46199,20 @@
 
 	//create a component with a popover and an input bar
 	var Question = function (props) {
+		//if the question is multiple choice, create a box for each option
 		if (props.selection) {
-			var options = props.selection.map(function (choice) {
-				return React.createElement(
-					'div',
-					{ className: 'option' },
+			var options = [];
+			for (var i = 0; i < props.selection.length; i++) {
+				options.push(React.createElement(
+					Button,
+					{ className: "option", type: 'button', id: [props.questionId, i], onClick: props.handleClick },
 					React.createElement(
-						'h5',
+						'h3',
 						null,
-						choice
+						props.selection[i]
 					)
-				);
-			}); //for selection-type questions
+				));
+			}
 		}
 
 		return React.createElement(
@@ -46212,19 +46235,36 @@
 						React.createElement(
 							Button,
 							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true', onClick: props.handleClick })
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true' })
 						)
 					)
 				),
 				React.createElement(FormControl.Feedback, null)
 			),
 			React.createElement(
-				'div',
-				{ className: props.selection ? '' : 'hidden' },
+				FormGroup,
+				{ className: props.selection ? 'selector' : 'hidden' },
 				React.createElement(
-					'h4',
-					null,
-					props.line
+					ButtonToolbar,
+					{ className: 'flex' },
+					React.createElement(
+						'h4',
+						null,
+						props.line
+					),
+					React.createElement(
+						OverlayTrigger,
+						{ trigger: 'click', placement: 'top', overlay: React.createElement(
+								Popover,
+								{ id: 'popover-trigger-click' },
+								props.popover
+							) },
+						React.createElement(
+							Button,
+							{ className: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true' })
+						)
+					)
 				),
 				React.createElement(
 					Row,

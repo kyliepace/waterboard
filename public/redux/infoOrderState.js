@@ -19,18 +19,18 @@ var infoOrderState = {
                 }
             ],
             
-            [   {id:0,
+             {id:0,
                 line: 'Is this parcel connected to a water source?',
-                input: true,
+                input: false,
                 target:"",
                 show: false,
-                popover: 'Examples of water sources include water companies that you pay monthly, a river or\
-                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source.',
+                popover: 'Examples of water sources include water utilities, a river or\
+                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
                 selection: ['Yes', 'No'],
                 changeCounter: [1, 100]
                 }
-            ],
-            [   {id:0,
+            ,
+               {id:0,
                 line: 'How many sources supply water to this parcel?',
                 input: true,
                 target: "",
@@ -39,7 +39,7 @@ var infoOrderState = {
                 wells, springs, ponds...',
                 changeCounter: [1]
                 }
-            ],
+            ,
              [   {id:0,
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
