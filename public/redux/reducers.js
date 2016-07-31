@@ -52,22 +52,24 @@ var infoOrderReducer= function(state, action) {
 
 /////////////// CHOOSE OPTION ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ 
-        //change the answer value
         var questionSet = action.questionSet;
         var counter = state[questionSet].counter;
         var question = state[questionSet].questions[counter]; //which question?
+         //change the answer value
         var answer = action.answer;
         console.log('answer:'+answer);
-
-        //update the question
-        var newQuestion = Object.assign({}, question, {answer: answer});
+        //updated the selected array
+        var selected = question.selected.slice(0,answer).concat(true, question.selected.slice(answer+1));
+        console.log(selected);
+        //update the question with new answer index and un-disable next arrow
+        var newQuestion = Object.assign({}, question, {answer: answer, selected: selected, disabled: false});
+        //create new array of questions
         var before = state[questionSet].questions.slice(0, counter);
         var after = state[questionSet].questions.slice(counter+1);
-        var newQuestions = before.concat(newQuestion, after); //create new array of questions
+        var newQuestions = before.concat(newQuestion, after); 
         console.log(newQuestions);
-
         //update the state
-        var newObject = {questions: newQuestions};
+        var newObject = {questions: newQuestions, counter: counter};
         return Object.assign({}, state, {[questionSet]: newObject});
     }
     return state;

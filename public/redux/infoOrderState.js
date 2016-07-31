@@ -13,19 +13,19 @@ var infoOrderState = {
             
              {
                 line: 'Is this parcel connected to a water source?',
-          
-                target:"",
-                show: false,
+                answer: null,
+                disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
                  stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
                 selection: ['Yes', 'No'],
+                selected: [false, false],
                 changeCounter: [1, 100]
                 }
             ,
                {
                 line: 'How many sources supply water to this parcel?',
                 input: ['Number'],
-             
+       			
                 popover: ['Examples of water sources include water companies, rivers or streams, \
                 wells, springs, ponds...'],
                 changeCounter: [1]
@@ -36,7 +36,7 @@ var infoOrderState = {
                 a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
                 are you a water supplier yourself?',
                 dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
-              
+              	selected: [false, false],
                 popover: 'Select the type of water source from the drop-down list. A spring \
                 is usually either a surface diversion or a well, depending on whether the \
                 water comes all the way to the surface',
@@ -64,7 +64,7 @@ var infoOrderState = {
                 line: 'You reported that this property is served by a water supplier. \
                 Who is that water supplier?',
                 dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
-               
+               	selected: [false, false],
                 popover: 'Select the type of water source from the drop-down list. A spring \
                 is usually either a surface diversion or a well, depending on whether the \
                 water comes all the way to the surface',
@@ -91,6 +91,8 @@ var infoOrderState = {
 	                applied for or claimed a water right?',
               
                 selection: ['Yes', 'No'],
+                selected: [false, false],
+                disabled: true,
                 popover: 'If you have a water right, you should have an application number \
                 that you use to report your water use annually',
                 changeCounter: [1,2]
@@ -109,6 +111,8 @@ var infoOrderState = {
                 line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
                 to the river or stream from which it takes water?',
                 selection: ['Yes', 'No'],
+                selected: [false, false],
+                disabled: true,
                 popover: 'Adjacent as in the property touches the stream.',
                 changeCounter: [1,2]
             }
@@ -118,9 +122,12 @@ var infoOrderState = {
                 to file a statement of use.',
                 selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
                 'This source is a spring that would never run off my property'],
-                popover: 'Filing the statement of use is free and is required if you are using \
+                selected: [false, false],
+                disabled: true,
+                popover: ['Filing the statement of use is free and is required if you are using \
                 surface water from an adjacent stream. Claiming this water right will protect your \
-                water source from over-allocation.',
+                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
+                does not flow off the property, even in the winter, even if you were diverting none of it.'],
                 changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
             }
             ,
@@ -129,7 +136,8 @@ var infoOrderState = {
                 you need to apply for a water right.',
                 selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
                 'But this is only for a small, domestic property'],
-                answer: "",
+                selected: [false, false],
+                disabled: true,
                 popover: 'If you have questions, which you probably do, please call the \
                 Division of Water Rights Help Line at (916) 341-5300',
                 changeCounter: [200, -100, 200]
@@ -149,7 +157,6 @@ var infoOrderState = {
             	changeCounter: [1]
             }
         ],
-		disabled: false,
 		counter: 0,
 };
 

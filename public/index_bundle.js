@@ -28561,22 +28561,24 @@
 
 	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ 
-	        //change the answer value
 	        var questionSet = action.questionSet;
 	        var counter = state[questionSet].counter;
 	        var question = state[questionSet].questions[counter]; //which question?
+	         //change the answer value
 	        var answer = action.answer;
 	        console.log('answer:'+answer);
-
-	        //update the question
-	        var newQuestion = Object.assign({}, question, {answer: answer});
+	        //updated the selected array
+	        var selected = question.selected.slice(0,answer).concat(true, question.selected.slice(answer+1));
+	        console.log(selected);
+	        //update the question with new answer index and un-disable next arrow
+	        var newQuestion = Object.assign({}, question, {answer: answer, selected: selected, disabled: false});
+	        //create new array of questions
 	        var before = state[questionSet].questions.slice(0, counter);
 	        var after = state[questionSet].questions.slice(counter+1);
-	        var newQuestions = before.concat(newQuestion, after); //create new array of questions
+	        var newQuestions = before.concat(newQuestion, after); 
 	        console.log(newQuestions);
-
 	        //update the state
-	        var newObject = {questions: newQuestions};
+	        var newObject = {questions: newQuestions, counter: counter};
 	        return Object.assign({}, state, {[questionSet]: newObject});
 	    }
 	    return state;
@@ -28679,19 +28681,19 @@
 	            
 	             {
 	                line: 'Is this parcel connected to a water source?',
-	          
-	                target:"",
-	                show: false,
+	                answer: null,
+	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
 	                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
 	                selection: ['Yes', 'No'],
+	                selected: [false, false],
 	                changeCounter: [1, 100]
 	                }
 	            ,
 	               {
 	                line: 'How many sources supply water to this parcel?',
 	                input: ['Number'],
-	             
+	       			
 	                popover: ['Examples of water sources include water companies, rivers or streams, \
 	                wells, springs, ponds...'],
 	                changeCounter: [1]
@@ -28702,7 +28704,7 @@
 	                a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
 	                are you a water supplier yourself?',
 	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
-	              
+	              	selected: [false, false],
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
@@ -28730,7 +28732,7 @@
 	                line: 'You reported that this property is served by a water supplier. \
 	                Who is that water supplier?',
 	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
-	               
+	               	selected: [false, false],
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
@@ -28757,6 +28759,8 @@
 		                applied for or claimed a water right?',
 	              
 	                selection: ['Yes', 'No'],
+	                selected: [false, false],
+	                disabled: true,
 	                popover: 'If you have a water right, you should have an application number \
 	                that you use to report your water use annually',
 	                changeCounter: [1,2]
@@ -28775,6 +28779,8 @@
 	                line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
 	                to the river or stream from which it takes water?',
 	                selection: ['Yes', 'No'],
+	                selected: [false, false],
+	                disabled: true,
 	                popover: 'Adjacent as in the property touches the stream.',
 	                changeCounter: [1,2]
 	            }
@@ -28784,9 +28790,12 @@
 	                to file a statement of use.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
 	                'This source is a spring that would never run off my property'],
-	                popover: 'Filing the statement of use is free and is required if you are using \
+	                selected: [false, false],
+	                disabled: true,
+	                popover: ['Filing the statement of use is free and is required if you are using \
 	                surface water from an adjacent stream. Claiming this water right will protect your \
-	                water source from over-allocation.',
+	                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
+	                does not flow off the property, even in the winter, even if you were diverting none of it.'],
 	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
 	            }
 	            ,
@@ -28795,7 +28804,8 @@
 	                you need to apply for a water right.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
 	                'But this is only for a small, domestic property'],
-	                answer: "",
+	                selected: [false, false],
+	                disabled: true,
 	                popover: 'If you have questions, which you probably do, please call the \
 	                Division of Water Rights Help Line at (916) 341-5300',
 	                changeCounter: [200, -100, 200]
@@ -28815,7 +28825,6 @@
 	            	changeCounter: [1]
 	            }
 	        ],
-			disabled: false,
 			counter: 0,
 	};
 
@@ -46048,8 +46057,9 @@
 		handleChange: function (e) {
 			this.props.dispatch(actions.changeInput(e));
 		},
-		onSubmit: function () {
+		onSubmit: function (e) {
 			console.log("submit");
+			e.preventDefault();
 			this.props.dispatch(actions.submitAnswer('infoOrder'));
 		},
 		prevQuestion: function () {
@@ -46086,7 +46096,7 @@
 							),
 							React.createElement(
 								Button,
-								{ className: 'button', type: 'submit' },
+								{ className: 'button', disabled: singleQuestion.disabled, type: 'button', onClick: that.onSubmit },
 								React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 							)
 						)
@@ -46138,7 +46148,7 @@
 			for (var j = 0; j < props.question.dropdown.length; j++) {
 				dropdown.push(React.createElement(
 					'option',
-					{ value: props.question.dropdown[i] },
+					{ value: props.question.dropdown[i], id: j, onClick: props.handleClick },
 					'props.question.dropdown[i]'
 				));
 			}
@@ -46155,7 +46165,7 @@
 			for (var i = 0; i < props.question.selection.length; i++) {
 				options.push(React.createElement(
 					Button,
-					{ className: "option", type: 'button', id: i, onClick: props.handleClick },
+					{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
 					React.createElement(
 						'h3',
 						null,

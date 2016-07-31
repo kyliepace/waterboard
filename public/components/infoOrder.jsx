@@ -22,8 +22,9 @@ var InfoOrder = React.createClass({
 	handleChange: function(e){
 		this.props.dispatch(actions.changeInput(e));
 	},
-	onSubmit: function(){
+	onSubmit: function(e){
 		console.log("submit");
+		e.preventDefault();
 		this.props.dispatch(actions.submitAnswer('infoOrder'));
 	},
 	prevQuestion: function(){
@@ -50,7 +51,7 @@ var InfoOrder = React.createClass({
 		    			{showQuestions}
 		    			<div className='flex'>
 		    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-	    					<Button className='button' type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+	    					<Button className='button' disabled={singleQuestion.disabled} type='button' onClick={that.onSubmit}><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		    			</div>
 	    			</form>
 	    		</Col>
