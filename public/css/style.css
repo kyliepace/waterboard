@@ -1,8 +1,9 @@
 .main {
   min-height: 800px;
+  max-width: 1000px;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  max-width: 1000px;
 }
 .hidden {
   display: none;
@@ -76,7 +77,7 @@ section {
 .questionView .selector .options .option:active {
   box-shadow: 1px 0px 20px white;
 }
-.questionView .selector .options .glowOption {
+.questionView .selector .options .selected {
   box-shadow: 1px 0px 20px white;
   border: 2px solid white;
   width: 200px;
@@ -85,8 +86,8 @@ section {
   margin: 2rem;
   text-align: center;
 }
-.questionView .selector .options .glowOption:hover,
-.questionView .selector .options .glowOption:active {
+.questionView .selector .options .selected:hover,
+.questionView .selector .options .selected:active {
   box-shadow: none;
 }
 .popover {
