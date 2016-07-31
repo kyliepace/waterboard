@@ -28538,13 +28538,12 @@
 
 	       //increase infoOrder.counter ++
 	        var changeCounterBy = function(){
-	            if(question.length>1){
-	                return question[0].changeCounter[0]; //appropriate number to add to counter
+	            if(question.changeCounter.length>1){
+	                return question.changeCounter[question.answer]//appropriate number to add to counter
 	            }
 	            else{
-	                return question.changeCounter[0]; //appropriate number to add to counter
-	            }
-	            
+	                return question.changeCounter[0];
+	            }   
 	        }
 	        console.log(question.changeCounter);
 	        console.log(changeCounterBy());
@@ -28552,24 +28551,20 @@
 	        console.log(counter);
 
 	        var newCounter = Object.assign({}, state[questionSet], {counter: counter}); //update state with new counter
-	        // var before = state[questionSet].slice(0, state[questionSet].length - 1);
-	        // var after = state[questionSet].slice(state[questionSet].length);
-	        // before.concat(newCounter, after);
-	        // console.log(before);
 	        return Object.assign({}, state, {[questionSet]: newCounter});
 	      
 	    }
-
+	//////////// CHANGE INPUT /////////////////////////////////////////////////
 	    if (action.type === actions.CHANGE_INPUT){
 	        //change the infoOrder.questions[counter].id.value to the e.target.value
 	    }
 
-	    if (action.type === actions.CHOOSE_OPTION){
+	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+	    if (action.type === actions.CHOOSE_OPTION){ 
 	        //change the answer value
 	        var questionSet = action.questionSet;
 	        var counter = state[questionSet].counter;
 	        var question = state[questionSet].questions[counter]; //which question?
-	        console.log(question);
 	        var answer = action.answer;
 	        console.log('answer:'+answer);
 
@@ -28577,20 +28572,11 @@
 	        var newQuestion = Object.assign({}, question, {answer: answer});
 	        var before = state[questionSet].questions.slice(0, counter);
 	        var after = state[questionSet].questions.slice(counter+1);
-	        var newQuestions = before.concat(newQuestion, after);
+	        var newQuestions = before.concat(newQuestion, after); //create new array of questions
 	        console.log(newQuestions);
 
-	        //increase infoOrder.counter ++
-	        var changeCounterBy = function(){
-	            return question.changeCounter[answer]; //appropriate number to add to counter
-	        }
-	        console.log(question.changeCounter);
-	        console.log(changeCounterBy());
-	        counter += changeCounterBy();
-	        console.log(counter);
-
 	        //update the state
-	        var newObject = {questions: newQuestions, counter: counter};
+	        var newObject = {questions: newQuestions};
 	        return Object.assign({}, state, {[questionSet]: newObject});
 	    }
 	    return state;
@@ -28648,26 +28634,25 @@
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 	exports.submitAnswer = submitAnswer;
 
-
+	//if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e, set){
 		return{
 			type: CHOOSE_OPTION,
 			questionSet: set,
-			id: e.target.id[0], //which line of the question array
-			answer: e.target.id[2] //which option of the selection array
+			answer: e.target.id //which option of the selection array
 		}
 	}
 	exports.CHOOSE_OPTION = CHOOSE_OPTION;
 	exports.chooseOption = chooseOption;
 
+	//if question.input, then update the state when form is changed
 	var CHANGE_INPUT = 'CHANGE_INPUT';
 	var changeInput = function(e, set){
 		console.log(e.target.id);
 		return{
 			type: CHANGE_INPUT, 
 			questionSet: set,
-			id: e.target.id,
 			answer: e.target.value
 		}
 	};
@@ -28682,27 +28667,19 @@
 	var infoOrderState = {
 
 		questions: [
-	             [  {id: 0,
-	                line: 'APN',
-	                input: true,
-	                show: false, 
-	                target: "",
-	                popover: 'This is printed on the letter you should have received in the mail. \
+	             {
+	                line: '',
+	                input: ['APN/Id Code', 'Password'],
+	                popover: ['This is printed on the letter you should have received in the mail. \
 	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
+	                ,'This is also included in your letter. Capitalization does matter.'],
 	                changeCounter: [1]
-	                }, 
-	                {id: 1,
-	                line: 'password', 
-	                input: true,
-	                show: false,
-	                target: "",
-	                popover: 'This is also included in your letter. Capitalization does matter.'
-	                }
-	            ],
+	             },
+	          
 	            
-	             {id:0,
+	             {
 	                line: 'Is this parcel connected to a water source?',
-	                input: false,
+	          
 	                target:"",
 	                show: false,
 	                popover: 'Examples of water sources include water utilities, a river or\
@@ -28711,171 +28688,132 @@
 	                changeCounter: [1, 100]
 	                }
 	            ,
-	               {id:0,
+	               {
 	                line: 'How many sources supply water to this parcel?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                popover: 'Examples of water sources include water companies, rivers or streams, \
-	                wells, springs, ponds...',
+	                input: ['Number'],
+	             
+	                popover: ['Examples of water sources include water companies, rivers or streams, \
+	                wells, springs, ponds...'],
 	                changeCounter: [1]
 	                }
 	            ,
-	             [   {id:0,
+	            {
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
 	                are you a water supplier yourself?',
 	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
-	                target: "",
-	                show: false,
+	              
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
 	                changeCounter: [1, 2, 4]
-	                }
-	            ],
-	            [   {id:0,
+	            }
+	            ,
+	           {
 	                line: 'You reported that this property is served by groundwater. \
 	                Please describe the details of your well',
-	                input: true,
-	                target: "",
-	                show: false,
-	                popover: 'Please provide as much of the following information as you know',
+	                input: [
+	                	'Please find the <a href="#"> coordinates </a> of the well\'s location',
+	                	'In what year was the well dug?',
+	                	'How many feet deep is the well?',
+	                	'Who owned the property when the well was dug?'
+	                ], 
+	                popover: ['Please provide as much of the following information as you know',
+		                'Follow the link to use the mapping tool',
+		                'Enter the approximate year of construction',
+		                'Enter the approximate depth, in feet, of your well',
+	                ],
 	                changeCounter: [8]
-	                },
-	                {id:1,
-	                line: 'Please find the <a href="#"> coordinates </a> of the well\'s location',
-	                input: true,
-	                target: "",
-	                show: false,
-	                popover: ''
-	                },
-	                {id:2,
-	                line: 'In what year was the well dug?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                required: false,
-	                popover: 'Enter the approximate year of construction'
-	                },
-	                {id:3,
-	                line: 'How many feet deep is the well?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                required: false,
-	                popover: 'Enter the approximate depth, in feet, of your well'
-	                },
-	                {id:4,
-	                line: 'Who owned the property when the well was dug?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                required: false,
-	                popover: 'Enter the approximate depth, in feet, of your well'
-	                }
-	            ],
-	            [   {id:0,
+	           },
+	              
+	            {
 	                line: 'You reported that this property is served by a water supplier. \
 	                Who is that water supplier?',
 	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
-	                target: "",
-	                show: false,
+	               
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
 	                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
-	                }
-	            ],
-	            [   {id:0,
+	            }
+	            ,
+	            {
 	                line: 'You reported that the water supplier is an individual. \
 	                Please describe as much as you know.',
-	                target: "",
-	                show: false,
-	                popover: 'If you don\'t know some details, that\'s ok.',
+	                input: [
+	                	'What is the individual water supplier\'s name?',
+	                	'What is the Accessor\'s Parcel Number of the parcel that supplies your water?',
+	                ],
+	                popover: ['If you don\'t know some details, that\'s ok.',
+	                	'The APN is also the 12-digit ID Code used to log into this form'
+	                ],
 	                changeCounter: [6] //go to water use
-	                },
-	                {id: 1,
-	                line: 'What is the individual water supplier\'s name?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                popover: 'We will look for this person\'s record in our system'
-	                },
-	                {id:2,
-	                line: 'What is the Accessor\'s Parcel Number of the parcel that supplies your water?',
-	                target: "",
-	                input: true,
-	                show: false,
-	                popover: 'The APN is also the 12-digit ID Code used to log into this form'
-	                }
-	            ],
-	            [   {id:0,
+	             },
+	                
+	            {
 	                line: 'You reported that the property\'s water source is surface water. \
-	                Because surface water requires a water right, let\'s figure out if you already \
-	                have a water right or if you need to apply for one.',
-	                target: "",
-	                show: false,
-	                popover: 'The system of water rights is confusing, but it helps make sure that \
-	                high-priority uses like domestic use get enough water. We don\'t want anyone\
-	                to be thirsty!',
-	                changeCounter: [1,2]
-	                },
-	                {id:1,
-	                line: 'Have you already applied for or claimed a water right?',
+		                Because surface water requires a water right, let\'s figure out if you already \
+		                have a water right or if you need to apply for one. </br> Have you already \
+		                applied for or claimed a water right?',
+	              
 	                selection: ['Yes', 'No'],
-	                target: "",
-	                show: false,
 	                popover: 'If you have a water right, you should have an application number \
-	                that you use to report your water use annually'
-	                }
-	            ],
-	            [   {id:0,
+	                that you use to report your water use annually',
+	                changeCounter: [1,2]
+	            },
+	               
+	           
+	            {
 	                line: 'You have already reported your use! Awesome! What\'s your application number?',
-	                input: true,
-	                target: "",
-	                show: false,
-	                popover: 'The application number usually starts with a letter and looks like \
-	                A111111 or S111111, for example',
+	                input: ['App Id'],
+	                popover: ['The application number usually starts with a letter and looks like \
+	                A111111 or S111111, for example'],
 	                changeCounter: [100] //go to confirmation
-	                }
-	            ],
-	            [   {id:0,
+	            }
+	            ,
+	            {	
 	                line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
 	                to the river or stream from which it takes water?',
 	                selection: ['Yes', 'No'],
-	                target: "",
-	                show: false,
 	                popover: 'Adjacent as in the property touches the stream.',
 	                changeCounter: [1,2]
-	                }
-	            ],
-	            [   {id:0,
+	            }
+	            ,
+	            {
 	                line: 'It looks like you have a riparian water right. To claim this right, you need \
 	                to file a statement of use.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
 	                'This source is a spring that would never run off my property'],
-	                target: "",
-	                show: false,
 	                popover: 'Filing the statement of use is free and is required if you are using \
 	                surface water from an adjacent stream. Claiming this water right will protect your \
 	                water source from over-allocation.',
 	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
-	                }
-	            ],
-	            [   {id:0,
+	            }
+	            ,
+	            {	
 	                line: 'If you\'re using water from a stream that doesn\'t touch your property, \
 	                you need to apply for a water right.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
 	                'But this is only for a small, domestic property'],
 	                answer: "",
-	                target: "",
-	                show: false,
 	                popover: 'If you have questions, which you probably do, please call the \
 	                Division of Water Rights Help Line at (916) 341-5300',
 	                changeCounter: [200, -100, 200]
-	                }
-	            ],
+	            }
+	            ,
+	            {	
+	            	line: 'We\'re almost done! Let\s figure out your water use',
+	            	input: ['number of people each month']
+	            },
+	            {	
+	            	line: 'How is water from this source used on the property?',
+	            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+	            	answer: null,
+	            	mult: true,
+	            	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
+	            	Agricultural use applies if you sell any food products raised on your property',
+	            	changeCounter: [1]
+	            }
 	        ],
 			disabled: false,
 			counter: 0,
@@ -46126,17 +46064,7 @@
 			console.log(questions);
 			console.log(questions[index]);
 
-			if (questions[index].length > 1) {
-				var showQuestions = questions[index].map(function (question) {
-					return React.createElement(Question, { questionId: question.id, line: question.line, handleClick: that.handleClick, handleChange: that.handleChange,
-						key: question.key, target: question.target, popover: question.popover,
-						input: question.input, selection: question.selection });
-				});
-			} else {
-				var showQuestions = React.createElement(Question, { questionId: singleQuestion.id, line: singleQuestion.line, handleClick: that.handleClick, handleChange: that.handleChange,
-					show: singleQuestion.show, key: questions[index].key, target: singleQuestion.target, popover: singleQuestion.popover,
-					input: singleQuestion.input, selection: singleQuestion.selection });
-			}
+			var showQuestions = React.createElement(Question, { question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
 
 			return React.createElement(
 				'section',
@@ -46203,20 +46131,61 @@
 	var Button = __webpack_require__(270).Button;
 	var ButtonToolbar = __webpack_require__(270).ButtonToolbar;
 
-	//create a component with a popover and an input bar
 	var Question = function (props) {
+		//if the question should have a dropdown box:
+		if (props.question.dropdown) {
+			var dropdown = [];
+			for (var j = 0; j < props.question.dropdown.length; j++) {
+				dropdown.push(React.createElement(
+					'option',
+					{ value: props.question.dropdown[i] },
+					'props.question.dropdown[i]'
+				));
+			}
+			var options = React.createElement(
+				FormControl,
+				{ componentClass: 'select', placeholder: 'select one' },
+				dropdown
+			);
+		}
+
 		//if the question is multiple choice, create a box for each option
-		if (props.selection) {
+		if (props.question.selection) {
 			var options = [];
-			for (var i = 0; i < props.selection.length; i++) {
+			for (var i = 0; i < props.question.selection.length; i++) {
 				options.push(React.createElement(
 					Button,
-					{ className: "option", type: 'button', id: [props.questionId, i], onClick: props.handleClick },
+					{ className: "option", type: 'button', id: i, onClick: props.handleClick },
 					React.createElement(
 						'h3',
 						null,
-						props.selection[i]
+						props.question.selection[i]
 					)
+				));
+			}
+		}
+		//if the question has a form text input, create a row for each input and popover
+		if (props.question.input) {
+			var inputs = [];
+			for (var n = 0; n < props.question.input.length; n++) {
+				inputs.push(React.createElement(
+					ButtonToolbar,
+					{ className: 'flex' },
+					React.createElement(FormControl, { placeholder: props.question.input[n], className: 'input', type: 'text', onChange: props.handleChange }),
+					React.createElement(
+						OverlayTrigger,
+						{ trigger: 'click', placement: 'top', overlay: React.createElement(
+								Popover,
+								{ id: 'popover-trigger-click' },
+								props.question.popover[n]
+							) },
+						React.createElement(
+							Button,
+							{ className: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						)
+					),
+					React.createElement(FormControl.Feedback, null)
 				));
 			}
 		}
@@ -46226,37 +46195,24 @@
 			null,
 			React.createElement(
 				FormGroup,
-				{ className: props.input ? "" : "hidden" },
+				{ className: props.question.input ? "" : "hidden" },
 				React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
-					React.createElement(FormControl, { placeholder: props.line, className: 'input', type: 'text', onChange: props.handleChange }),
-					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								props.popover
-							) },
-						React.createElement(
-							Button,
-							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true' })
-						)
-					)
+					'h4',
+					null,
+					props.question.line
 				),
-				React.createElement(FormControl.Feedback, null)
+				inputs
 			),
 			React.createElement(
 				FormGroup,
-				{ className: props.selection ? 'selector' : 'hidden' },
+				{ className: props.question.input ? 'hidden' : 'selector' },
 				React.createElement(
 					ButtonToolbar,
 					{ className: 'flex' },
 					React.createElement(
 						'h4',
 						null,
-						props.line
+						props.question.line
 					),
 					React.createElement(
 						OverlayTrigger,

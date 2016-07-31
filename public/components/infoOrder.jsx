@@ -38,20 +38,10 @@ var InfoOrder = React.createClass({
 		console.log(questions);
 		console.log(questions[index]);
 
-		if(questions[index].length>1){
-			var showQuestions = questions[index].map(function(question){
-				return (<Question questionId={question.id} line={question.line} handleClick={that.handleClick} handleChange={that.handleChange}
-				key={question.key} target={question.target} popover={question.popover}
-				input={question.input} selection={question.selection}/>);
-			});
-		}
-		else{
-			var showQuestions = (
-				<Question questionId={singleQuestion.id} line={singleQuestion.line} handleClick={that.handleClick} handleChange={that.handleChange}
-				show={singleQuestion.show} key={questions[index].key} target={singleQuestion.target} popover={singleQuestion.popover}
-				input={singleQuestion.input} selection={singleQuestion.selection}/>
-			)
-		}
+		var showQuestions = (
+			<Question question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+		);
+		
 
 		return(
 		    <section>
