@@ -16,8 +16,8 @@ var InfoOrder = React.createClass({
 		};
 	},
 	handleClick: function(e){
-		console.log(e);
-		this.props.dispatch(actions.chooseOption(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+		console.log('click'+ e.target.value);
+		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
 		this.props.dispatch(actions.changeInput(e));
@@ -25,7 +25,7 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
-		this.props.dispatch(actions.submitAnswer('infoOrder'));
+		this.props.dispatch(actions.submitAnswer());
 	},
 	prevQuestion: function(){
 		//dispatch an action that will reduce the counter by the amount that was just added to it
@@ -51,7 +51,7 @@ var InfoOrder = React.createClass({
 		    			{showQuestions}
 		    			<div className='flex'>
 		    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-	    					<Button className='button' disabled={singleQuestion.disabled} type='button' onClick={that.onSubmit}><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+	    					<Button className='button' disabled={singleQuestion.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		    			</div>
 	    			</form>
 	    		</Col>
@@ -66,7 +66,7 @@ var InfoOrder = React.createClass({
 
 var mapStateToProps = function(state, props) {
     return {
-        infoOrder: state.infoOrder.infoOrder
+        infoOrder: state.infoOrder
     };
 };
 

@@ -58,6 +58,10 @@ section {
   align-items: flex-end;
   justify-content: center;
 }
+.questionView h4 {
+  text-align: center;
+  margin: 0px 10px;
+}
 .questionView .selector {
   text-align: center;
 }

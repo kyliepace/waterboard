@@ -18,19 +18,31 @@ var initialRepositoryState = {
 };
 
 var infoOrderReducer= function(state, action) {
-    state = state || initialRepositoryState;
-    
+    state = state || infoOrder;
+    for (var i=0; i<state.questions.length; i++){
+        state.answers.concat({}); //add an empty object to the answers array for every question
+    }
     /////////// SUBMIT ANSWER ////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
-        var questionSet = action.questionSet;
-        var counter = state[questionSet].counter;
-        var question = state[questionSet].questions[counter]; //which question?
-        //send infoOrder.questions[counter] to server 
+        var counter = state.counter;
+        var question = state.questions[counter]; //which question?
+        console.log('answer index is '+question.answerIndex);
+        //push answer to state.answers
+        // if(question.value){
+        //     var answer = question.value;
+        // }
+        if(question.selection){
+            var answer = question.selection[question.answerIndex];
+        }
+        else if(question.dropdown){
+            var answer = question.dropdown[question.answerIndex];
+        }
+        var newAnswers = state.answers.slice(0,counter).concat({answer}, state.answers.slice(counter+1));
 
        //increase infoOrder.counter ++
         var changeCounterBy = function(){
             if(question.changeCounter.length>1){
-                return question.changeCounter[question.answer]//appropriate number to add to counter
+                return question.changeCounter[question.answerIndex]//appropriate number to add to counter
             }
             else{
                 return question.changeCounter[0];
@@ -41,8 +53,7 @@ var infoOrderReducer= function(state, action) {
         counter += changeCounterBy();
         console.log(counter);
 
-        var newCounter = Object.assign({}, state[questionSet], {counter: counter}); //update state with new counter
-        return Object.assign({}, state, {[questionSet]: newCounter});
+        return Object.assign({}, state, {counter: counter, answers: newAnswers}); //update state with new counter
       
     }
 //////////// CHANGE INPUT /////////////////////////////////////////////////
@@ -52,25 +63,30 @@ var infoOrderReducer= function(state, action) {
 
 /////////////// CHOOSE OPTION ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ 
-        var questionSet = action.questionSet;
-        var counter = state[questionSet].counter;
-        var question = state[questionSet].questions[counter]; //which question?
-         //change the answer value
-        var answer = action.answer;
-        console.log('answer:'+answer);
-        //updated the selected array
-        var selected = question.selected.slice(0,answer).concat(true, question.selected.slice(answer+1));
-        console.log(selected);
+        var counter = state.counter;
+        var question = state.questions[counter]; //which question?
+        
+        if(question.selected){ //if a multiple-choice question
+             //change the answer value
+            var answerIndex = action.answerIndex;
+            console.log('answer:'+ answerIndex);
+            //updated the selected array
+            var selected = question.selected.slice(0,answerIndex).concat(true, question.selected.slice(answerIndex+1));
+            console.log(selected);
+        }
+        else{ //if a dropdown question
+            var selected = []
+            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+        }
         //update the question with new answer index and un-disable next arrow
-        var newQuestion = Object.assign({}, question, {answer: answer, selected: selected, disabled: false});
+        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: selected, disabled: false});
         //create new array of questions
-        var before = state[questionSet].questions.slice(0, counter);
-        var after = state[questionSet].questions.slice(counter+1);
+        var before = state.questions.slice(0, counter);
+        var after = state.questions.slice(counter+1);
         var newQuestions = before.concat(newQuestion, after); 
         console.log(newQuestions);
         //update the state
-        var newObject = {questions: newQuestions, counter: counter};
-        return Object.assign({}, state, {[questionSet]: newObject});
+        return Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
     }
     return state;
 };

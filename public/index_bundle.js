@@ -28527,19 +28527,31 @@
 	};
 
 	var infoOrderReducer= function(state, action) {
-	    state = state || initialRepositoryState;
-	    
+	    state = state || infoOrder;
+	    for (var i=0; i<state.questions.length; i++){
+	        state.answers.concat({}); //add an empty object to the answers array for every question
+	    }
 	    /////////// SUBMIT ANSWER ////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
-	        var questionSet = action.questionSet;
-	        var counter = state[questionSet].counter;
-	        var question = state[questionSet].questions[counter]; //which question?
-	        //send infoOrder.questions[counter] to server 
+	        var counter = state.counter;
+	        var question = state.questions[counter]; //which question?
+	        console.log('answer index is '+question.answerIndex);
+	        //push answer to state.answers
+	        // if(question.value){
+	        //     var answer = question.value;
+	        // }
+	        if(question.selection){
+	            var answer = question.selection[question.answerIndex];
+	        }
+	        else if(question.dropdown){
+	            var answer = question.dropdown[question.answerIndex];
+	        }
+	        var newAnswers = state.answers.slice(0,counter).concat({answer}, state.answers.slice(counter+1));
 
 	       //increase infoOrder.counter ++
 	        var changeCounterBy = function(){
 	            if(question.changeCounter.length>1){
-	                return question.changeCounter[question.answer]//appropriate number to add to counter
+	                return question.changeCounter[question.answerIndex]//appropriate number to add to counter
 	            }
 	            else{
 	                return question.changeCounter[0];
@@ -28550,8 +28562,7 @@
 	        counter += changeCounterBy();
 	        console.log(counter);
 
-	        var newCounter = Object.assign({}, state[questionSet], {counter: counter}); //update state with new counter
-	        return Object.assign({}, state, {[questionSet]: newCounter});
+	        return Object.assign({}, state, {counter: counter, answers: newAnswers}); //update state with new counter
 	      
 	    }
 	//////////// CHANGE INPUT /////////////////////////////////////////////////
@@ -28561,25 +28572,30 @@
 
 	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ 
-	        var questionSet = action.questionSet;
-	        var counter = state[questionSet].counter;
-	        var question = state[questionSet].questions[counter]; //which question?
-	         //change the answer value
-	        var answer = action.answer;
-	        console.log('answer:'+answer);
-	        //updated the selected array
-	        var selected = question.selected.slice(0,answer).concat(true, question.selected.slice(answer+1));
-	        console.log(selected);
+	        var counter = state.counter;
+	        var question = state.questions[counter]; //which question?
+	        
+	        if(question.selected){ //if a multiple-choice question
+	             //change the answer value
+	            var answerIndex = action.answerIndex;
+	            console.log('answer:'+ answerIndex);
+	            //updated the selected array
+	            var selected = question.selected.slice(0,answerIndex).concat(true, question.selected.slice(answerIndex+1));
+	            console.log(selected);
+	        }
+	        else{ //if a dropdown question
+	            var selected = []
+	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+	        }
 	        //update the question with new answer index and un-disable next arrow
-	        var newQuestion = Object.assign({}, question, {answer: answer, selected: selected, disabled: false});
+	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: selected, disabled: false});
 	        //create new array of questions
-	        var before = state[questionSet].questions.slice(0, counter);
-	        var after = state[questionSet].questions.slice(counter+1);
+	        var before = state.questions.slice(0, counter);
+	        var after = state.questions.slice(counter+1);
 	        var newQuestions = before.concat(newQuestion, after); 
 	        console.log(newQuestions);
 	        //update the state
-	        var newObject = {questions: newQuestions, counter: counter};
-	        return Object.assign({}, state, {[questionSet]: newObject});
+	        return Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
 	    }
 	    return state;
 	};
@@ -28626,11 +28642,10 @@
 /***/ function(module, exports) {
 
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-	var submitAnswer = function(set) {
+	var submitAnswer = function(e) {
 		console.log('action: submitAnswer');
 	    return {
-	        type: SUBMIT_ANSWER,
-	        questionSet: set
+	        type: SUBMIT_ANSWER
 	    }
 	};
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
@@ -28638,11 +28653,18 @@
 
 	//if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
-	var chooseOption = function(e, set){
+	var chooseOption = function(e){
+		console.log('choose option ' +e.target);
+		if(e.target.value){
+			console.log('dropdown selected ' + e.target.value);
+			var index = e.target.value;
+		}
+		else{
+			var index = e.target.id;
+		}
 		return{
 			type: CHOOSE_OPTION,
-			questionSet: set,
-			answer: e.target.id //which option of the selection array
+			answerIndex: index //which option of the selection array
 		}
 	}
 	exports.CHOOSE_OPTION = CHOOSE_OPTION;
@@ -28650,11 +28672,10 @@
 
 	//if question.input, then update the state when form is changed
 	var CHANGE_INPUT = 'CHANGE_INPUT';
-	var changeInput = function(e, set){
+	var changeInput = function(e){
 		console.log(e.target.id);
 		return{
 			type: CHANGE_INPUT, 
-			questionSet: set,
 			answer: e.target.value
 		}
 	};
@@ -28671,47 +28692,41 @@
 		questions: [
 	             {
 	                line: '',
-	                input: ['APN/Id Code', 'Password'],
+	                input: ['APN/ID Code', 'Password'],
 	                popover: ['This is printed on the letter you should have received in the mail. \
-	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
-	                ,'This is also included in your letter. Capitalization does matter.'],
+		                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
+		                ,'This is also included in your letter. Capitalization does matter.'
+		            ],
 	                changeCounter: [1]
-	             },
-	          
-	            
+	             }, 
 	             {
 	                line: 'Is this parcel connected to a water source?',
-	                answer: null,
 	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
-	                 stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
+	                	stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
 	                selection: ['Yes', 'No'],
 	                selected: [false, false],
 	                changeCounter: [1, 100]
-	                }
-	            ,
-	               {
+	            },
+	            {
 	                line: 'How many sources supply water to this parcel?',
 	                input: ['Number'],
-	       			
 	                popover: ['Examples of water sources include water companies, rivers or streams, \
-	                wells, springs, ponds...'],
+	                	wells, springs, ponds...'
+	               	],
 	                changeCounter: [1]
-	                }
-	            ,
+	            },
 	            {
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
-	                a water supplier (e.g. you pay a water company), surface water (i.e. from a river or stream), or \
-	                are you a water supplier yourself?',
+	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
 	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
-	              	selected: [false, false],
+	              	disabled: true,
 	                popover: 'Select the type of water source from the drop-down list. A spring \
-	                is usually either a surface diversion or a well, depending on whether the \
-	                water comes all the way to the surface',
+		                is usually either a surface diversion or a well, depending on whether the \
+		                water comes all the way to the surface',
 	                changeCounter: [1, 2, 4]
-	            }
-	            ,
-	           {
+	            },
+	           	{
 	                line: 'You reported that this property is served by groundwater. \
 	                Please describe the details of your well',
 	                input: [
@@ -28734,8 +28749,8 @@
 	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
 	               	selected: [false, false],
 	                popover: 'Select the type of water source from the drop-down list. A spring \
-	                is usually either a surface diversion or a well, depending on whether the \
-	                water comes all the way to the surface',
+		                is usually either a surface diversion or a well, depending on whether the \
+		                water comes all the way to the surface',
 	                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
 	            }
 	            ,
@@ -28762,7 +28777,7 @@
 	                selected: [false, false],
 	                disabled: true,
 	                popover: 'If you have a water right, you should have an application number \
-	                that you use to report your water use annually',
+	                	that you use to report your water use annually',
 	                changeCounter: [1,2]
 	            },
 	               
@@ -28771,10 +28786,10 @@
 	                line: 'You have already reported your use! Awesome! What\'s your application number?',
 	                input: ['App Id'],
 	                popover: ['The application number usually starts with a letter and looks like \
-	                A111111 or S111111, for example'],
+	                	A111111 or S111111, for example'
+	                ],
 	                changeCounter: [100] //go to confirmation
-	            }
-	            ,
+	            },
 	            {	
 	                line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
 	                to the river or stream from which it takes water?',
@@ -28783,22 +28798,22 @@
 	                disabled: true,
 	                popover: 'Adjacent as in the property touches the stream.',
 	                changeCounter: [1,2]
-	            }
-	            ,
+	            },
 	            {
 	                line: 'It looks like you have a riparian water right. To claim this right, you need \
-	                to file a statement of use.',
+	                	to file a statement of use.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
-	                'This source is a spring that would never run off my property'],
+	                	'This source is a spring that would never run off my property'
+	                ],
 	                selected: [false, false],
 	                disabled: true,
 	                popover: ['Filing the statement of use is free and is required if you are using \
-	                surface water from an adjacent stream. Claiming this water right will protect your \
-	                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
-	                does not flow off the property, even in the winter, even if you were diverting none of it.'],
+		                surface water from an adjacent stream. Claiming this water right will protect your \
+		                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
+		                does not flow off the property, even in the winter, even if you were diverting none of it.'
+		            ],
 	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
-	            }
-	            ,
+	            },
 	            {	
 	                line: 'If you\'re using water from a stream that doesn\'t touch your property, \
 	                you need to apply for a water right.',
@@ -28807,10 +28822,9 @@
 	                selected: [false, false],
 	                disabled: true,
 	                popover: 'If you have questions, which you probably do, please call the \
-	                Division of Water Rights Help Line at (916) 341-5300',
+	                	Division of Water Rights Help Line at (916) 341-5300',
 	                changeCounter: [200, -100, 200]
-	            }
-	            ,
+	            },
 	            {	
 	            	line: 'We\'re almost done! Let\s figure out your water use',
 	            	input: ['number of people each month']
@@ -28821,11 +28835,14 @@
 	            	answer: null,
 	            	mult: true,
 	            	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
-	            	Agricultural use applies if you sell any food products raised on your property',
+	            		Agricultural use applies if you sell any food products raised on your property',
 	            	changeCounter: [1]
 	            }
 	        ],
 			counter: 0,
+			answers:[
+
+			]
 	};
 
 	module.exports = infoOrderState;
@@ -28861,6 +28878,8 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
+	var router = __webpack_require__(201);
+	var Link = router.Link;
 
 	var Header = function (props) {
 		return React.createElement(
@@ -28873,9 +28892,13 @@
 					Col,
 					{ xs: 7, xsOffset: 1, md: 5, mdOffset: 1 },
 					React.createElement(
-						'h3',
-						null,
-						'State Water Resources Control Board'
+						Link,
+						{ to: '/' },
+						React.createElement(
+							'h3',
+							null,
+							'State Water Resources Control Board'
+						)
 					)
 				),
 				React.createElement(
@@ -46051,8 +46074,8 @@
 			};
 		},
 		handleClick: function (e) {
-			console.log(e);
-			this.props.dispatch(actions.chooseOption(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+			console.log('click' + e.target.value);
+			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
 			this.props.dispatch(actions.changeInput(e));
@@ -46060,7 +46083,7 @@
 		onSubmit: function (e) {
 			console.log("submit");
 			e.preventDefault();
-			this.props.dispatch(actions.submitAnswer('infoOrder'));
+			this.props.dispatch(actions.submitAnswer());
 		},
 		prevQuestion: function () {
 			//dispatch an action that will reduce the counter by the amount that was just added to it
@@ -46096,7 +46119,7 @@
 							),
 							React.createElement(
 								Button,
-								{ className: 'button', disabled: singleQuestion.disabled, type: 'button', onClick: that.onSubmit },
+								{ className: 'button', disabled: singleQuestion.disabled, type: 'submit' },
 								React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 							)
 						)
@@ -46117,7 +46140,7 @@
 
 	var mapStateToProps = function (state, props) {
 		return {
-			infoOrder: state.infoOrder.infoOrder
+			infoOrder: state.infoOrder
 		};
 	};
 
@@ -46131,7 +46154,6 @@
 
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
-
 	var FormGroup = __webpack_require__(270).FormGroup;
 	var ControlLabel = __webpack_require__(270).ControlLabel;
 	var FormControl = __webpack_require__(270).FormControl;
@@ -46144,36 +46166,40 @@
 	var Question = function (props) {
 		//if the question should have a dropdown box:
 		if (props.question.dropdown) {
-			var dropdown = [];
+			var dropdown = [React.createElement(
+				'option',
+				{ selected: true, disabled: true },
+				'Select One'
+			)];
 			for (var j = 0; j < props.question.dropdown.length; j++) {
 				dropdown.push(React.createElement(
 					'option',
-					{ value: props.question.dropdown[i], id: j, onClick: props.handleClick },
-					'props.question.dropdown[i]'
+					{ value: props.question.dropdown[j], id: j },
+					props.question.dropdown[j]
 				));
 			}
 			var options = React.createElement(
 				FormControl,
-				{ componentClass: 'select', placeholder: 'select one' },
+				{ componentClass: 'select', placeholder: 'select one', className: 'input', onChange: props.handleClick },
 				dropdown
 			);
 		}
 
 		//if the question is multiple choice, create a box for each option
-		if (props.question.selection) {
-			var options = [];
-			for (var i = 0; i < props.question.selection.length; i++) {
-				options.push(React.createElement(
-					Button,
-					{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
-					React.createElement(
-						'h3',
-						null,
-						props.question.selection[i]
-					)
-				));
+		else if (props.question.selection) {
+				var options = [];
+				for (var i = 0; i < props.question.selection.length; i++) {
+					options.push(React.createElement(
+						Button,
+						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
+						React.createElement(
+							'h3',
+							null,
+							props.question.selection[i]
+						)
+					));
+				}
 			}
-		}
 		//if the question has a form text input, create a row for each input and popover
 		if (props.question.input) {
 			var inputs = [];
@@ -46234,7 +46260,7 @@
 						React.createElement(
 							Button,
 							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', id: props.questionId, 'aria-hidden': 'true' })
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 						)
 					)
 				),

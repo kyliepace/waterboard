@@ -1,6 +1,5 @@
 var React = require('react');
 var Row = require('react-bootstrap').Row;
-
 var FormGroup = require('react-bootstrap').FormGroup;
 var ControlLabel = require('react-bootstrap').ControlLabel;
 var FormControl = require('react-bootstrap').FormControl;
@@ -10,25 +9,24 @@ var Popover = require('react-bootstrap').Popover;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
-
 var Question = function(props){
 	//if the question should have a dropdown box:
 	if(props.question.dropdown){
-		var dropdown = [];
+		var dropdown = [<option selected disabled>Select One</option>];
 		for (var j=0; j<props.question.dropdown.length; j++){
 			dropdown.push(
-				<option value ={props.question.dropdown[i]} id={j} onClick={props.handleClick}>props.question.dropdown[i]</option>
+				<option value ={props.question.dropdown[j]} id={j}>{props.question.dropdown[j]}</option>
 			)
 		}
 		var options = (
-			<FormControl componentClass='select' placeholder='select one'>
+			<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
 				{dropdown}
 			</FormControl>
 		)
 	}
 
 	//if the question is multiple choice, create a box for each option
-	if(props.question.selection){
+	else if(props.question.selection){
 		var options = [];
 		for (var i=0; i<props.question.selection.length; i++){
 			options.push(
@@ -65,7 +63,7 @@ var Question = function(props){
 			<ButtonToolbar className='flex'>
 				<h4>{props.question.line}</h4>
 				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.popover}</Popover>}>
-					<Button className='button'><span className='glyphicon glyphicon-question-sign' id={props.questionId} aria-hidden='true' ></span></Button>
+					<Button className='button'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 				</OverlayTrigger>
 			</ButtonToolbar>
 			<Row className='options'>
