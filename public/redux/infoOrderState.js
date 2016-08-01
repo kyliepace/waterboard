@@ -41,7 +41,7 @@ var infoOrderState = {
                 line: 'You reported that this property is served by groundwater. \
                 Please describe the details of your well',
                 input: [
-                	'Please find the <a href="#"> coordinates </a> of the well\'s location',
+                	'Please find the'+ <a href="#"> +'coordinates '+ <\/a> +'of the well\'s location',
                 	'In what year was the well dug?',
                 	'How many feet deep is the well?',
                 	'Who owned the property when the well was dug?'
@@ -137,17 +137,82 @@ var infoOrderState = {
                 changeCounter: [200, -100, 200]
             },
             {	
-            	line: 'We\'re almost done! Let\s figure out your water use',
-            	input: ['number of people each month']
-            },
-            {	
             	line: 'How is water from this source used on the property?',
             	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
-            	answer: null,
             	mult: true,
+            	disabled: true,
             	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
             		Agricultural use applies if you sell any food products raised on your property',
-            	changeCounter: [1]
+            	changeCounter: [2, 1, 1, 1, 1]
+            },
+            {	
+            	line: 'We\'re almost done! Let\s figure out your water use',
+            	input: ['total use January 2015 (gallons)', 
+            		'total use May 2015 (gallons)', 
+            		'total use June 2015 (gallons)', 
+            		'total use July 2015 (gallons)', 
+            		'total use August 2015 (gallons)',
+            		'total use September 2015 (gallons)',  
+            		'total use October 2015 (gallons)', 
+            		'total use November 2015 (gallons)', 
+            	],
+            	popover: ['Tally the number of gallons of water used from this water source in January of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in May of 2015.',
+            	'Tally the number of gallons of water used from this water source in June of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in July of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in August of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in September of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in October of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.',
+            	'Tally the number of gallons of water used from this water source in November of 2015. You may \
+            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+            	are useful tools.'
+            	],
+            	changeCounter: [3]
+
+            },
+            {
+            	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
+            	reside on the property',
+            	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
+            	selection: ['Sounds great!', 'Cool, but I can estimate the usage'],
+            	selected: [false, false],
+            	disabled: true,
+            	changeCounter: [1,2]
+            },
+            {	
+            	line: 'Please enter the number of people who were living on the property for each \
+            	of the indicated months',
+            	input: ['January 2015', 
+            		'May 2015', 
+            		'June 2015', 
+            		'July 2015', 
+            		'August 2015',
+            		'September 2015',  
+            		'October 2015', 
+            		'November 2015'
+            	],
+            	popover: ['If a person was only living there for 1/2 the month, add them as 0.5',
+            	'We know they are a full person',
+            	'but we will multiply the estimated water use per person per month by 0.5',
+            	'The estimates were calculated from measured water use in part of Sonoma County',
+            	'You can find more information about the method '+<a href="#">+'here' +<\/a>,
+            	'Thanks',
+            	'Hope that wasn\'t so bad',
+            	'Learn how much water you use each month!'
+            	],
+            	changeCounter: [2]
             }
         ],
 		counter: 0,

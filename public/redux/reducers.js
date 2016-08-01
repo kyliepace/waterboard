@@ -25,6 +25,8 @@ var infoOrderReducer= function(state, action) {
     /////////// SUBMIT ANSWER ////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
         var counter = state.counter;
+        //check to see if counter>questions.length and if so, send answers to server
+
         var question = state.questions[counter]; //which question?
         console.log('answer index is '+question.answerIndex);
         //push answer to state.answers
