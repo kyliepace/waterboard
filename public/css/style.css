@@ -44,50 +44,61 @@ section {
 .glyphicon {
   font-size: 2rem;
 }
-.questionView {
+form {
   border: 2px solid white;
+  max-width: 800px;
+  margin: 8rem auto 1rem auto;
   padding: 5rem 0px 10px;
 }
-.questionView .input {
+form .input {
   width: 60%;
   text-align: center;
   padding: 5px;
 }
-.questionView .flex {
+form .flex {
   display: flex;
   align-items: flex-end;
   justify-content: center;
 }
-.questionView .selector {
+form h2,
+form h3 {
+  text-align: center;
+  margin: 5px auto;
+}
+form .selector {
   text-align: center;
 }
-.questionView .selector .options {
+form .selector .options {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
-.questionView .selector .options .option {
+form .selector .options span {
+  font-size: 3rem;
+}
+form .selector .options .option {
   border: 2px solid white;
-  width: 200px;
+  width: 90%;
+  height: 150px;
+  padding: 2rem;
+  margin: 2rem;
+  text-align: center;
+  color: white;
+}
+form .selector .options .option:hover,
+form .selector .options .option:active {
+  box-shadow: 1px 0px 20px white;
+}
+form .selector .options .selected {
+  box-shadow: 1px 0px 20px white;
+  border: 2px solid white;
+  width: 90%;
   height: 150px;
   padding: 2rem;
   margin: 2rem;
   text-align: center;
 }
-.questionView .selector .options .option:hover,
-.questionView .selector .options .option:active {
-  box-shadow: 1px 0px 20px white;
-}
-.questionView .selector .options .selected {
-  box-shadow: 1px 0px 20px white;
-  border: 2px solid white;
-  width: 200px;
-  height: 150px;
-  padding: 2rem;
-  margin: 2rem;
-  text-align: center;
-}
-.questionView .selector .options .selected:hover,
-.questionView .selector .options .selected:active {
+form .selector .options .selected:hover,
+form .selector .options .selected:active {
   box-shadow: none;
 }
 .popover {

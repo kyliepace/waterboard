@@ -5,6 +5,7 @@ var Question = require('./question.jsx');
 var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
+var Confirm = require('./confirm.jsx');
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -15,9 +16,12 @@ var InfoOrder = React.createClass({
 			disabled: false
 		};
 	},
+	componentWillMount: function(){
+		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+	},
 	handleClick: function(e){
-		console.log(e);
-		this.props.dispatch(actions.chooseOption(e, 'infoOrder')); //send the glyphicon's html and key value to the action
+		console.log('click'+ e.target.value);
+		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
 		this.props.dispatch(actions.changeInput(e));
@@ -25,37 +29,49 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
-		this.props.dispatch(actions.submitAnswer('infoOrder'));
+		this.props.dispatch(actions.submitAnswer());
 	},
 	prevQuestion: function(){
 		//dispatch an action that will reduce the counter by the amount that was just added to it
+		this.props.dispatch(actions.prevQuestion());
+	},
+	sendData: function(){
+
+	},
+	addSource: function(){
+
+	},
+	saveForm: function(){
+
 	},
 	render: function(props){
 		var that = this;
-		console.log(that.props.infoOrder); //becomes undefined when I try to render the 3rd question
+		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.infoOrder.counter;
 		var singleQuestion = questions[index];
-		console.log(questions);
-		console.log(questions[index]);
+		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-		var showQuestions = (
-			<Question question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
-		);
-		
-
+		if(index>1000){
+			var show = (
+				<h4>Saving...</h4>
+			);
+		}
+		else if(index>100){
+			var show = (
+				<Confirm sendData={that.sendData} addSource={that.addSource} saveForm={that.saveForm} onClick={that.prevQuestion}/>
+			);
+		}
+		else{
+			var show = (
+				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
+    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+			);
+		}
 		return(
-		    <section>
-	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-	    			<form className='questionView' onSubmit = {that.onSubmit}>
-		    			{showQuestions}
-		    			<div className='flex'>
-		    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-	    					<Button className='button' disabled={singleQuestion.disabled} type='button' onClick={that.onSubmit}><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-		    			</div>
-	    			</form>
-	    		</Col>
-
+		    <section className='container'>
+		    	{show}
+    			
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>
 		    	</Col>
@@ -66,7 +82,7 @@ var InfoOrder = React.createClass({
 
 var mapStateToProps = function(state, props) {
     return {
-        infoOrder: state.infoOrder.infoOrder
+        infoOrder: state.infoOrder
     };
 };
 

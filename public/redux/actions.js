@@ -1,35 +1,77 @@
-var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-var submitAnswer = function(set) {
-	console.log('action: submitAnswer');
+var ON_LOAD= 'ON_LOAD';
+var onLoad = function(e) {
+	console.log('action: onLoad');
     return {
-        type: SUBMIT_ANSWER,
-        questionSet: set
+        type: ON_LOAD
     }
 };
-exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
-exports.submitAnswer = submitAnswer;
+exports.ON_LOAD = ON_LOAD;
+exports.onLoad = onLoad;
 
-//if question.dropdown or question.selection, then choose option instead of changing input
+var LOG_IN_SUCCESS= 'LOG_IN_SUCCESS';
+var logInSuccess = function(e) {
+	console.log('action: logInSuccess');
+    return {
+        type: LOG_IN_SUCCESS
+    }
+};
+exports.LOG_IN_SUCCESS = LOG_IN_SUCCESS;
+exports.logInSuccess = logInSuccess;
+
+
+//////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
-var chooseOption = function(e, set){
+var chooseOption = function(e){
+	console.log('choose option ');
+	console.log(e.target.value);
+	console.log(e.target.id);
+	if(e.target.value){
+		console.log('dropdown selected ' + e.target.value);
+		var index = e.target.value;
+	}
+	else{
+		var index = e.target.id;
+	}
 	return{
 		type: CHOOSE_OPTION,
-		questionSet: set,
-		answer: e.target.id //which option of the selection array
+		answerIndex: index //which option of the selection array
 	}
 }
 exports.CHOOSE_OPTION = CHOOSE_OPTION;
 exports.chooseOption = chooseOption;
 
-//if question.input, then update the state when form is changed
+//////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
-var changeInput = function(e, set){
+var changeInput = function(e){
 	console.log(e.target.id);
 	return{
 		type: CHANGE_INPUT, 
-		questionSet: set,
+		index: e.target.id,
 		answer: e.target.value
 	}
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;
 exports.changeInput = changeInput;
+
+
+////// when previous arrow is clicked ///////////////
+var PREV_QUESTION= 'PREV_QUESTION';
+var prevQuestion = function() {
+	console.log('action: previous question');
+    return {
+        type: PREV_QUESTION
+    }
+};
+exports.PREV_QUESTION = PREV_QUESTION;
+exports.prevQuestion = prevQuestion;
+
+////// when next arrow is clicked ///////////////
+var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
+var submitAnswer = function() {
+	console.log('action: submitAnswer');
+    return {
+        type: SUBMIT_ANSWER
+    }
+};
+exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
+exports.submitAnswer = submitAnswer;

@@ -1,6 +1,5 @@
 var React = require('react');
 var Col = require('react-bootstrap').Col;
-var Selection = require('./selection.jsx');
 var Button = require('react-bootstrap').Button;
 
 var InfoOrderFaq = function(props){
