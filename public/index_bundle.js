@@ -66,7 +66,7 @@
 	var InfoOrder = __webpack_require__(487);
 	var WaterRights = __webpack_require__(489);
 	var WaterRightsFaq = __webpack_require__(490);
-	var InfoOrderFaq = __webpack_require__(492);
+	var InfoOrderFaq = __webpack_require__(491);
 
 	var routes = React.createElement(
 					Provider,
@@ -28528,26 +28528,25 @@
 
 	var infoOrderReducer= function(state, action) {
 	    state = state || infoOrder;
-	    for (var i=0; i<state.questions.length; i++){
-	        state.answers.concat({}); //add an empty object to the answers array for every question
-	    }
+	   
 	    /////////// SUBMIT ANSWER ////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
 	        console.log('answer index is '+question.answerIndex);
-	        //push answer to state.answers
-	        // if(question.value){
-	        //     var answer = question.value;
-	        // }
+	        //check to see if counter>questions.length and if so, send answers to server
+
+	        //save answer string to state
 	        if(question.selection){
 	            var answer = question.selection[question.answerIndex];
 	        }
 	        else if(question.dropdown){
 	            var answer = question.dropdown[question.answerIndex];
 	        }
-	        var newAnswers = state.answers.slice(0,counter).concat({answer}, state.answers.slice(counter+1));
-
+	        //update the state.answers array
+	        var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: answer}); //update the question object within the water source answers object within the answers object
+	        var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
+	        console.log(newAnswersForState);
 	       //increase infoOrder.counter ++
 	        var changeCounterBy = function(){
 	            if(question.changeCounter.length>1){
@@ -28557,12 +28556,10 @@
 	                return question.changeCounter[0];
 	            }   
 	        }
-	        console.log(question.changeCounter);
-	        console.log(changeCounterBy());
+	        console.log('the quiz will advance by'+ changeCounterBy());
 	        counter += changeCounterBy();
-	        console.log(counter);
-
-	        return Object.assign({}, state, {counter: counter, answers: newAnswers}); //update state with new counter
+	       
+	        return Object.assign({}, state, {counter: counter, answers: newAnswersForState}); //update state with new counter
 	      
 	    }
 	//////////// CHANGE INPUT /////////////////////////////////////////////////
@@ -28579,17 +28576,26 @@
 	             //change the answer value
 	            var answerIndex = action.answerIndex;
 	            console.log('answer:'+ answerIndex);
-	            //updated the selected array
-	            var selected = question.selected.slice(0,answerIndex).concat(true, question.selected.slice(answerIndex+1));
-	            console.log(selected);
+	            //updated the selected array so that the button has selected=true
+	            
+	            var newArray = [];
+	            question.selected.forEach(function(isTrue){
+	                if (question.selected.indexOf(isTrue) === answerIndex){
+	                    newArray.push(true); //only the index aligning with the answer index becomes true
+	                }
+	                else{
+	                    newArray.push(false);
+	                }
+	            });
+	            console.log(newArray);
 	        }
 	        else{ //if a dropdown question
 	            var selected = []
 	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
 	        }
 	        //update the question with new answer index and un-disable next arrow
-	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: selected, disabled: false});
-	        //create new array of questions
+	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+	        //create new question array
 	        var before = state.questions.slice(0, counter);
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = before.concat(newQuestion, after); 
@@ -28730,15 +28736,15 @@
 	                line: 'You reported that this property is served by groundwater. \
 	                Please describe the details of your well',
 	                input: [
-	                	'Please find the <a href="#"> coordinates </a> of the well\'s location',
+	                	'Please find the coordinates of the well\'s location',
 	                	'In what year was the well dug?',
 	                	'How many feet deep is the well?',
 	                	'Who owned the property when the well was dug?'
 	                ], 
 	                popover: ['Please provide as much of the following information as you know',
-		                'Follow the link to use the mapping tool',
+		                'We have created a mapping tool for you to use',
 		                'Enter the approximate year of construction',
-		                'Enter the approximate depth, in feet, of your well',
+		                'Enter the approximate depth, in feet, of your well'
 	                ],
 	                changeCounter: [8]
 	           },
@@ -28826,23 +28832,88 @@
 	                changeCounter: [200, -100, 200]
 	            },
 	            {	
-	            	line: 'We\'re almost done! Let\s figure out your water use',
-	            	input: ['number of people each month']
-	            },
-	            {	
 	            	line: 'How is water from this source used on the property?',
 	            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
-	            	answer: null,
 	            	mult: true,
+	            	disabled: true,
 	            	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
 	            		Agricultural use applies if you sell any food products raised on your property',
-	            	changeCounter: [1]
+	            	changeCounter: [2, 1, 1, 1, 1]
+	            },
+	            {	
+	            	line: 'We\'re almost done! Let\s figure out your water use',
+	            	input: ['total use January 2015 (gallons)', 
+	            		'total use May 2015 (gallons)', 
+	            		'total use June 2015 (gallons)', 
+	            		'total use July 2015 (gallons)', 
+	            		'total use August 2015 (gallons)',
+	            		'total use September 2015 (gallons)',  
+	            		'total use October 2015 (gallons)', 
+	            		'total use November 2015 (gallons)', 
+	            	],
+	            	popover: ['Tally the number of gallons of water used from this water source in January of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in May of 2015.',
+	            	'Tally the number of gallons of water used from this water source in June of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in July of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in August of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in September of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in October of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water used from this water source in November of 2015. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.'
+	            	],
+	            	changeCounter: [3]
+
+	            },
+	            {
+	            	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
+	            	reside on the property',
+	            	disabled: true,
+	            	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
+	            	selection: ['Sounds great!', 'Cool, but I can estimate the usage'],
+	            	selected: [false, false],
+	            	changeCounter: [1,2]
+	            },
+	            {	
+	            	line: 'Please enter the number of people who were living on the property for each \
+	            	of the indicated months',
+	            	disabled: true,
+	            	input: ['January 2015', 
+	            		'May 2015', 
+	            		'June 2015', 
+	            		'July 2015', 
+	            		'August 2015',
+	            		'September 2015',  
+	            		'October 2015', 
+	            		'November 2015'
+	            	],
+	            	popover: ['If a person was only living there for 1/2 the month, add them as 0.5',
+	            	'We know they are a full person',
+	            	'but we will multiply the estimated water use per person per month by 0.5',
+	            	'The estimates were calculated from measured water use in part of Sonoma County',
+	            	'If you think you use less water but you don\'t know exactly how much, now\'s a good time to get your calculator out.',
+	            	'Thanks',
+	            	'Hope that wasn\'t so bad',
+	            	'Learn how much water you use each month!'
+	            	],
+	            	changeCounter: [2]
 	            }
 	        ],
-			counter: 0,
-			answers:[
-
-			]
+			counter: 0, //count the question index
+			sourceCounter: 0, //count which water source being answered for
+			answers:{0:{}, 1:{},2:{},3:{},4:{},5:{}}
 	};
 
 	module.exports = infoOrderState;
@@ -46101,27 +46172,23 @@
 
 			return React.createElement(
 				'section',
-				null,
+				{ className: 'container' },
 				React.createElement(
-					Col,
-					{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
+					'form',
+					{ onSubmit: that.onSubmit },
+					showQuestions,
 					React.createElement(
-						'form',
-						{ className: 'questionView', onSubmit: that.onSubmit },
-						showQuestions,
+						'div',
+						{ className: 'flex' },
 						React.createElement(
-							'div',
-							{ className: 'flex' },
-							React.createElement(
-								Button,
-								{ className: 'button', onClick: that.prevQuestion, type: 'button' },
-								React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-							),
-							React.createElement(
-								Button,
-								{ className: 'button', disabled: singleQuestion.disabled, type: 'submit' },
-								React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-							)
+							Button,
+							{ className: 'button', onClick: that.prevQuestion, type: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
+						),
+						React.createElement(
+							Button,
+							{ className: 'button', disabled: singleQuestion.disabled, type: 'submit' },
+							React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 						)
 					)
 				),
@@ -46175,7 +46242,11 @@
 				dropdown.push(React.createElement(
 					'option',
 					{ value: props.question.dropdown[j], id: j },
-					props.question.dropdown[j]
+					React.createElement(
+						'h3',
+						null,
+						props.question.dropdown[j]
+					)
 				));
 			}
 			var options = React.createElement(
@@ -46233,7 +46304,7 @@
 				FormGroup,
 				{ className: props.question.input ? "" : "hidden" },
 				React.createElement(
-					'h4',
+					'h3',
 					null,
 					props.question.line
 				),
@@ -46246,7 +46317,7 @@
 					ButtonToolbar,
 					{ className: 'flex' },
 					React.createElement(
-						'h4',
+						'h3',
 						null,
 						props.question.line
 					),
@@ -46255,7 +46326,7 @@
 						{ trigger: 'click', placement: 'top', overlay: React.createElement(
 								Popover,
 								{ id: 'popover-trigger-click' },
-								props.popover
+								props.question.popover
 							) },
 						React.createElement(
 							Button,
@@ -46324,7 +46395,6 @@
 
 	var React = __webpack_require__(2);
 	var Col = __webpack_require__(270).Col;
-	var Selection = __webpack_require__(491);
 	var Button = __webpack_require__(270).Button;
 
 	var WaterRightsFaq = function (props) {
@@ -46356,51 +46426,6 @@
 
 	var React = __webpack_require__(2);
 	var Col = __webpack_require__(270).Col;
-	var Row = __webpack_require__(270).Row;
-
-	var Selection = function (props) {
-		return React.createElement(
-			'div',
-			{ className: 'question' },
-			React.createElement(
-				'h4',
-				null,
-				props.line
-			),
-			React.createElement(
-				Row,
-				{ className: 'options' },
-				React.createElement(
-					'div',
-					{ className: 'option' },
-					React.createElement(
-						'h5',
-						null,
-						props.option1
-					)
-				),
-				React.createElement(
-					'div',
-					{ className: 'option' },
-					React.createElement(
-						'h5',
-						null,
-						props.option2
-					)
-				)
-			)
-		);
-	};
-
-	module.exports = Selection;
-
-/***/ },
-/* 492 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(2);
-	var Col = __webpack_require__(270).Col;
-	var Selection = __webpack_require__(491);
 	var Button = __webpack_require__(270).Button;
 
 	var InfoOrderFaq = function (props) {

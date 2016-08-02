@@ -45,16 +45,16 @@ var InfoOrder = React.createClass({
 		
 
 		return(
-		    <section>
-	    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-	    			<form className='questionView' onSubmit = {that.onSubmit}>
-		    			{showQuestions}
-		    			<div className='flex'>
-		    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-	    					<Button className='button' disabled={singleQuestion.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-		    			</div>
-	    			</form>
-	    		</Col>
+		    <section className='container'>
+	    		
+    			<form onSubmit = {that.onSubmit}>
+	    			{showQuestions}
+	    			<div className='flex'>
+	    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
+    					<Button className='button' disabled={singleQuestion.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+	    			</div>
+    			</form>
+	    
 
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>

@@ -41,15 +41,15 @@ var infoOrderState = {
                 line: 'You reported that this property is served by groundwater. \
                 Please describe the details of your well',
                 input: [
-                	'Please find the'+ <a href="#"> +'coordinates '+ <\/a> +'of the well\'s location',
+                	'Please find the coordinates of the well\'s location',
                 	'In what year was the well dug?',
                 	'How many feet deep is the well?',
                 	'Who owned the property when the well was dug?'
                 ], 
                 popover: ['Please provide as much of the following information as you know',
-	                'Follow the link to use the mapping tool',
+	                'We have created a mapping tool for you to use',
 	                'Enter the approximate year of construction',
-	                'Enter the approximate depth, in feet, of your well',
+	                'Enter the approximate depth, in feet, of your well'
                 ],
                 changeCounter: [8]
            },
@@ -185,15 +185,16 @@ var infoOrderState = {
             {
             	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
             	reside on the property',
+            	disabled: true,
             	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
             	selection: ['Sounds great!', 'Cool, but I can estimate the usage'],
             	selected: [false, false],
-            	disabled: true,
             	changeCounter: [1,2]
             },
             {	
             	line: 'Please enter the number of people who were living on the property for each \
             	of the indicated months',
+            	disabled: true,
             	input: ['January 2015', 
             		'May 2015', 
             		'June 2015', 
@@ -207,7 +208,7 @@ var infoOrderState = {
             	'We know they are a full person',
             	'but we will multiply the estimated water use per person per month by 0.5',
             	'The estimates were calculated from measured water use in part of Sonoma County',
-            	'You can find more information about the method '+<a href="#">+'here' +<\/a>,
+            	'If you think you use less water but you don\'t know exactly how much, now\'s a good time to get your calculator out.',
             	'Thanks',
             	'Hope that wasn\'t so bad',
             	'Learn how much water you use each month!'
@@ -215,10 +216,9 @@ var infoOrderState = {
             	changeCounter: [2]
             }
         ],
-		counter: 0,
-		answers:[
-
-		]
+		counter: 0, //count the question index
+		sourceCounter: 0, //count which water source being answered for
+		answers:{0:{}, 1:{},2:{},3:{},4:{},5:{}}
 };
 
 module.exports = infoOrderState;

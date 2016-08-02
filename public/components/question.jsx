@@ -15,7 +15,7 @@ var Question = function(props){
 		var dropdown = [<option selected disabled>Select One</option>];
 		for (var j=0; j<props.question.dropdown.length; j++){
 			dropdown.push(
-				<option value ={props.question.dropdown[j]} id={j}>{props.question.dropdown[j]}</option>
+				<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
 			)
 		}
 		var options = (
@@ -55,14 +55,14 @@ var Question = function(props){
 	return(
 	<div>
 		<FormGroup className={props.question.input ? "":"hidden"}> 
-			<h4>{props.question.line}</h4>
+			<h3>{props.question.line}</h3>
 			{inputs}
 		</FormGroup>
 
 		<FormGroup className={props.question.input ? 'hidden': 'selector'}>
 			<ButtonToolbar className='flex'>
-				<h4>{props.question.line}</h4>
-				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.popover}</Popover>}>
+				<h3>{props.question.line}</h3>
+				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover}</Popover>}>
 					<Button className='button'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 				</OverlayTrigger>
 			</ButtonToolbar>
