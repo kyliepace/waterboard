@@ -60,6 +60,7 @@ form .flex {
   align-items: flex-end;
   justify-content: center;
 }
+form h2,
 form h3 {
   text-align: center;
   margin: 5px auto;
@@ -69,15 +70,19 @@ form .selector {
 }
 form .selector .options {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+}
+form .selector .options span {
+  font-size: 3rem;
 }
 form .selector .options .option {
   border: 2px solid white;
-  width: 200px;
+  width: 90%;
   height: 150px;
   padding: 2rem;
   margin: 2rem;
   text-align: center;
+  color: white;
 }
 form .selector .options .option:hover,
 form .selector .options .option:active {
@@ -86,7 +91,7 @@ form .selector .options .option:active {
 form .selector .options .selected {
   box-shadow: 1px 0px 20px white;
   border: 2px solid white;
-  width: 200px;
+  width: 90%;
   height: 150px;
   padding: 2rem;
   margin: 2rem;

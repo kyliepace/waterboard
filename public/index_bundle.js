@@ -64,9 +64,9 @@
 	var Main = __webpack_require__(268);
 	var Menu = __webpack_require__(486);
 	var InfoOrder = __webpack_require__(487);
-	var WaterRights = __webpack_require__(489);
-	var WaterRightsFaq = __webpack_require__(490);
-	var InfoOrderFaq = __webpack_require__(491);
+	var WaterRights = __webpack_require__(490);
+	var WaterRightsFaq = __webpack_require__(491);
+	var InfoOrderFaq = __webpack_require__(492);
 
 	var routes = React.createElement(
 					Provider,
@@ -28598,11 +28598,12 @@
 	//////////////// PREVIOUS QUESTION //////////////////////////////////////
 	    if(action.type === actions.PREV_QUESTION){
 	        var counter = state.counter;
-	        var reduceCounter = state.prevQuestion[counter]; //see what value was added to the counter in the last submit
+	        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
 	        console.log('the form will go back by '+ reduceCounter);
 	        counter -= reduceCounter;
+	        clicks --;
 	   
-	    var newState = Object.assign({}, state, {counter: counter}); //update state with new counter 
+	    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
 	    return newState;
 	    }
 	    
@@ -28645,8 +28646,9 @@
 	        console.log('the quiz will advance by'+ changeCounterBy());
 	        var increaseBy = changeCounterBy();
 	        counter +=  increaseBy; //increase the counter by the chosen value
+	        var clicks = state.clicks ++;
 	        var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
-	        var newState = Object.assign({}, state, {counter: counter, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
+	        var newState = Object.assign({}, state, {counter: counter, clicks: clicks, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
 	        console.log('new state'); console.log(newState);
 	        return newState;
 	    }
@@ -28992,12 +28994,21 @@
 	            	'Hope that wasn\'t so bad',
 	            	'Learn how much water you use each month!'
 	            	],
-	            	changeCounter: [90]
+	            	changeCounter: [1]
+	            },
+	            {	number: 17,
+	            	line: 'I confirm that the information I\'ve entered is true to the best of my knowledge',
+	            	disabled: true,
+	            	selection: ['Yes', 'Let me save the form and get back to it later'],
+	            	selected: [false, false],
+	            	popover: ['If you save the form, be sure to log back in soon.'],
+	            	changeCounter: [100, 1000]
 	            }
 	        ],
 			counter: 0, //count the question index
-			sourceCounter: 0, //count which water source being answered for
 			prevQuestion: [0],
+			clicks: 0,
+			sourceCounter: 0, //count which water source being answered for
 			answers:{ 
 				0:{
 					0: []
@@ -46221,6 +46232,7 @@
 	var Button = __webpack_require__(270).Button;
 	var connect = __webpack_require__(173).connect;
 	var actions = __webpack_require__(266);
+	var Confirm = __webpack_require__(489);
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -46252,6 +46264,9 @@
 			//dispatch an action that will reduce the counter by the amount that was just added to it
 			this.props.dispatch(actions.prevQuestion());
 		},
+		sendData: function () {},
+		addSource: function () {},
+		saveForm: function () {},
 		render: function (props) {
 			var that = this;
 			console.log(that.props.infoOrder);
@@ -46260,12 +46275,14 @@
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-			if (index > 100) {
+			if (index > 1000) {
 				var show = React.createElement(
 					'h4',
 					null,
-					'Confirmation page'
+					'Saving...'
 				);
+			} else if (index > 100) {
+				var show = React.createElement(Confirm, { sendData: that.sendData, addSource: that.addSource, saveForm: that.saveForm, onClick: that.prevQuestion });
 			} else {
 				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, disabled: singleQuestion.disabled,
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
@@ -46448,6 +46465,98 @@
 
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
+	var FormGroup = __webpack_require__(270).FormGroup;
+	var ControlLabel = __webpack_require__(270).ControlLabel;
+	var FormControl = __webpack_require__(270).FormControl;
+	var Overlay = __webpack_require__(270).Overlay;
+	var OverlayTrigger = __webpack_require__(270).OverlayTrigger;
+	var Popover = __webpack_require__(270).Popover;
+	var Button = __webpack_require__(270).Button;
+	var ButtonToolbar = __webpack_require__(270).ButtonToolbar;
+
+	var Confirm = function (props) {
+		return React.createElement(
+			'form',
+			{ onSubmit: props.sendData },
+			React.createElement(
+				FormGroup,
+				{ className: 'selector' },
+				React.createElement(
+					ButtonToolbar,
+					{ className: 'flex' },
+					React.createElement(
+						'h2',
+						null,
+						'Congrats, you\'ve completed the form for this water source!'
+					),
+					React.createElement(
+						OverlayTrigger,
+						{ trigger: 'click', placement: 'top', overlay: React.createElement(
+								Popover,
+								{ id: 'popover-trigger-click' },
+								'If you have multiple sources of water on this parcel, you have not completed your response to the Info Order. If you were contacted regarding multiple properties, please complete this parcel and sign in with the next parcel\'s identification code (APN)'
+							) },
+						React.createElement(
+							Button,
+							{ className: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						)
+					)
+				),
+				React.createElement(
+					Row,
+					{ className: 'options' },
+					React.createElement(
+						Button,
+						{ className: 'option', type: 'button', id: 0, onClick: props.addSource },
+						React.createElement(
+							'span',
+							{ id: 0, onClick: props.addSource },
+							'I have more sources to report'
+						)
+					),
+					React.createElement(
+						Button,
+						{ className: 'option', type: 'button', id: 1, onClick: props.saveForm },
+						React.createElement(
+							'span',
+							{ id: 1, onClick: props.saveForm },
+							'I\'m unsure of some details.',
+							React.createElement('br', null),
+							' Save the form but don\'t submit it yet.'
+						)
+					),
+					React.createElement(
+						Button,
+						{ className: 'option', type: 'button', id: 1, onClick: props.submitForm },
+						React.createElement(
+							'span',
+							{ id: 2, onClick: props.submitForm },
+							'Submit the form.'
+						)
+					)
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'flex' },
+				React.createElement(
+					Button,
+					{ className: 'button', onClick: props.onClick, type: 'button' },
+					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
+				)
+			)
+		);
+	};
+
+	module.exports = Confirm;
+
+/***/ },
+/* 490 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
 	var Question = __webpack_require__(488);
 	var Button = __webpack_require__(270).Button;
@@ -46486,7 +46595,7 @@
 	module.exports = WaterRights;
 
 /***/ },
-/* 490 */
+/* 491 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -46517,7 +46626,7 @@
 	module.exports = WaterRightsFaq;
 
 /***/ },
-/* 491 */
+/* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);

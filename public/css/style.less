@@ -14,6 +14,11 @@
 }
 .button{
 	border: 0px;
+	color: white;
+	font-size: 3rem;
+	&:hover{
+		color: silver;
+	}
 }
 
 header{
@@ -44,9 +49,7 @@ section{
 		padding: 5rem 6rem;
 	}
 }
-.glyphicon{
-		font-size: 2rem;
-}
+
 form{
 	border: @border;
 	max-width: 800px;
@@ -59,25 +62,29 @@ form{
 	}
 	.flex{
 		display: flex;
-  		align-items: flex-end;
+  		align-items: flex-start;
   		justify-content: center;
 	}
-	h3{
+	h2,h3{
 		text-align: center;
-		margin: 5px auto;
+		margin: 5px 5px;
 	}
 	.selector{
 		text-align: center;
 		.options{
 			display: flex;
-			justify-content: space-around;
+			justify-content: center;
+			span{
+				font-size: 3rem;
+			}
 			.option{
 				border: @border;
-				width: 200px;
+				width: 90%;
 				height: 150px;
 				padding: 2rem;
 				margin: 2rem;
 				text-align: center;
+				color: lightgrey;
 				&:hover, &:active{
 					box-shadow: @shadow;
 				}
@@ -85,7 +92,7 @@ form{
 			.selected{
 				box-shadow: @shadow;
 				border: @border;
-				width: 200px;
+				width: 90%;
 				height: 150px;
 				padding: 2rem;
 				margin: 2rem;

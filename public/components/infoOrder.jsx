@@ -5,6 +5,7 @@ var Question = require('./question.jsx');
 var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
+var Confirm = require('./confirm.jsx');
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){

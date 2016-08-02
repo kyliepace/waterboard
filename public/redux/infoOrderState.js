@@ -221,14 +221,14 @@ var infoOrderState = {
             	disabled: true,
             	selection: ['Yes', 'Let me save the form and get back to it later'],
             	selected: [false, false],
-            	popover: ['If you save the form, be sure to log back in soon.']
-            	],
+            	popover: ['If you save the form, be sure to log back in soon.'],
             	changeCounter: [100, 1000]
             }
         ],
 		counter: 0, //count the question index
-		sourceCounter: 0, //count which water source being answered for
 		prevQuestion: [0],
+		clicks: 0,
+		sourceCounter: 0, //count which water source being answered for
 		answers:{ 
 			0:{
 				0: []

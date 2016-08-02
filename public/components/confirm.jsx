@@ -14,7 +14,7 @@ var Confirm = function(props){
 	<form onSubmit={props.sendData}>
 		<FormGroup className={'selector'}>
 			<ButtonToolbar className='flex'>
-				<h3>Congrats, you've completed the form for this water source!</h3>
+				<h2>Congrats, you've completed the form for this water source!</h2>
 				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>If you have multiple sources of water on this parcel, you have not completed your response to the Info Order.
 					If you were contacted regarding multiple properties, please complete this parcel and sign in with the next parcel's identification code (APN)</Popover>}>
 					<Button className='button'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
@@ -22,13 +22,13 @@ var Confirm = function(props){
 			</ButtonToolbar>
 			<Row className='options'>
 				<Button className={'option'} type='button' id={0} onClick={props.addSource}>
-					<h3 id={0} onClick={props.addSource}>I have more sources to report</h3>
+					<span id={0} onClick={props.addSource}>I have more sources to report</span>
 				</Button>
 				<Button className={'option'} type='button' id={1} onClick={props.saveForm}>
-					<h3 id={1} onClick={props.saveForm}>I'm unsure of some details. Save the form but don't submit it yet.</h3>
+					<span id={1} onClick={props.saveForm}>{'I\'m unsure of some details.'}<br/>{' Save the form but don\'t submit it yet.'}</span>
 				</Button>
 				<Button className={'option'} type='button' id={1} onClick={props.submitForm}>
-					<h3 id={2} onClick={props.submitForm}>All the details are true to the best of my knowledge. Submit the form.</h3>
+					<span id={2} onClick={props.submitForm}>Submit the form.</span>
 				</Button>
 			</Row>
 		</FormGroup>

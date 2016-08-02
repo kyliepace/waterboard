@@ -89,11 +89,12 @@ var infoOrderReducer= function(state, action) {
 //////////////// PREVIOUS QUESTION //////////////////////////////////////
     if(action.type === actions.PREV_QUESTION){
         var counter = state.counter;
-        var reduceCounter = state.prevQuestion[counter]; //see what value was added to the counter in the last submit
+        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
         console.log('the form will go back by '+ reduceCounter);
         counter -= reduceCounter;
+        clicks --;
    
-    var newState = Object.assign({}, state, {counter: counter}); //update state with new counter 
+    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
     return newState;
     }
     
@@ -136,8 +137,9 @@ var infoOrderReducer= function(state, action) {
         console.log('the quiz will advance by'+ changeCounterBy());
         var increaseBy = changeCounterBy();
         counter +=  increaseBy; //increase the counter by the chosen value
+        var clicks = state.clicks ++;
         var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
-        var newState = Object.assign({}, state, {counter: counter, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
+        var newState = Object.assign({}, state, {counter: counter, clicks: clicks, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
         console.log('new state'); console.log(newState);
         return newState;
     }
