@@ -28520,15 +28520,17 @@
 	var infoOrderReducer= function(state, action) {
 	    state = state || infoOrder;
 	    //////////////// LOG IN ////////////////////////////////////////
-	    if(action.type === actions.LOG_IN_SUCCESS){
-	        console.log('reducer: log in success');
+	    if(action.type === actions.ON_LOAD){
+	        console.log('reducer: on load');
 	        //set up first answer object with one array for each question
 	        var answerObject = {}; //this will be the answer object for the first water source
 	        for (var i = 0; i<state.questions.length; i++){
 	            answerObject[i] = []; //assign a new key:value pair to the object for each question
 	        }
 	        var newAnswers = Object.assign({}, state.answers, {0: answerObject});
-	        return Object.assign({}, state, {answers: newAnswers});
+	        var newState =  Object.assign({}, state, {answers: newAnswers});
+	        console.log(newState);
+	        return newState;
 	    }
 
 	    //////////// CHANGE INPUT /////////////////////////////////////////////////
@@ -28537,20 +28539,19 @@
 	        var counter = state.counter;
 	        var sourceCounter = state.sourceCounter;
 	        var question = state.questions[counter];
-	        var index = action.id; //which of the input bars is being changed
-	        //save the input value
-	        var answer = action.answer;
-	        console.log(answer);
+	        var index = action.index; //which of the input bars is being changed
+	        var answer = action.answer; //save the input value
 
 	        //update the answers object
 	        var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
 	            console.log(newAnswer); //incoming value
-	            console.log(state.answers[sourceCounter][counter]); //old answer array
+	            console.log(state.answers[sourceCounter][counter]); //old answer array - why is this still blank?
 	    
 	            console.log('updating water source answers');
 	          
 	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
 	        console.log(newAnswersForSource);
+	        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
 
 	        //turn off the disabled value
 	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
@@ -28559,7 +28560,7 @@
 	        var newQuestions = before.concat(newQuestion, after); 
 	            
 	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForSource}); //if I don't include counter here, it doesn't get copied
+	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
 	        return newState;
 	    }
 
@@ -28594,8 +28595,18 @@
 	        return newState;
 	    }
 
+	//////////////// PREVIOUS QUESTION //////////////////////////////////////
+	    if(action.type === actions.PREV_QUESTION){
+	        var counter = state.counter;
+	        var reduceCounter = state.prevQuestion[counter]; //see what value was added to the counter in the last submit
+	        console.log('the form will go back by '+ reduceCounter);
+	        counter -= reduceCounter;
+	   
+	    var newState = Object.assign({}, state, {counter: counter}); //update state with new counter 
+	    return newState;
+	    }
 	    
-	    /////////// SUBMIT ANSWER ////////////////////
+	////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
@@ -28619,7 +28630,7 @@
 	        }
 	        else{
 	            console.log('submitting an input-type question');
-	            var newAnswerForState = state.answers;
+	            var newAnswersForState = state.answers;
 	        }
 	        
 	       //increase infoOrder.counter ++
@@ -28632,10 +28643,12 @@
 	            }   
 	        }
 	        console.log('the quiz will advance by'+ changeCounterBy());
-	        counter += changeCounterBy();
-	       
-	        return Object.assign({}, state, {counter: counter, answers: newAnswersForState}); //update state with new counter
-	      
+	        var increaseBy = changeCounterBy();
+	        counter +=  increaseBy; //increase the counter by the chosen value
+	        var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
+	        var newState = Object.assign({}, state, {counter: counter, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
+	        console.log('new state'); console.log(newState);
+	        return newState;
 	    }
 	    return state;
 	};
@@ -28680,6 +28693,16 @@
 /* 266 */
 /***/ function(module, exports) {
 
+	var ON_LOAD= 'ON_LOAD';
+	var onLoad = function(e) {
+		console.log('action: onLoad');
+	    return {
+	        type: ON_LOAD
+	    }
+	};
+	exports.ON_LOAD = ON_LOAD;
+	exports.onLoad = onLoad;
+
 	var LOG_IN_SUCCESS= 'LOG_IN_SUCCESS';
 	var logInSuccess = function(e) {
 		console.log('action: logInSuccess');
@@ -28690,17 +28713,8 @@
 	exports.LOG_IN_SUCCESS = LOG_IN_SUCCESS;
 	exports.logInSuccess = logInSuccess;
 
-	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-	var submitAnswer = function() {
-		console.log('action: submitAnswer');
-	    return {
-	        type: SUBMIT_ANSWER
-	    }
-	};
-	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
-	exports.submitAnswer = submitAnswer;
 
-	//if question.dropdown or question.selection, then choose option instead of changing input
+	//////  if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e){
 		console.log('choose option ');
@@ -28721,7 +28735,7 @@
 	exports.CHOOSE_OPTION = CHOOSE_OPTION;
 	exports.chooseOption = chooseOption;
 
-	//if question.input, then update the state when form is changed
+	//////////  if question.input, then update the state when form is changed////////////////////
 	var CHANGE_INPUT = 'CHANGE_INPUT';
 	var changeInput = function(e){
 		console.log(e.target.id);
@@ -28733,6 +28747,29 @@
 	};
 	exports.CHANGE_INPUT = CHANGE_INPUT;
 	exports.changeInput = changeInput;
+
+
+	////// when previous arrow is clicked ///////////////
+	var PREV_QUESTION= 'PREV_QUESTION';
+	var prevQuestion = function() {
+		console.log('action: previous question');
+	    return {
+	        type: PREV_QUESTION
+	    }
+	};
+	exports.PREV_QUESTION = PREV_QUESTION;
+	exports.prevQuestion = prevQuestion;
+
+	////// when next arrow is clicked ///////////////
+	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
+	var submitAnswer = function() {
+		console.log('action: submitAnswer');
+	    return {
+	        type: SUBMIT_ANSWER
+	    }
+	};
+	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
+	exports.submitAnswer = submitAnswer;
 
 
 /***/ },
@@ -28955,15 +28992,16 @@
 	            	'Hope that wasn\'t so bad',
 	            	'Learn how much water you use each month!'
 	            	],
-	            	changeCounter: [2]
+	            	changeCounter: [90]
 	            }
 	        ],
 			counter: 0, //count the question index
 			sourceCounter: 0, //count which water source being answered for
+			prevQuestion: [0],
 			answers:{ 
-				// 0:{ //each object is a water source
-				// 	0: [] //each object is an answer to a question
-				// }, 1:{},2:{},3:{},4:{},5:{}
+				0:{
+					0: []
+				}
 			} 
 	};
 
@@ -46195,15 +46233,14 @@
 				disabled: false
 			};
 		},
+		componentWillMount: function () {
+			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+		},
 		handleClick: function (e) {
 			console.log('click' + e.target.value);
 			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
-			if (this.props.infoOrder.counter < 1) {
-				//if the login page is being submitted
-				this.props.dispatch(actions.logInSuccess()); //dispatch the login reducer
-			}
 			this.props.dispatch(actions.changeInput(e));
 		},
 		onSubmit: function (e) {
@@ -46213,6 +46250,7 @@
 		},
 		prevQuestion: function () {
 			//dispatch an action that will reduce the counter by the amount that was just added to it
+			this.props.dispatch(actions.prevQuestion());
 		},
 		render: function (props) {
 			var that = this;
@@ -46220,31 +46258,22 @@
 			var questions = that.props.infoOrder.questions;
 			var index = that.props.infoOrder.counter;
 			var singleQuestion = questions[index];
+			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-			var showQuestions = React.createElement(Question, { question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
-
+			if (index > 100) {
+				var show = React.createElement(
+					'h4',
+					null,
+					'Confirmation page'
+				);
+			} else {
+				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, disabled: singleQuestion.disabled,
+					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
+			}
 			return React.createElement(
 				'section',
 				{ className: 'container' },
-				React.createElement(
-					'form',
-					{ onSubmit: that.onSubmit },
-					showQuestions,
-					React.createElement(
-						'div',
-						{ className: 'flex' },
-						React.createElement(
-							Button,
-							{ className: 'button', onClick: that.prevQuestion, type: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-						),
-						React.createElement(
-							Button,
-							{ className: 'button', disabled: singleQuestion.disabled, type: 'submit' },
-							React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-						)
-					)
-				),
+				show,
 				React.createElement(
 					Col,
 					{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
@@ -46288,7 +46317,7 @@
 		if (props.question.dropdown) {
 			var dropdown = [React.createElement(
 				'option',
-				{ selected: true, disabled: true },
+				{ defaultValue: true, disabled: true },
 				'Select One'
 			)];
 			for (var j = 0; j < props.question.dropdown.length; j++) {
@@ -46331,7 +46360,7 @@
 				inputs.push(React.createElement(
 					ButtonToolbar,
 					{ className: 'flex' },
-					React.createElement(FormControl, { placeholder: props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
+					React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
 					React.createElement(
 						OverlayTrigger,
 						{ trigger: 'click', placement: 'top', overlay: React.createElement(
@@ -46351,8 +46380,8 @@
 		}
 
 		return React.createElement(
-			'div',
-			null,
+			'form',
+			{ onSubmit: props.onSubmit },
 			React.createElement(
 				FormGroup,
 				{ className: props.question.input ? "" : "hidden" },
@@ -46392,6 +46421,20 @@
 					Row,
 					{ className: 'options' },
 					options
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'flex' },
+				React.createElement(
+					Button,
+					{ className: 'button', onClick: props.onClick, type: 'button' },
+					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
+				),
+				React.createElement(
+					Button,
+					{ className: 'button', disabled: props.disabled, type: 'submit' },
+					React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 				)
 			)
 		);

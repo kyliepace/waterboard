@@ -12,7 +12,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Question = function(props){
 	//if the question should have a dropdown box:
 	if(props.question.dropdown){
-		var dropdown = [<option selected disabled>Select One</option>];
+		var dropdown = [<option defaultValue disabled>Select One</option>];
 		for (var j=0; j<props.question.dropdown.length; j++){
 			dropdown.push(
 				<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
@@ -42,7 +42,7 @@ var Question = function(props){
 		for (var n=0; n<props.question.input.length; n++){
 			inputs.push(
 				<ButtonToolbar className='flex'>
-					<FormControl placeholder={props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
+					<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
 					<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
 						<Button className={'button'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 					</OverlayTrigger>
@@ -53,7 +53,7 @@ var Question = function(props){
 	}
 	
 	return(
-	<div>
+	<form onSubmit={props.onSubmit}>
 		<FormGroup className={props.question.input ? "":"hidden"}> 
 			<h3>{props.question.line}</h3>
 			{inputs}
@@ -70,7 +70,12 @@ var Question = function(props){
 				{options}
 			</Row>
 		</FormGroup>
-	</div>
+
+		<div className='flex'>
+			<Button className='button' onClick={props.onClick} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
+			<Button className='button' disabled={props.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		</div>
+	</form>
 	);		
 };
 

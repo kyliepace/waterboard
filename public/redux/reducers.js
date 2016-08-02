@@ -11,15 +11,17 @@ var initialRepositoryState = {
 var infoOrderReducer= function(state, action) {
     state = state || infoOrder;
     //////////////// LOG IN ////////////////////////////////////////
-    if(action.type === actions.LOG_IN_SUCCESS){
-        console.log('reducer: log in success');
+    if(action.type === actions.ON_LOAD){
+        console.log('reducer: on load');
         //set up first answer object with one array for each question
         var answerObject = {}; //this will be the answer object for the first water source
         for (var i = 0; i<state.questions.length; i++){
             answerObject[i] = []; //assign a new key:value pair to the object for each question
         }
         var newAnswers = Object.assign({}, state.answers, {0: answerObject});
-        return Object.assign({}, state, {answers: newAnswers});
+        var newState =  Object.assign({}, state, {answers: newAnswers});
+        console.log(newState);
+        return newState;
     }
 
     //////////// CHANGE INPUT /////////////////////////////////////////////////
@@ -28,20 +30,19 @@ var infoOrderReducer= function(state, action) {
         var counter = state.counter;
         var sourceCounter = state.sourceCounter;
         var question = state.questions[counter];
-        var index = action.id; //which of the input bars is being changed
-        //save the input value
-        var answer = action.answer;
-        console.log(answer);
+        var index = action.index; //which of the input bars is being changed
+        var answer = action.answer; //save the input value
 
         //update the answers object
         var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
             console.log(newAnswer); //incoming value
-            console.log(state.answers[sourceCounter][counter]); //old answer array
+            console.log(state.answers[sourceCounter][counter]); //old answer array - why is this still blank?
     
             console.log('updating water source answers');
           
         var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
         console.log(newAnswersForSource);
+        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
 
         //turn off the disabled value
         var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
@@ -50,7 +51,7 @@ var infoOrderReducer= function(state, action) {
         var newQuestions = before.concat(newQuestion, after); 
             
         //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForSource}); //if I don't include counter here, it doesn't get copied
+        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
         return newState;
     }
 
@@ -85,8 +86,18 @@ var infoOrderReducer= function(state, action) {
         return newState;
     }
 
+//////////////// PREVIOUS QUESTION //////////////////////////////////////
+    if(action.type === actions.PREV_QUESTION){
+        var counter = state.counter;
+        var reduceCounter = state.prevQuestion[counter]; //see what value was added to the counter in the last submit
+        console.log('the form will go back by '+ reduceCounter);
+        counter -= reduceCounter;
+   
+    var newState = Object.assign({}, state, {counter: counter}); //update state with new counter 
+    return newState;
+    }
     
-    /////////// SUBMIT ANSWER ////////////////////
+////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
@@ -110,7 +121,7 @@ var infoOrderReducer= function(state, action) {
         }
         else{
             console.log('submitting an input-type question');
-            var newAnswerForState = state.answers;
+            var newAnswersForState = state.answers;
         }
         
        //increase infoOrder.counter ++
@@ -123,10 +134,12 @@ var infoOrderReducer= function(state, action) {
             }   
         }
         console.log('the quiz will advance by'+ changeCounterBy());
-        counter += changeCounterBy();
-       
-        return Object.assign({}, state, {counter: counter, answers: newAnswersForState}); //update state with new counter
-      
+        var increaseBy = changeCounterBy();
+        counter +=  increaseBy; //increase the counter by the chosen value
+        var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
+        var newState = Object.assign({}, state, {counter: counter, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
+        console.log('new state'); console.log(newState);
+        return newState;
     }
     return state;
 };

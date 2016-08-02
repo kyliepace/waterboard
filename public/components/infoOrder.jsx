@@ -15,14 +15,14 @@ var InfoOrder = React.createClass({
 			disabled: false
 		};
 	},
+	componentWillMount: function(){
+		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+	},
 	handleClick: function(e){
 		console.log('click'+ e.target.value);
 		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
-		if(this.props.infoOrder.counter<1){ //if the login page is being submitted
-			this.props.dispatch(actions.logInSuccess()); //dispatch the login reducer
-		}
 		this.props.dispatch(actions.changeInput(e));
 	},
 	onSubmit: function(e){
@@ -32,6 +32,16 @@ var InfoOrder = React.createClass({
 	},
 	prevQuestion: function(){
 		//dispatch an action that will reduce the counter by the amount that was just added to it
+		this.props.dispatch(actions.prevQuestion());
+	},
+	sendData: function(){
+
+	},
+	addSource: function(){
+
+	},
+	saveForm: function(){
+
 	},
 	render: function(props){
 		var that = this;
@@ -39,22 +49,28 @@ var InfoOrder = React.createClass({
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.infoOrder.counter;
 		var singleQuestion = questions[index];
+		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-		var showQuestions = (
-			<Question question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
-		);
-		
-
+		if(index>1000){
+			var show = (
+				<h4>Saving...</h4>
+			);
+		}
+		else if(index>100){
+			var show = (
+				<Confirm sendData={that.sendData} addSource={that.addSource} saveForm={that.saveForm} onClick={that.prevQuestion}/>
+			);
+		}
+		else{
+			var show = (
+				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
+    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+			);
+		}
 		return(
 		    <section className='container'>
-    			<form onSubmit = {that.onSubmit}>
-	    			{showQuestions}
-	    			<div className='flex'>
-	    				<Button className='button' onClick = {that.prevQuestion} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-    					<Button className='button' disabled={singleQuestion.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-	    			</div>
-    			</form>
-	   
+		    	{show}
+    			
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>
 		    	</Col>

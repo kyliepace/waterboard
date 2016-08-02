@@ -1,3 +1,13 @@
+var ON_LOAD= 'ON_LOAD';
+var onLoad = function(e) {
+	console.log('action: onLoad');
+    return {
+        type: ON_LOAD
+    }
+};
+exports.ON_LOAD = ON_LOAD;
+exports.onLoad = onLoad;
+
 var LOG_IN_SUCCESS= 'LOG_IN_SUCCESS';
 var logInSuccess = function(e) {
 	console.log('action: logInSuccess');
@@ -8,17 +18,8 @@ var logInSuccess = function(e) {
 exports.LOG_IN_SUCCESS = LOG_IN_SUCCESS;
 exports.logInSuccess = logInSuccess;
 
-var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-var submitAnswer = function() {
-	console.log('action: submitAnswer');
-    return {
-        type: SUBMIT_ANSWER
-    }
-};
-exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
-exports.submitAnswer = submitAnswer;
 
-//if question.dropdown or question.selection, then choose option instead of changing input
+//////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
 var chooseOption = function(e){
 	console.log('choose option ');
@@ -39,7 +40,7 @@ var chooseOption = function(e){
 exports.CHOOSE_OPTION = CHOOSE_OPTION;
 exports.chooseOption = chooseOption;
 
-//if question.input, then update the state when form is changed
+//////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
 var changeInput = function(e){
 	console.log(e.target.id);
@@ -51,3 +52,26 @@ var changeInput = function(e){
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;
 exports.changeInput = changeInput;
+
+
+////// when previous arrow is clicked ///////////////
+var PREV_QUESTION= 'PREV_QUESTION';
+var prevQuestion = function() {
+	console.log('action: previous question');
+    return {
+        type: PREV_QUESTION
+    }
+};
+exports.PREV_QUESTION = PREV_QUESTION;
+exports.prevQuestion = prevQuestion;
+
+////// when next arrow is clicked ///////////////
+var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
+var submitAnswer = function() {
+	console.log('action: submitAnswer');
+    return {
+        type: SUBMIT_ANSWER
+    }
+};
+exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
+exports.submitAnswer = submitAnswer;

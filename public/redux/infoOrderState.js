@@ -214,15 +214,25 @@ var infoOrderState = {
             	'Hope that wasn\'t so bad',
             	'Learn how much water you use each month!'
             	],
-            	changeCounter: [2]
+            	changeCounter: [1]
+            },
+            {	number: 17,
+            	line: 'I confirm that the information I\'ve entered is true to the best of my knowledge',
+            	disabled: true,
+            	selection: ['Yes', 'Let me save the form and get back to it later'],
+            	selected: [false, false],
+            	popover: ['If you save the form, be sure to log back in soon.']
+            	],
+            	changeCounter: [100, 1000]
             }
         ],
 		counter: 0, //count the question index
 		sourceCounter: 0, //count which water source being answered for
+		prevQuestion: [0],
 		answers:{ 
-			// 0:{ //each object is a water source
-			// 	0: [] //each object is an answer to a question
-			// }, 1:{},2:{},3:{},4:{},5:{}
+			0:{
+				0: []
+			}
 		} 
 };
 
