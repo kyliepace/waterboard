@@ -20,6 +20,9 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
+		if(this.props.infoOrder.counter<1){ //if the login page is being submitted
+			this.props.dispatch(actions.logInSuccess()); //dispatch the login reducer
+		}
 		this.props.dispatch(actions.changeInput(e));
 	},
 	onSubmit: function(e){
@@ -32,12 +35,10 @@ var InfoOrder = React.createClass({
 	},
 	render: function(props){
 		var that = this;
-		console.log(that.props.infoOrder); //becomes undefined when I try to render the 3rd question
+		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.infoOrder.counter;
 		var singleQuestion = questions[index];
-		console.log(questions);
-		console.log(questions[index]);
 
 		var showQuestions = (
 			<Question question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
@@ -46,7 +47,6 @@ var InfoOrder = React.createClass({
 
 		return(
 		    <section className='container'>
-	    		
     			<form onSubmit = {that.onSubmit}>
 	    			{showQuestions}
 	    			<div className='flex'>
@@ -54,8 +54,7 @@ var InfoOrder = React.createClass({
     					<Button className='button' disabled={singleQuestion.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 	    			</div>
     			</form>
-	    
-
+	   
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>
 		    	</Col>

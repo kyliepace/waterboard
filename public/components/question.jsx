@@ -31,7 +31,7 @@ var Question = function(props){
 		for (var i=0; i<props.question.selection.length; i++){
 			options.push(
 				<Button className={props.question.selected[i]? "selected":'option'} type='button' id={i} onClick={props.handleClick}>
-					<h3>{props.question.selection[i]}</h3>
+					<h3 id={i} onClick={props.handleClick}>{props.question.selection[i]}</h3>
 				</Button>
 			)
 		}
@@ -42,7 +42,7 @@ var Question = function(props){
 		for (var n=0; n<props.question.input.length; n++){
 			inputs.push(
 				<ButtonToolbar className='flex'>
-					<FormControl placeholder={props.question.input[n]} className='input' type='text' onChange={props.handleChange}/>
+					<FormControl placeholder={props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
 					<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
 						<Button className={'button'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 					</OverlayTrigger>

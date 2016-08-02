@@ -3,41 +3,116 @@ var infoOrder = require('./infoOrderState.js');
 
 var initialRepositoryState = {
     infoOrder: infoOrder,
-    waterRights: {
-        questions: [],
-        counter: 0
-    },
-    infoOrderFaq: {
-        questions: [],
-        counter: 0
-    },
-    waterRightsFaq: {
-        questions: [],
-        counter: 0
-    }
+    waterRights: "",
+    infoOrderFaq: "",
+    waterRightsFaq: ""
 };
 
 var infoOrderReducer= function(state, action) {
     state = state || infoOrder;
-   
+    //////////////// LOG IN ////////////////////////////////////////
+    if(action.type === actions.LOG_IN_SUCCESS){
+        console.log('reducer: log in success');
+        //set up first answer object with one array for each question
+        var answerObject = {}; //this will be the answer object for the first water source
+        for (var i = 0; i<state.questions.length; i++){
+            answerObject[i] = []; //assign a new key:value pair to the object for each question
+        }
+        var newAnswers = Object.assign({}, state.answers, {0: answerObject});
+        return Object.assign({}, state, {answers: newAnswers});
+    }
+
+    //////////// CHANGE INPUT /////////////////////////////////////////////////
+    if (action.type === actions.CHANGE_INPUT){
+        //change the infoOrder.questions[counter].id.value to the e.target.value
+        var counter = state.counter;
+        var sourceCounter = state.sourceCounter;
+        var question = state.questions[counter];
+        var index = action.id; //which of the input bars is being changed
+        //save the input value
+        var answer = action.answer;
+        console.log(answer);
+
+        //update the answers object
+        var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
+            console.log(newAnswer); //incoming value
+            console.log(state.answers[sourceCounter][counter]); //old answer array
+    
+            console.log('updating water source answers');
+          
+        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
+        console.log(newAnswersForSource);
+
+        //turn off the disabled value
+        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
+        var before = state.questions.slice(0, counter);
+        var after = state.questions.slice(counter+1);
+        var newQuestions = before.concat(newQuestion, after); 
+            
+        //update the state
+        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForSource}); //if I don't include counter here, it doesn't get copied
+        return newState;
+    }
+
+/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+    if (action.type === actions.CHOOSE_OPTION){ 
+        var counter = state.counter;
+        var question = state.questions[counter]; //which question?
+        
+        if(question.selected){ //if a multiple-choice question
+             //change the answer value
+            var answerIndex = action.answerIndex; //which element in the selected array has been clicked?
+            console.log('answer:'+ answerIndex);
+            
+            //updated the selected array so that the button has selected=true
+            var newArray = [false, false];
+            newArray[answerIndex] = true;
+            console.log(newArray);
+        }
+        else{ //if a dropdown question
+            var selected = []
+            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+        }
+        //update the question with new answer index and un-disable next arrow
+        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+        //create new question array
+        var after = state.questions.slice(counter+1);
+        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
+        //update the state
+        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
+        console.log('new state:')
+        console.log(newState);
+        return newState;
+    }
+
+    
     /////////// SUBMIT ANSWER ////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
-        console.log('answer index is '+question.answerIndex);
+        
         //check to see if counter>questions.length and if so, send answers to server
 
-        //save answer string to state
-        if(question.selection){
-            var answer = question.selection[question.answerIndex];
+        //if multiple choice, save answer string to state
+        if(!question.input){
+            console.log('answer index is '+question.answerIndex); //for multiple-choice questions
+            if(question.selection){
+                var answer = question.selection[question.answerIndex];
+            }
+            else if(question.dropdown){
+                var answer = question.dropdown[question.answerIndex];
+            }
+            //update the state.answers array
+            var newAnswerArray = state.answers[state.sourceCounter][counter].concat(answer);
+             var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: newAnswerArray}); //update the question object within the water source answers object within the answers object
+            var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
+            console.log(newAnswersForState);
         }
-        else if(question.dropdown){
-            var answer = question.dropdown[question.answerIndex];
+        else{
+            console.log('submitting an input-type question');
+            var newAnswerForState = state.answers;
         }
-        //update the state.answers array
-        var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: answer}); //update the question object within the water source answers object within the answers object
-        var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
-        console.log(newAnswersForState);
+        
        //increase infoOrder.counter ++
         var changeCounterBy = function(){
             if(question.changeCounter.length>1){
@@ -53,50 +128,8 @@ var infoOrderReducer= function(state, action) {
         return Object.assign({}, state, {counter: counter, answers: newAnswersForState}); //update state with new counter
       
     }
-//////////// CHANGE INPUT /////////////////////////////////////////////////
-    if (action.type === actions.CHANGE_INPUT){
-        //change the infoOrder.questions[counter].id.value to the e.target.value
-    }
-
-/////////////// CHOOSE OPTION ////////////////////////////////////////////////
-    if (action.type === actions.CHOOSE_OPTION){ 
-        var counter = state.counter;
-        var question = state.questions[counter]; //which question?
-        
-        if(question.selected){ //if a multiple-choice question
-             //change the answer value
-            var answerIndex = action.answerIndex;
-            console.log('answer:'+ answerIndex);
-            //updated the selected array so that the button has selected=true
-            
-            var newArray = [];
-            question.selected.forEach(function(isTrue){
-                if (question.selected.indexOf(isTrue) === answerIndex){
-                    newArray.push(true); //only the index aligning with the answer index becomes true
-                }
-                else{
-                    newArray.push(false);
-                }
-            });
-            console.log(newArray);
-        }
-        else{ //if a dropdown question
-            var selected = []
-            var answerIndex = question.dropdown.indexOf(action.answerIndex);
-        }
-        //update the question with new answer index and un-disable next arrow
-        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
-        //create new question array
-        var before = state.questions.slice(0, counter);
-        var after = state.questions.slice(counter+1);
-        var newQuestions = before.concat(newQuestion, after); 
-        console.log(newQuestions);
-        //update the state
-        return Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
-    }
     return state;
 };
-
 var infoOrderFaqReducer= function(state, action) {
     state = state || initialRepositoryState;
     if (action.type === actions.SUBMIT_ANSWER) {

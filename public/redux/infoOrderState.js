@@ -1,16 +1,17 @@
 var infoOrderState = {
 
 	questions: [
-             {
-                line: '',
+             {	number: 1,
+                line: 'Please log in',
                 input: ['APN/ID Code', 'Password'],
+                disabled: true,
                 popover: ['This is printed on the letter you should have received in the mail. \
 	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 	                ,'This is also included in your letter. Capitalization does matter.'
 	            ],
                 changeCounter: [1]
              }, 
-             {
+             {	number: 2,
                 line: 'Is this parcel connected to a water source?',
                 disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
@@ -19,7 +20,7 @@ var infoOrderState = {
                 selected: [false, false],
                 changeCounter: [1, 100]
             },
-            {
+            {	number: 3,
                 line: 'How many sources supply water to this parcel?',
                 input: ['Number'],
                 popover: ['Examples of water sources include water companies, rivers or streams, \
@@ -27,7 +28,7 @@ var infoOrderState = {
                	],
                 changeCounter: [1]
             },
-            {
+            {	number: 4,
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
                 dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
@@ -37,7 +38,7 @@ var infoOrderState = {
 	                water comes all the way to the surface',
                 changeCounter: [1, 2, 4]
             },
-           	{
+           	{	number: 5,
                 line: 'You reported that this property is served by groundwater. \
                 Please describe the details of your well',
                 input: [
@@ -54,7 +55,7 @@ var infoOrderState = {
                 changeCounter: [8]
            },
               
-            {
+            {	number: 6,
                 line: 'You reported that this property is served by a water supplier. \
                 Who is that water supplier?',
                 dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
@@ -65,7 +66,7 @@ var infoOrderState = {
                 changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
             }
             ,
-            {
+            {	number: 7,
                 line: 'You reported that the water supplier is an individual. \
                 Please describe as much as you know.',
                 input: [
@@ -78,7 +79,7 @@ var infoOrderState = {
                 changeCounter: [6] //go to water use
              },
                 
-            {
+            {	number: 8,
                 line: 'You reported that the property\'s water source is surface water. \
 	                Because surface water requires a water right, let\'s figure out if you already \
 	                have a water right or if you need to apply for one. </br> Have you already \
@@ -93,7 +94,7 @@ var infoOrderState = {
             },
                
            
-            {
+            {	number: 9,
                 line: 'You have already reported your use! Awesome! What\'s your application number?',
                 input: ['App Id'],
                 popover: ['The application number usually starts with a letter and looks like \
@@ -101,7 +102,7 @@ var infoOrderState = {
                 ],
                 changeCounter: [100] //go to confirmation
             },
-            {	
+            {	number: 10,
                 line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
                 to the river or stream from which it takes water?',
                 selection: ['Yes', 'No'],
@@ -110,7 +111,7 @@ var infoOrderState = {
                 popover: 'Adjacent as in the property touches the stream.',
                 changeCounter: [1,2]
             },
-            {
+            {	number: 11,
                 line: 'It looks like you have a riparian water right. To claim this right, you need \
                 	to file a statement of use.',
                 selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
@@ -125,7 +126,7 @@ var infoOrderState = {
 	            ],
                 changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
             },
-            {	
+            {	number: 12,
                 line: 'If you\'re using water from a stream that doesn\'t touch your property, \
                 you need to apply for a water right.',
                 selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
@@ -136,7 +137,7 @@ var infoOrderState = {
                 	Division of Water Rights Help Line at (916) 341-5300',
                 changeCounter: [200, -100, 200]
             },
-            {	
+            {	number: 13, 
             	line: 'How is water from this source used on the property?',
             	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
             	mult: true,
@@ -145,7 +146,7 @@ var infoOrderState = {
             		Agricultural use applies if you sell any food products raised on your property',
             	changeCounter: [2, 1, 1, 1, 1]
             },
-            {	
+            {	number: 14,
             	line: 'We\'re almost done! Let\s figure out your water use',
             	input: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
@@ -182,7 +183,7 @@ var infoOrderState = {
             	changeCounter: [3]
 
             },
-            {
+            {	number: 15,
             	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
             	reside on the property',
             	disabled: true,
@@ -191,7 +192,7 @@ var infoOrderState = {
             	selected: [false, false],
             	changeCounter: [1,2]
             },
-            {	
+            {	number: 16,
             	line: 'Please enter the number of people who were living on the property for each \
             	of the indicated months',
             	disabled: true,
@@ -218,7 +219,11 @@ var infoOrderState = {
         ],
 		counter: 0, //count the question index
 		sourceCounter: 0, //count which water source being answered for
-		answers:{0:{}, 1:{},2:{},3:{},4:{},5:{}}
+		answers:{ 
+			// 0:{ //each object is a water source
+			// 	0: [] //each object is an answer to a question
+			// }, 1:{},2:{},3:{},4:{},5:{}
+		} 
 };
 
 module.exports = infoOrderState;

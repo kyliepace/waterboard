@@ -28512,41 +28512,116 @@
 
 	var initialRepositoryState = {
 	    infoOrder: infoOrder,
-	    waterRights: {
-	        questions: [],
-	        counter: 0
-	    },
-	    infoOrderFaq: {
-	        questions: [],
-	        counter: 0
-	    },
-	    waterRightsFaq: {
-	        questions: [],
-	        counter: 0
-	    }
+	    waterRights: "",
+	    infoOrderFaq: "",
+	    waterRightsFaq: ""
 	};
 
 	var infoOrderReducer= function(state, action) {
 	    state = state || infoOrder;
-	   
+	    //////////////// LOG IN ////////////////////////////////////////
+	    if(action.type === actions.LOG_IN_SUCCESS){
+	        console.log('reducer: log in success');
+	        //set up first answer object with one array for each question
+	        var answerObject = {}; //this will be the answer object for the first water source
+	        for (var i = 0; i<state.questions.length; i++){
+	            answerObject[i] = []; //assign a new key:value pair to the object for each question
+	        }
+	        var newAnswers = Object.assign({}, state.answers, {0: answerObject});
+	        return Object.assign({}, state, {answers: newAnswers});
+	    }
+
+	    //////////// CHANGE INPUT /////////////////////////////////////////////////
+	    if (action.type === actions.CHANGE_INPUT){
+	        //change the infoOrder.questions[counter].id.value to the e.target.value
+	        var counter = state.counter;
+	        var sourceCounter = state.sourceCounter;
+	        var question = state.questions[counter];
+	        var index = action.id; //which of the input bars is being changed
+	        //save the input value
+	        var answer = action.answer;
+	        console.log(answer);
+
+	        //update the answers object
+	        var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
+	            console.log(newAnswer); //incoming value
+	            console.log(state.answers[sourceCounter][counter]); //old answer array
+	    
+	            console.log('updating water source answers');
+	          
+	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
+	        console.log(newAnswersForSource);
+
+	        //turn off the disabled value
+	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
+	        var before = state.questions.slice(0, counter);
+	        var after = state.questions.slice(counter+1);
+	        var newQuestions = before.concat(newQuestion, after); 
+	            
+	        //update the state
+	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForSource}); //if I don't include counter here, it doesn't get copied
+	        return newState;
+	    }
+
+	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+	    if (action.type === actions.CHOOSE_OPTION){ 
+	        var counter = state.counter;
+	        var question = state.questions[counter]; //which question?
+	        
+	        if(question.selected){ //if a multiple-choice question
+	             //change the answer value
+	            var answerIndex = action.answerIndex; //which element in the selected array has been clicked?
+	            console.log('answer:'+ answerIndex);
+	            
+	            //updated the selected array so that the button has selected=true
+	            var newArray = [false, false];
+	            newArray[answerIndex] = true;
+	            console.log(newArray);
+	        }
+	        else{ //if a dropdown question
+	            var selected = []
+	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+	        }
+	        //update the question with new answer index and un-disable next arrow
+	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+	        //create new question array
+	        var after = state.questions.slice(counter+1);
+	        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
+	        //update the state
+	        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
+	        console.log('new state:')
+	        console.log(newState);
+	        return newState;
+	    }
+
+	    
 	    /////////// SUBMIT ANSWER ////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
-	        console.log('answer index is '+question.answerIndex);
+	        
 	        //check to see if counter>questions.length and if so, send answers to server
 
-	        //save answer string to state
-	        if(question.selection){
-	            var answer = question.selection[question.answerIndex];
+	        //if multiple choice, save answer string to state
+	        if(!question.input){
+	            console.log('answer index is '+question.answerIndex); //for multiple-choice questions
+	            if(question.selection){
+	                var answer = question.selection[question.answerIndex];
+	            }
+	            else if(question.dropdown){
+	                var answer = question.dropdown[question.answerIndex];
+	            }
+	            //update the state.answers array
+	            var newAnswerArray = state.answers[state.sourceCounter][counter].concat(answer);
+	             var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: newAnswerArray}); //update the question object within the water source answers object within the answers object
+	            var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
+	            console.log(newAnswersForState);
 	        }
-	        else if(question.dropdown){
-	            var answer = question.dropdown[question.answerIndex];
+	        else{
+	            console.log('submitting an input-type question');
+	            var newAnswerForState = state.answers;
 	        }
-	        //update the state.answers array
-	        var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: answer}); //update the question object within the water source answers object within the answers object
-	        var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
-	        console.log(newAnswersForState);
+	        
 	       //increase infoOrder.counter ++
 	        var changeCounterBy = function(){
 	            if(question.changeCounter.length>1){
@@ -28562,50 +28637,8 @@
 	        return Object.assign({}, state, {counter: counter, answers: newAnswersForState}); //update state with new counter
 	      
 	    }
-	//////////// CHANGE INPUT /////////////////////////////////////////////////
-	    if (action.type === actions.CHANGE_INPUT){
-	        //change the infoOrder.questions[counter].id.value to the e.target.value
-	    }
-
-	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
-	    if (action.type === actions.CHOOSE_OPTION){ 
-	        var counter = state.counter;
-	        var question = state.questions[counter]; //which question?
-	        
-	        if(question.selected){ //if a multiple-choice question
-	             //change the answer value
-	            var answerIndex = action.answerIndex;
-	            console.log('answer:'+ answerIndex);
-	            //updated the selected array so that the button has selected=true
-	            
-	            var newArray = [];
-	            question.selected.forEach(function(isTrue){
-	                if (question.selected.indexOf(isTrue) === answerIndex){
-	                    newArray.push(true); //only the index aligning with the answer index becomes true
-	                }
-	                else{
-	                    newArray.push(false);
-	                }
-	            });
-	            console.log(newArray);
-	        }
-	        else{ //if a dropdown question
-	            var selected = []
-	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
-	        }
-	        //update the question with new answer index and un-disable next arrow
-	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
-	        //create new question array
-	        var before = state.questions.slice(0, counter);
-	        var after = state.questions.slice(counter+1);
-	        var newQuestions = before.concat(newQuestion, after); 
-	        console.log(newQuestions);
-	        //update the state
-	        return Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
-	    }
 	    return state;
 	};
-
 	var infoOrderFaqReducer= function(state, action) {
 	    state = state || initialRepositoryState;
 	    if (action.type === actions.SUBMIT_ANSWER) {
@@ -28647,8 +28680,18 @@
 /* 266 */
 /***/ function(module, exports) {
 
+	var LOG_IN_SUCCESS= 'LOG_IN_SUCCESS';
+	var logInSuccess = function(e) {
+		console.log('action: logInSuccess');
+	    return {
+	        type: LOG_IN_SUCCESS
+	    }
+	};
+	exports.LOG_IN_SUCCESS = LOG_IN_SUCCESS;
+	exports.logInSuccess = logInSuccess;
+
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-	var submitAnswer = function(e) {
+	var submitAnswer = function() {
 		console.log('action: submitAnswer');
 	    return {
 	        type: SUBMIT_ANSWER
@@ -28660,7 +28703,9 @@
 	//if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e){
-		console.log('choose option ' +e.target);
+		console.log('choose option ');
+		console.log(e.target.value);
+		console.log(e.target.id);
 		if(e.target.value){
 			console.log('dropdown selected ' + e.target.value);
 			var index = e.target.value;
@@ -28682,6 +28727,7 @@
 		console.log(e.target.id);
 		return{
 			type: CHANGE_INPUT, 
+			index: e.target.id,
 			answer: e.target.value
 		}
 	};
@@ -28696,16 +28742,17 @@
 	var infoOrderState = {
 
 		questions: [
-	             {
-	                line: '',
+	             {	number: 1,
+	                line: 'Please log in',
 	                input: ['APN/ID Code', 'Password'],
+	                disabled: true,
 	                popover: ['This is printed on the letter you should have received in the mail. \
 		                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 		                ,'This is also included in your letter. Capitalization does matter.'
 		            ],
 	                changeCounter: [1]
 	             }, 
-	             {
+	             {	number: 2,
 	                line: 'Is this parcel connected to a water source?',
 	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
@@ -28714,7 +28761,7 @@
 	                selected: [false, false],
 	                changeCounter: [1, 100]
 	            },
-	            {
+	            {	number: 3,
 	                line: 'How many sources supply water to this parcel?',
 	                input: ['Number'],
 	                popover: ['Examples of water sources include water companies, rivers or streams, \
@@ -28722,7 +28769,7 @@
 	               	],
 	                changeCounter: [1]
 	            },
-	            {
+	            {	number: 4,
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
 	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
@@ -28732,7 +28779,7 @@
 		                water comes all the way to the surface',
 	                changeCounter: [1, 2, 4]
 	            },
-	           	{
+	           	{	number: 5,
 	                line: 'You reported that this property is served by groundwater. \
 	                Please describe the details of your well',
 	                input: [
@@ -28749,7 +28796,7 @@
 	                changeCounter: [8]
 	           },
 	              
-	            {
+	            {	number: 6,
 	                line: 'You reported that this property is served by a water supplier. \
 	                Who is that water supplier?',
 	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
@@ -28760,7 +28807,7 @@
 	                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
 	            }
 	            ,
-	            {
+	            {	number: 7,
 	                line: 'You reported that the water supplier is an individual. \
 	                Please describe as much as you know.',
 	                input: [
@@ -28773,7 +28820,7 @@
 	                changeCounter: [6] //go to water use
 	             },
 	                
-	            {
+	            {	number: 8,
 	                line: 'You reported that the property\'s water source is surface water. \
 		                Because surface water requires a water right, let\'s figure out if you already \
 		                have a water right or if you need to apply for one. </br> Have you already \
@@ -28788,7 +28835,7 @@
 	            },
 	               
 	           
-	            {
+	            {	number: 9,
 	                line: 'You have already reported your use! Awesome! What\'s your application number?',
 	                input: ['App Id'],
 	                popover: ['The application number usually starts with a letter and looks like \
@@ -28796,7 +28843,7 @@
 	                ],
 	                changeCounter: [100] //go to confirmation
 	            },
-	            {	
+	            {	number: 10,
 	                line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
 	                to the river or stream from which it takes water?',
 	                selection: ['Yes', 'No'],
@@ -28805,7 +28852,7 @@
 	                popover: 'Adjacent as in the property touches the stream.',
 	                changeCounter: [1,2]
 	            },
-	            {
+	            {	number: 11,
 	                line: 'It looks like you have a riparian water right. To claim this right, you need \
 	                	to file a statement of use.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
@@ -28820,7 +28867,7 @@
 		            ],
 	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
 	            },
-	            {	
+	            {	number: 12,
 	                line: 'If you\'re using water from a stream that doesn\'t touch your property, \
 	                you need to apply for a water right.',
 	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
@@ -28831,7 +28878,7 @@
 	                	Division of Water Rights Help Line at (916) 341-5300',
 	                changeCounter: [200, -100, 200]
 	            },
-	            {	
+	            {	number: 13, 
 	            	line: 'How is water from this source used on the property?',
 	            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
 	            	mult: true,
@@ -28840,7 +28887,7 @@
 	            		Agricultural use applies if you sell any food products raised on your property',
 	            	changeCounter: [2, 1, 1, 1, 1]
 	            },
-	            {	
+	            {	number: 14,
 	            	line: 'We\'re almost done! Let\s figure out your water use',
 	            	input: ['total use January 2015 (gallons)', 
 	            		'total use May 2015 (gallons)', 
@@ -28877,7 +28924,7 @@
 	            	changeCounter: [3]
 
 	            },
-	            {
+	            {	number: 15,
 	            	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
 	            	reside on the property',
 	            	disabled: true,
@@ -28886,7 +28933,7 @@
 	            	selected: [false, false],
 	            	changeCounter: [1,2]
 	            },
-	            {	
+	            {	number: 16,
 	            	line: 'Please enter the number of people who were living on the property for each \
 	            	of the indicated months',
 	            	disabled: true,
@@ -28913,7 +28960,11 @@
 	        ],
 			counter: 0, //count the question index
 			sourceCounter: 0, //count which water source being answered for
-			answers:{0:{}, 1:{},2:{},3:{},4:{},5:{}}
+			answers:{ 
+				// 0:{ //each object is a water source
+				// 	0: [] //each object is an answer to a question
+				// }, 1:{},2:{},3:{},4:{},5:{}
+			} 
 	};
 
 	module.exports = infoOrderState;
@@ -46149,6 +46200,10 @@
 			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
+			if (this.props.infoOrder.counter < 1) {
+				//if the login page is being submitted
+				this.props.dispatch(actions.logInSuccess()); //dispatch the login reducer
+			}
 			this.props.dispatch(actions.changeInput(e));
 		},
 		onSubmit: function (e) {
@@ -46161,12 +46216,10 @@
 		},
 		render: function (props) {
 			var that = this;
-			console.log(that.props.infoOrder); //becomes undefined when I try to render the 3rd question
+			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
 			var index = that.props.infoOrder.counter;
 			var singleQuestion = questions[index];
-			console.log(questions);
-			console.log(questions[index]);
 
 			var showQuestions = React.createElement(Question, { question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
 
@@ -46265,7 +46318,7 @@
 						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
 						React.createElement(
 							'h3',
-							null,
+							{ id: i, onClick: props.handleClick },
 							props.question.selection[i]
 						)
 					));
@@ -46278,7 +46331,7 @@
 				inputs.push(React.createElement(
 					ButtonToolbar,
 					{ className: 'flex' },
-					React.createElement(FormControl, { placeholder: props.question.input[n], className: 'input', type: 'text', onChange: props.handleChange }),
+					React.createElement(FormControl, { placeholder: props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
 					React.createElement(
 						OverlayTrigger,
 						{ trigger: 'click', placement: 'top', overlay: React.createElement(
