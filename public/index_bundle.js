@@ -28646,7 +28646,8 @@
 	        console.log('the quiz will advance by'+ changeCounterBy());
 	        var increaseBy = changeCounterBy();
 	        counter +=  increaseBy; //increase the counter by the chosen value
-	        var clicks = state.clicks ++;
+	        var clicks = state.clicks;
+	        clicks ++;
 	        var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
 	        var newState = Object.assign({}, state, {counter: counter, clicks: clicks, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
 	        console.log('new state'); console.log(newState);
@@ -46151,6 +46152,7 @@
 	var Col = __webpack_require__(270).Col;
 	var router = __webpack_require__(201);
 	var Link = router.Link;
+	var Button = __webpack_require__(270).Button;
 
 	var Menu = function (props) {
 		return React.createElement(
@@ -46166,9 +46168,13 @@
 						Link,
 						{ to: '/infoOrder' },
 						React.createElement(
-							'h2',
-							null,
-							'Respond to Info Order'
+							Button,
+							{ type: 'button', className: 'button' },
+							React.createElement(
+								'h2',
+								null,
+								'Respond to Info Order'
+							)
 						)
 					)
 				),
@@ -46176,12 +46182,16 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 4, xsOffset: 1, mdOffset: 2 },
 					React.createElement(
-						Link,
-						{ to: '/waterRights' },
+						Button,
+						{ type: 'button', className: 'button' },
 						React.createElement(
-							'h2',
-							null,
-							'Claim or Apply for Water Right'
+							Link,
+							{ to: '/waterRights' },
+							React.createElement(
+								'h2',
+								null,
+								'Claim or Apply for Water Right'
+							)
 						)
 					)
 				)
@@ -46193,12 +46203,16 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						Link,
-						{ to: '/infoOrderFaq' },
+						Button,
+						{ type: 'button', className: 'button' },
 						React.createElement(
-							'h3',
-							null,
-							'What is this Info Order all about?'
+							Link,
+							{ to: '/infoOrderFaq' },
+							React.createElement(
+								'h3',
+								null,
+								'What is this Info Order all about?'
+							)
 						)
 					)
 				),
@@ -46206,12 +46220,16 @@
 					Col,
 					{ className: 'menu', xs: 10, md: 10, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
-						Link,
-						{ to: '/waterRightsFaq' },
+						Button,
+						{ type: 'button', className: 'button' },
 						React.createElement(
-							'h3',
-							null,
-							'What is a water right and do I need one?'
+							Link,
+							{ to: '/waterRightsFaq' },
+							React.createElement(
+								'h3',
+								null,
+								'What is a water right and do I need one?'
+							)
 						)
 					)
 				)

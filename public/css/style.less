@@ -12,10 +12,15 @@
 .hidden{
 	display:none;
 }
+a:hover{
+	text-decoration: none;
+}
 .button{
 	border: 0px;
 	color: white;
 	font-size: 3rem;
+	width: 100%;
+	height: 100%;
 	&:hover{
 		color: silver;
 	}
@@ -32,21 +37,20 @@ section{
 	margin-top: 5rem;
 	flex: 1;
 }
-.row{
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-}
 .menu{
 	height: 20rem;
 	border: @border;
 	text-align: center;
 	margin-bottom: 5rem;
+	padding: 0px;
 	&:hover, &:active{
 		box-shadow: @shadow;
 	}
 	h2, h3{
-		padding: 5rem 6rem;
+		padding: 5rem 1rem;
+		&:hover{
+			cursor:pointer;
+		}
 	}
 }
 
@@ -64,6 +68,9 @@ form{
 		display: flex;
   		align-items: flex-start;
   		justify-content: center;
+  		.button{
+  			width: 10%;
+  		}
 	}
 	h2,h3{
 		text-align: center;
@@ -74,6 +81,8 @@ form{
 		.options{
 			display: flex;
 			justify-content: center;
+			flex-wrap: wrap;
+			align-items: baseline;
 			span{
 				font-size: 3rem;
 			}

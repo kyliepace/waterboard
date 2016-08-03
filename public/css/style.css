@@ -8,8 +8,18 @@
 .hidden {
   display: none;
 }
+a:hover {
+  text-decoration: none;
+}
 .button {
   border: 0px;
+  color: white;
+  font-size: 3rem;
+  width: 100%;
+  height: 100%;
+}
+.button:hover {
+  color: silver;
 }
 header {
   background-color: #8A25E8;
@@ -22,16 +32,12 @@ section {
   margin-top: 5rem;
   flex: 1;
 }
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-}
 .menu {
   height: 20rem;
   border: 2px solid white;
   text-align: center;
   margin-bottom: 5rem;
+  padding: 0px;
 }
 .menu:hover,
 .menu:active {
@@ -39,10 +45,11 @@ section {
 }
 .menu h2,
 .menu h3 {
-  padding: 5rem 6rem;
+  padding: 5rem 1rem;
 }
-.glyphicon {
-  font-size: 2rem;
+.menu h2:hover,
+.menu h3:hover {
+  cursor: pointer;
 }
 form {
   border: 2px solid white;
@@ -57,13 +64,16 @@ form .input {
 }
 form .flex {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
+}
+form .flex .button {
+  width: 5%;
 }
 form h2,
 form h3 {
   text-align: center;
-  margin: 5px auto;
+  margin: 5px 5px;
 }
 form .selector {
   text-align: center;
@@ -71,6 +81,8 @@ form .selector {
 form .selector .options {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  align-items: baseline;
 }
 form .selector .options span {
   font-size: 3rem;
@@ -82,7 +94,7 @@ form .selector .options .option {
   padding: 2rem;
   margin: 2rem;
   text-align: center;
-  color: white;
+  color: lightgrey;
 }
 form .selector .options .option:hover,
 form .selector .options .option:active {

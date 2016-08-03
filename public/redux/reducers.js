@@ -137,7 +137,8 @@ var infoOrderReducer= function(state, action) {
         console.log('the quiz will advance by'+ changeCounterBy());
         var increaseBy = changeCounterBy();
         counter +=  increaseBy; //increase the counter by the chosen value
-        var clicks = state.clicks ++;
+        var clicks = state.clicks;
+        clicks ++;
         var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
         var newState = Object.assign({}, state, {counter: counter, clicks: clicks, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
         console.log('new state'); console.log(newState);
