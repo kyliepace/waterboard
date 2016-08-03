@@ -57,6 +57,7 @@
 	var router = __webpack_require__(201);
 	var Router = router.Router;
 	var Route = router.Route;
+	var browserHistory = router.browserHistory;
 	var hashHistory = router.hashHistory;
 	var IndexRoute = router.IndexRoute;
 
@@ -78,7 +79,7 @@
 													Route,
 													{ path: '/', component: Main },
 													React.createElement(IndexRoute, { component: Menu }),
-													React.createElement(Route, { path: '/infoOrder', component: InfoOrder }),
+													React.createElement(Route, { path: '/infoOrder/:counter', component: InfoOrder }),
 													React.createElement(Route, { path: '/waterRights', component: WaterRights }),
 													React.createElement(Route, { path: '/infoOrderFaq', component: InfoOrderFaq }),
 													React.createElement(Route, { path: '/waterRightsFaq', component: WaterRightsFaq })
@@ -28601,6 +28602,7 @@
 	        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
 	        console.log('the form will go back by '+ reduceCounter);
 	        counter -= reduceCounter;
+	        var clicks = state.clicks;
 	        clicks --;
 	   
 	    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
@@ -46250,11 +46252,12 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
-	var Question = __webpack_require__(488);
+	var Question = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./question.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var Button = __webpack_require__(270).Button;
 	var connect = __webpack_require__(173).connect;
 	var actions = __webpack_require__(266);
 	var Confirm = __webpack_require__(489);
+	var browserHistory = __webpack_require__(201).browserHistory;
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -46280,6 +46283,7 @@
 		onSubmit: function (e) {
 			console.log("submit");
 			e.preventDefault();
+			this.props.history.push('/infoOrder/' + this.props.infoOrder.counter);
 			this.props.dispatch(actions.submitAnswer());
 		},
 		prevQuestion: function () {
@@ -46293,7 +46297,7 @@
 			var that = this;
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
-			var index = that.props.infoOrder.counter;
+			var index = that.props.params.counter;
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
@@ -46337,160 +46341,7 @@
 	module.exports = Container;
 
 /***/ },
-/* 488 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(2);
-	var Row = __webpack_require__(270).Row;
-	var FormGroup = __webpack_require__(270).FormGroup;
-	var ControlLabel = __webpack_require__(270).ControlLabel;
-	var FormControl = __webpack_require__(270).FormControl;
-	var Overlay = __webpack_require__(270).Overlay;
-	var OverlayTrigger = __webpack_require__(270).OverlayTrigger;
-	var Popover = __webpack_require__(270).Popover;
-	var Button = __webpack_require__(270).Button;
-	var ButtonToolbar = __webpack_require__(270).ButtonToolbar;
-
-	var Question = function (props) {
-		//if the question should have a dropdown box:
-		if (props.question.dropdown) {
-			var dropdown = [React.createElement(
-				'option',
-				{ selected: true, disabled: true },
-				'Select One'
-			)];
-			for (var j = 0; j < props.question.dropdown.length; j++) {
-				dropdown.push(React.createElement(
-					'option',
-					{ value: props.question.dropdown[j], id: j },
-					React.createElement(
-						'h3',
-						null,
-						props.question.dropdown[j]
-					)
-				));
-			}
-			var options = React.createElement(
-				FormControl,
-				{ componentClass: 'select', placeholder: 'select one', className: 'input', onChange: props.handleClick },
-				dropdown
-			);
-		}
-
-		//if the question is multiple choice, create a box for each option
-		else if (props.question.selection) {
-				var options = [];
-				for (var i = 0; i < props.question.selection.length; i++) {
-					options.push(React.createElement(
-						Button,
-						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
-						React.createElement(
-							'h3',
-							{ id: i, onClick: props.handleClick },
-							props.question.selection[i]
-						)
-					));
-				}
-			}
-		//if the question has a form text input, create a row for each input and popover
-		if (props.question.input) {
-			var inputs = [];
-			for (var n = 0; n < props.question.input.length; n++) {
-				inputs.push(React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
-					React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
-					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								props.question.popover[n]
-							) },
-						React.createElement(
-							Button,
-							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
-						)
-					),
-					React.createElement(FormControl.Feedback, null)
-				));
-			}
-		}
-
-		return React.createElement(
-			'form',
-			{ onSubmit: props.onSubmit },
-			React.createElement(
-				FormGroup,
-				{ className: props.question.input ? "" : "hidden" },
-				React.createElement(
-					'h3',
-					null,
-					props.question.line
-				),
-				React.createElement(
-					'h3',
-					{ className: props.question.link ? "" : "hidden" },
-					React.createElement(
-						'a',
-						{ target: '_blank', href: props.question.link },
-						'Please use this mapping tool to find the well coordinates if unknown'
-					)
-				),
-				inputs
-			),
-			React.createElement(
-				FormGroup,
-				{ className: props.question.input ? 'hidden' : 'selector' },
-				React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
-					React.createElement(
-						'h3',
-						null,
-						props.question.line
-					),
-					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								props.question.popover
-							) },
-						React.createElement(
-							Button,
-							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
-						)
-					)
-				),
-				React.createElement(
-					Row,
-					{ className: 'options' },
-					options
-				)
-			),
-			React.createElement(
-				'div',
-				{ className: 'flex' },
-				React.createElement(
-					Button,
-					{ className: 'button', onClick: props.onClick, type: 'button' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-				),
-				React.createElement(
-					Button,
-					{ className: 'button', disabled: props.disabled, type: 'submit' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-				)
-			)
-		);
-	};
-
-	module.exports = Question;
-
-/***/ },
+/* 488 */,
 /* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -46589,7 +46440,7 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
-	var Question = __webpack_require__(488);
+	var Question = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./question.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var Button = __webpack_require__(270).Button;
 
 	var WaterRights = function (props) {

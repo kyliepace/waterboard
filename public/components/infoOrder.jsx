@@ -6,6 +6,7 @@ var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
+var browserHistory = require('react-router').browserHistory;
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -29,6 +30,7 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
+		this.props.history.push('/infoOrder/'+this.props.infoOrder.counter);
 		this.props.dispatch(actions.submitAnswer());
 	},
 	prevQuestion: function(){
@@ -48,7 +50,7 @@ var InfoOrder = React.createClass({
 		var that = this;
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
-		var index = that.props.infoOrder.counter;
+		var index = that.props.params.counter;
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 

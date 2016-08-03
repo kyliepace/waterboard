@@ -4,6 +4,7 @@ var Provider = require('react-redux').Provider;
 var router = require('react-router');
 var Router = router.Router;
 var Route = router.Route;
+var browserHistory = router.browserHistory;
 var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
 
@@ -20,7 +21,7 @@ var routes = (
 	  <Router history={hashHistory} >
 	    <Route path='/' component={Main}>
 	      	<IndexRoute component={Menu}/>
-	      	<Route path='/infoOrder' component={InfoOrder}/>
+	      	<Route path='/infoOrder/:counter' component={InfoOrder}/>
 	      	<Route path='/waterRights' component={WaterRights}/>
 	      	<Route path='/infoOrderFaq' component={InfoOrderFaq}/>
 	      	<Route path='/waterRightsFaq' component={WaterRightsFaq}/>
