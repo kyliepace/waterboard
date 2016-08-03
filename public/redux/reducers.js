@@ -92,6 +92,7 @@ var infoOrderReducer= function(state, action) {
         var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
         console.log('the form will go back by '+ reduceCounter);
         counter -= reduceCounter;
+        var clicks = state.clicks;
         clicks --;
    
     var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
