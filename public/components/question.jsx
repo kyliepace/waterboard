@@ -12,7 +12,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Question = function(props){
 	//if the question should have a dropdown box:
 	if(props.question.dropdown){
-		var dropdown = [<option defaultValue disabled>Select One</option>];
+		var dropdown = [<option selected disabled>Select One</option>];
 		for (var j=0; j<props.question.dropdown.length; j++){
 			dropdown.push(
 				<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
@@ -56,6 +56,8 @@ var Question = function(props){
 	<form onSubmit={props.onSubmit}>
 		<FormGroup className={props.question.input ? "":"hidden"}> 
 			<h3>{props.question.line}</h3>
+			<h3 className={props.question.link ? "":"hidden"}><a target='_blank' href={props.question.link}>Please use this mapping tool 
+			to find the well coordinates if unknown</a></h3>
 			{inputs}
 		</FormGroup>
 

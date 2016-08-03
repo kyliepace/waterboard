@@ -40,18 +40,20 @@ var infoOrderState = {
             },
            	{	number: 5,
                 line: 'You reported that this property is served by groundwater. \
-                Please describe the details of your well',
+                Please describe the details of your well.',
                 input: [
                 	'Please find the coordinates of the well\'s location',
                 	'In what year was the well dug?',
                 	'How many feet deep is the well?',
                 	'Who owned the property when the well was dug?'
                 ], 
-                popover: ['Please provide as much of the following information as you know',
-	                'We have created a mapping tool for you to use',
+                popover: [
+	                'Please use the linked mapping tool to find the coordinates',
 	                'Enter the approximate year of construction',
-	                'Enter the approximate depth, in feet, of your well'
+	                'Enter the approximate depth, in feet, of your well',
+	                'Even just a last name will help us locate the record, if one exists.'
                 ],
+                link: "http://www.mapcoordinates.net/en",
                 changeCounter: [8]
            },
               
@@ -82,7 +84,7 @@ var infoOrderState = {
             {	number: 8,
                 line: 'You reported that the property\'s water source is surface water. \
 	                Because surface water requires a water right, let\'s figure out if you already \
-	                have a water right or if you need to apply for one. </br> Have you already \
+	                have a water right or if you need to apply for one. Have you already \
 	                applied for or claimed a water right?',
               
                 selection: ['Yes', 'No'],

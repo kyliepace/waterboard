@@ -28821,18 +28821,20 @@
 	            },
 	           	{	number: 5,
 	                line: 'You reported that this property is served by groundwater. \
-	                Please describe the details of your well',
+	                Please describe the details of your well. Use this mapping tool if you don\'t know the well\'s coordinates',
 	                input: [
 	                	'Please find the coordinates of the well\'s location',
 	                	'In what year was the well dug?',
 	                	'How many feet deep is the well?',
 	                	'Who owned the property when the well was dug?'
 	                ], 
-	                popover: ['Please provide as much of the following information as you know',
-		                'We have created a mapping tool for you to use',
+	                popover: [
+		                'Please use the linked mapping tool to find the coordinates',
 		                'Enter the approximate year of construction',
-		                'Enter the approximate depth, in feet, of your well'
+		                'Enter the approximate depth, in feet, of your well',
+		                'Even just a last name will help us locate the record, if one exists.'
 	                ],
+	                link: "http://www.mapcoordinates.net/en",
 	                changeCounter: [8]
 	           },
 	              
@@ -28863,7 +28865,7 @@
 	            {	number: 8,
 	                line: 'You reported that the property\'s water source is surface water. \
 		                Because surface water requires a water right, let\'s figure out if you already \
-		                have a water right or if you need to apply for one. </br> Have you already \
+		                have a water right or if you need to apply for one. Have you already \
 		                applied for or claimed a water right?',
 	              
 	                selection: ['Yes', 'No'],
@@ -46352,7 +46354,7 @@
 		if (props.question.dropdown) {
 			var dropdown = [React.createElement(
 				'option',
-				{ defaultValue: true, disabled: true },
+				{ selected: true, disabled: true },
 				'Select One'
 			)];
 			for (var j = 0; j < props.question.dropdown.length; j++) {
@@ -46424,6 +46426,15 @@
 					'h3',
 					null,
 					props.question.line
+				),
+				React.createElement(
+					'h3',
+					{ className: props.question.link ? "" : "hidden" },
+					React.createElement(
+						'a',
+						{ target: '_blank', href: props.question.link },
+						'Please use this mapping tool to find the well coordinates if unknown'
+					)
 				),
 				inputs
 			),
