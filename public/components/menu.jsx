@@ -16,7 +16,7 @@ var Menu = function(props){
 	    		</Col>	    		
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={2}>
 	    			<Button type='button' className='button'><Link to='/waterRights'>
-	    				<h2>Claim or Apply for Water Right</h2>
+	    				<span>Claim or Apply for<br/> Water Right</span>
 	    			</Link></Button>
 	    		</Col>
 	    	</Row>
@@ -24,12 +24,12 @@ var Menu = function(props){
 	    	<Row>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
 	    			<Button type='button' className='button'><Link to='/infoOrderFaq'>
-	    				<h3>What is this Info Order all about?</h3>
+	    				<span>What is this Info Order all about?</span>
 	    			</Link></Button>
 	    		</Col>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
 	    			<Button type='button' className='button'><Link to='/waterRightsFaq'>
-	    				<h3>What is a water right and do I need one?</h3>
+	    				<span>What is a water right and do I need one?</span>
 	    			</Link></Button>
 	    		</Col>
 	    	</Row>

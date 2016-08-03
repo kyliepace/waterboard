@@ -57,6 +57,9 @@ form {
   margin: 8rem auto 1rem auto;
   padding: 5rem 0px 10px;
 }
+form a {
+  color: lightgrey;
+}
 form .input {
   width: 60%;
   text-align: center;
@@ -71,7 +74,8 @@ form .flex .button {
   width: 10%;
 }
 form h2,
-form h3 {
+form h3,
+form span {
   text-align: center;
   margin: 5px 5px;
 }

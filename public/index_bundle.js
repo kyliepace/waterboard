@@ -28821,7 +28821,7 @@
 	            },
 	           	{	number: 5,
 	                line: 'You reported that this property is served by groundwater. \
-	                Please describe the details of your well. Use this mapping tool if you don\'t know the well\'s coordinates',
+	                Please describe the details of your well.',
 	                input: [
 	                	'Please find the coordinates of the well\'s location',
 	                	'In what year was the well dug?',
@@ -46190,9 +46190,11 @@
 							Link,
 							{ to: '/waterRights' },
 							React.createElement(
-								'h2',
+								'span',
 								null,
-								'Claim or Apply for Water Right'
+								'Claim or Apply for',
+								React.createElement('br', null),
+								' Water Right'
 							)
 						)
 					)
@@ -46211,7 +46213,7 @@
 							Link,
 							{ to: '/infoOrderFaq' },
 							React.createElement(
-								'h3',
+								'span',
 								null,
 								'What is this Info Order all about?'
 							)
@@ -46228,7 +46230,7 @@
 							Link,
 							{ to: '/waterRightsFaq' },
 							React.createElement(
-								'h3',
+								'span',
 								null,
 								'What is a water right and do I need one?'
 							)
