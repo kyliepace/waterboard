@@ -29,7 +29,8 @@ header h3 {
   font-family: "Montserrat";
 }
 section {
-  margin-top: 5rem;
+  margin: 5rem auto;
+  max-width: 90%;
   flex: 1;
 }
 .menu {
@@ -71,7 +72,8 @@ form .flex {
   justify-content: center;
 }
 form .flex .button {
-  width: 10%;
+  width: 15%;
+  text-align: center;
 }
 form h2,
 form h3,

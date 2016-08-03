@@ -63,10 +63,13 @@ var InfoOrder = React.createClass({
 			);
 		}
 		else{
-			var show = (
-				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
-    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
-			);
+			// var show = (
+			// 	<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
+   //  			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+			// );
+			var show = React.Children.map(this.props.children, function(child){
+				React.cloneElement(child, {question: singleQuestion, answer: answer});
+			})
 		}
 		return(
 		    <section className='container'>
