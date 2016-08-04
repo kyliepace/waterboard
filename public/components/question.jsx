@@ -10,6 +10,7 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 var Question = function(props){
+	console.log(props.question.next);
 	//if the question should have a dropdown box:
 	if(props.question.dropdown){
 		var dropdown = [<option selected disabled>Select One</option>];
@@ -51,8 +52,6 @@ var Question = function(props){
 			);
 		}	
 	}
-	var nextLink = "/"+ (props.question.counter+1);
-	console.log('next link is '+nextLink);
 	
 	return(
 	<form onSubmit={props.onSubmit}>
@@ -77,7 +76,7 @@ var Question = function(props){
 
 		<div className='flex'>
 			<Button className='button' onClick={props.onClick} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-			<Button className='button' disabled={props.disabled} type='submit'><Link to=nextLink><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Link></Button>
+			<Button className='button' disabled={props.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		</div>
 	</form>
 	);		

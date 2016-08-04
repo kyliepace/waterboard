@@ -28553,9 +28553,9 @@
 	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
 	        console.log(newAnswersForSource);
 	        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-
+	        var next = question.changeCounter[0];
 	        //turn off the disabled value
-	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
+	        var newQuestion = Object.assign({}, question, {disabled: false, next: next}); //update the question state
 	        var before = state.questions.slice(0, counter);
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = before.concat(newQuestion, after); 
@@ -28584,8 +28584,11 @@
 	            var selected = []
 	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
 	        }
+	        //increase question.next 
+	        var increaseBy = question.changeCounter[question.answerIndex];
+	        
 	        //update the question with new answer index and un-disable next arrow
-	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
 	        //create new question array
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
@@ -28792,7 +28795,8 @@
 		                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 		                ,'This is also included in your letter. Capitalization does matter.'
 		            ],
-	                changeCounter: [1]
+	                changeCounter: [1],
+	             	next: 1
 	             }, 
 	             {	number: 2,
 	                line: 'Is this parcel connected to a water source?',
@@ -28802,6 +28806,7 @@
 	                selection: ['Yes', 'No'],
 	                selected: [false, false],
 	                changeCounter: [1, 100]
+	             
 	            },
 	            {	number: 3,
 	                line: 'How many sources supply water to this parcel?',
@@ -28810,6 +28815,7 @@
 	                	wells, springs, ponds...'
 	               	],
 	                changeCounter: [1]
+	         
 	            },
 	            {	number: 4,
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
@@ -28838,6 +28844,7 @@
 	                ],
 	                link: "http://www.mapcoordinates.net/en",
 	                changeCounter: [8]
+	               
 	           },
 	              
 	            {	number: 6,
@@ -46252,7 +46259,7 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
-	var Question = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./question.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var Question = __webpack_require__(488);
 	var Button = __webpack_require__(270).Button;
 	var connect = __webpack_require__(173).connect;
 	var actions = __webpack_require__(266);
@@ -46283,7 +46290,8 @@
 		onSubmit: function (e) {
 			console.log("submit");
 			e.preventDefault();
-			this.props.history.push('/infoOrder/' + this.props.infoOrder.counter);
+			console.log(this.props.infoOrder.questions[this.props.infoOrder.counter].next);
+			this.props.history.push('/infoOrder/' + this.props.infoOrder.questions[this.props.infoOrder.counter].next);
 			this.props.dispatch(actions.submitAnswer());
 		},
 		prevQuestion: function () {
@@ -46341,7 +46349,161 @@
 	module.exports = Container;
 
 /***/ },
-/* 488 */,
+/* 488 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var Row = __webpack_require__(270).Row;
+	var FormGroup = __webpack_require__(270).FormGroup;
+	var ControlLabel = __webpack_require__(270).ControlLabel;
+	var FormControl = __webpack_require__(270).FormControl;
+	var Overlay = __webpack_require__(270).Overlay;
+	var OverlayTrigger = __webpack_require__(270).OverlayTrigger;
+	var Popover = __webpack_require__(270).Popover;
+	var Button = __webpack_require__(270).Button;
+	var ButtonToolbar = __webpack_require__(270).ButtonToolbar;
+
+	var Question = function (props) {
+		console.log(props.question.next);
+		//if the question should have a dropdown box:
+		if (props.question.dropdown) {
+			var dropdown = [React.createElement(
+				'option',
+				{ selected: true, disabled: true },
+				'Select One'
+			)];
+			for (var j = 0; j < props.question.dropdown.length; j++) {
+				dropdown.push(React.createElement(
+					'option',
+					{ value: props.question.dropdown[j], id: j },
+					React.createElement(
+						'h3',
+						null,
+						props.question.dropdown[j]
+					)
+				));
+			}
+			var options = React.createElement(
+				FormControl,
+				{ componentClass: 'select', placeholder: 'select one', className: 'input', onChange: props.handleClick },
+				dropdown
+			);
+		}
+
+		//if the question is multiple choice, create a box for each option
+		else if (props.question.selection) {
+				var options = [];
+				for (var i = 0; i < props.question.selection.length; i++) {
+					options.push(React.createElement(
+						Button,
+						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
+						React.createElement(
+							'h3',
+							{ id: i, onClick: props.handleClick },
+							props.question.selection[i]
+						)
+					));
+				}
+			}
+		//if the question has a form text input, create a row for each input and popover
+		if (props.question.input) {
+			var inputs = [];
+			for (var n = 0; n < props.question.input.length; n++) {
+				inputs.push(React.createElement(
+					ButtonToolbar,
+					{ className: 'flex' },
+					React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
+					React.createElement(
+						OverlayTrigger,
+						{ trigger: 'click', placement: 'top', overlay: React.createElement(
+								Popover,
+								{ id: 'popover-trigger-click' },
+								props.question.popover[n]
+							) },
+						React.createElement(
+							Button,
+							{ className: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						)
+					),
+					React.createElement(FormControl.Feedback, null)
+				));
+			}
+		}
+
+		return React.createElement(
+			'form',
+			{ onSubmit: props.onSubmit },
+			React.createElement(
+				FormGroup,
+				{ className: props.question.input ? "" : "hidden" },
+				React.createElement(
+					'h3',
+					null,
+					props.question.line
+				),
+				React.createElement(
+					'h3',
+					{ className: props.question.link ? "" : "hidden" },
+					React.createElement(
+						'a',
+						{ target: '_blank', href: props.question.link },
+						'Please use this mapping tool to find the well coordinates if unknown'
+					)
+				),
+				inputs
+			),
+			React.createElement(
+				FormGroup,
+				{ className: props.question.input ? 'hidden' : 'selector' },
+				React.createElement(
+					ButtonToolbar,
+					{ className: 'flex' },
+					React.createElement(
+						'h3',
+						null,
+						props.question.line
+					),
+					React.createElement(
+						OverlayTrigger,
+						{ trigger: 'click', placement: 'top', overlay: React.createElement(
+								Popover,
+								{ id: 'popover-trigger-click' },
+								props.question.popover
+							) },
+						React.createElement(
+							Button,
+							{ className: 'button' },
+							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+						)
+					)
+				),
+				React.createElement(
+					Row,
+					{ className: 'options' },
+					options
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: 'flex' },
+				React.createElement(
+					Button,
+					{ className: 'button', onClick: props.onClick, type: 'button' },
+					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
+				),
+				React.createElement(
+					Button,
+					{ className: 'button', disabled: props.disabled, type: 'submit' },
+					React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+				)
+			)
+		);
+	};
+
+	module.exports = Question;
+
+/***/ },
 /* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -46440,7 +46602,7 @@
 	var React = __webpack_require__(2);
 	var Row = __webpack_require__(270).Row;
 	var Col = __webpack_require__(270).Col;
-	var Question = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./question.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var Question = __webpack_require__(488);
 	var Button = __webpack_require__(270).Button;
 
 	var WaterRights = function (props) {

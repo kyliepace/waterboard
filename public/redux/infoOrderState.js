@@ -9,7 +9,8 @@ var infoOrderState = {
 	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 	                ,'This is also included in your letter. Capitalization does matter.'
 	            ],
-                changeCounter: [1]
+                changeCounter: [1],
+             	next: 1
              }, 
              {	number: 2,
                 line: 'Is this parcel connected to a water source?',
@@ -19,6 +20,7 @@ var infoOrderState = {
                 selection: ['Yes', 'No'],
                 selected: [false, false],
                 changeCounter: [1, 100]
+             
             },
             {	number: 3,
                 line: 'How many sources supply water to this parcel?',
@@ -27,6 +29,7 @@ var infoOrderState = {
                 	wells, springs, ponds...'
                	],
                 changeCounter: [1]
+         
             },
             {	number: 4,
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
@@ -55,6 +58,7 @@ var infoOrderState = {
                 ],
                 link: "http://www.mapcoordinates.net/en",
                 changeCounter: [8]
+               
            },
               
             {	number: 6,

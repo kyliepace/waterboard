@@ -30,7 +30,8 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
-		this.props.history.push('/infoOrder/'+this.props.infoOrder.counter);
+		console.log(this.props.infoOrder.questions[this.props.infoOrder.counter].next);
+		this.props.history.push('/infoOrder/'+this.props.infoOrder.questions[this.props.infoOrder.counter].next);
 		this.props.dispatch(actions.submitAnswer());
 	},
 	prevQuestion: function(){

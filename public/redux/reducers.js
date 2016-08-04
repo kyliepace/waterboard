@@ -43,9 +43,9 @@ var infoOrderReducer= function(state, action) {
         var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
         console.log(newAnswersForSource);
         var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-
+        var next = question.changeCounter[0];
         //turn off the disabled value
-        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
+        var newQuestion = Object.assign({}, question, {disabled: false, next: next}); //update the question state
         var before = state.questions.slice(0, counter);
         var after = state.questions.slice(counter+1);
         var newQuestions = before.concat(newQuestion, after); 
@@ -74,8 +74,11 @@ var infoOrderReducer= function(state, action) {
             var selected = []
             var answerIndex = question.dropdown.indexOf(action.answerIndex);
         }
+        //increase question.next 
+        var increaseBy = question.changeCounter[question.answerIndex];
+        
         //update the question with new answer index and un-disable next arrow
-        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
         //create new question array
         var after = state.questions.slice(counter+1);
         var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
