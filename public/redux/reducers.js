@@ -39,7 +39,7 @@ var infoOrderReducer= function(state, action) {
         else{
             var answers = state.answers;
         }
-
+        
         var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
         return newState;
     }

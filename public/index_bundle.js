@@ -28578,7 +28578,7 @@
 	        else{
 	            var answers = state.answers;
 	        }
-
+	        
 	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
 	        return newState;
 	    }
@@ -46877,12 +46877,12 @@
 		onSubmit: function (e) {
 			e.preventDefault();
 			var that = this;
-			if (parseInt(this.props.params.counter) === 0) {
+			if (parseInt(this.props.infoOrder.counter) === 0) {
 				//if this is the log-in page being submitted, talk to server
 				//dispatch logIn function with idCode and password from state
 				this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
 
-				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
+				//this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 			} else {
 				console.log('next will be ' + this.props.infoOrder.next);
 				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
@@ -46897,7 +46897,7 @@
 
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
-			var index = that.props.params.counter;
+			var index = that.props.infoOrder.counter;
 			console.log('index is ' + index);
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array

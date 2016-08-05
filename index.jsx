@@ -32,7 +32,6 @@ var routes = (
 );
 
 
-
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
         routes,
