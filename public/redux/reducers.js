@@ -10,7 +10,7 @@ var initialRepositoryState = {
 
 var infoOrderReducer= function(state, action) {
     state = state || infoOrder;
-    //////////////// LOG IN ////////////////////////////////////////
+    //////////////// ON LOAD ////////////////////////////////////////
     if(action.type === actions.ON_LOAD){
         console.log('reducer: on load');
         //set up first answer object with one array for each question
@@ -24,6 +24,9 @@ var infoOrderReducer= function(state, action) {
         console.log(newState);
         return newState;
     }
+
+    //////////// LOG IN SUCCESS //////////////////////////
+    
 
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){
@@ -156,8 +159,7 @@ var infoOrderReducer= function(state, action) {
     if (action.type === actions.SUBMIT_ANSWER) {
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
-        //check to see if counter>questions.length and if so, send answers to server
-        
+  
         var next = state.next; //the value of next becomes the new counter index
         var clicks = state.clicks;
         clicks ++;

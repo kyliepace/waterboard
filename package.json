@@ -2,7 +2,7 @@
   "name": "waterboard",
   "version": "1.0.0",
   "description": "final Thinkful project",
-  "main": "public/index_bundle.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "less": "lessc public/css/style.less public/css/style.css",
@@ -18,7 +18,8 @@
   ],
   "babel": {
     "presets": [
-      "react", "es2016"
+      "react",
+      "es2016"
     ]
   },
   "author": "Kylie Pace",

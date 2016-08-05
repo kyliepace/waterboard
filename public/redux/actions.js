@@ -1,3 +1,5 @@
+require('isomorphic-fetch');
+
 var ON_LOAD= 'ON_LOAD';
 var onLoad = function(e) {
 	console.log('action: onLoad');
@@ -8,16 +10,66 @@ var onLoad = function(e) {
 exports.ON_LOAD = ON_LOAD;
 exports.onLoad = onLoad;
 
-var LOG_IN_SUCCESS= 'LOG_IN_SUCCESS';
-var logInSuccess = function(e) {
-	console.log('action: logInSuccess');
-    return {
-        type: LOG_IN_SUCCESS
-    }
+//////// LOG IN ////////////////
+var logIn = function(idCode, password){
+	return function(dispatch){
+		var url='/logIn';
+		var data= JSON.stringify({idCode: idCode, password: password});
+		var params={
+			{
+				method: 'GET',
+				body: data
+			}
+		};
+		return fetch(url, params).then(function(res){
+			if(res.state<200 || res.status >= 300){
+				var error = new Error(res.statusText)
+				error.res = res
+				throw error;
+			}
+			return res;
+		})
+		.then(function(res){
+			return res.json();
+		})
+		.then(function(data){
+			console.log(data);
+			return dispatch(
+				logInSuccess(data);
+			);
+		})
+		.catch(function(error){
+			return dispatch(
+				logInNotSuccess(error)
+			);
+		});
+	}
+};
+exports.logIn = logIn;
+
+////////// LOG IN SUCCESS////////////////
+var LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
+var logInSuccess = function(data){
+	console.log('successful login');
+	return{
+		type: LOG_IN_SUCCESS,
+		data: data
+	}
 };
 exports.LOG_IN_SUCCESS = LOG_IN_SUCCESS;
 exports.logInSuccess = logInSuccess;
 
+/////////// LOG IN NOT SUCCESSFUL //////////////
+var LOG_IN_NOT_SUCCESS = 'LOG_IN_NOT_SUCCESS';
+var logInNotSuccess = function(error){
+	console.log('unsuccessful login');
+	return{
+		type: LOG_IN_NOT_SUCCESS,
+		error: error
+	}
+};
+exports.LOG_IN_NOT_SUCCESS = LOG_IN_NOT_SUCCESS;
+exports.logInNotSuccess = logInNotSuccess;
 
 //////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';

@@ -7,10 +7,7 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['number', 'number'],
                 error: [],
-                popover: ['You can find this number on the letter you should have received in the mail. \
-	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
-	                ,'Also found on your letter'
-	            ],
+                popover: ['1', 'welcome'],
                 changeCounter: [1]
              	
              }, 
