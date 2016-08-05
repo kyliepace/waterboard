@@ -37,10 +37,21 @@ exports.chooseOption = chooseOption;
 var CHANGE_INPUT = 'CHANGE_INPUT';
 var changeInput = function(e){
 	console.log(e.target.id);
+	if(e.target.value===""){
+		var answer = 0;
+	}
+	else if(isNaN(e.target.value)){ //for letters
+		var answer = e.target.value;
+		console.log('input is not numeric '+answer);
+	}
+	else{
+		var answer = parseInt(e.target.value);
+		console.log('input is numeric' + answer); 
+	}
 	return{
 		type: CHANGE_INPUT, 
 		index: e.target.id,
-		answer: e.target.value
+		answer: answer
 	}
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;

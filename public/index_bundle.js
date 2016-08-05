@@ -28541,27 +28541,45 @@
 	        var question = state.questions[counter];
 	        var index = action.index; //which of the input bars is being changed
 	        var answer = action.answer; //save the input value
-
-	        //update the answers object
-	        var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
-	            console.log(newAnswer); //incoming value
-	            console.log(state.answers[sourceCounter][counter]); //old answer array - why is this still blank?
-	    
-	            console.log('updating water source answers');
-	          
-	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
-	        console.log(newAnswersForSource);
-	        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-	        var next = question.changeCounter[0] + counter;
-	        //turn off the disabled value
-	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
-	        var before = state.questions.slice(0, counter);
-	        var after = state.questions.slice(counter+1);
-	        var newQuestions = before.concat(newQuestion, after); 
-	            
-	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
-	        return newState;
+	        // validate text input
+	        console.log('type of answer '+typeof(answer));
+	        console.log('must be '+question.validate[index]);
+	        
+	        var error = [];
+	        question.error.forEach(function(message){
+	            error.push(message); //copy error array
+	        });
+	        if(typeof(answer)===question.validate[index]){
+	             //update the answers object
+	            var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
+	                console.log(newAnswer); //incoming value
+	                console.log('updating water source answers');
+	              
+	            var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
+	            console.log(newAnswersForSource);
+	            var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
+	            var next = question.changeCounter[0] + counter; //set new next value
+	            //turn off the disabled value and clear any error message
+	            error[index]="";
+	            var newQuestion = Object.assign({}, question, {disabled: false, error: error}); //update the question state
+	            var before = state.questions.slice(0, counter);
+	            var after = state.questions.slice(counter+1);
+	            var newQuestions = before.concat(newQuestion, after);        
+	            //update the state
+	            var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+	            return newState; 
+	        }
+	        else{
+	            error[index]=('please enter a '+question.validate[index]);
+	            var newQuestion = Object.assign({}, question, {error: error, disabled: true});
+	            var before = state.questions.slice(0, counter);
+	            var after = state.questions.slice(counter+1);
+	            var newQuestions = before.concat(newQuestion, after);        
+	            //update the state
+	            var newState = Object.assign({}, state, {questions: newQuestions}); //update only the questions
+	            return newState; 
+	        }
+	                 
 	    }
 
 	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
@@ -28725,10 +28743,21 @@
 	var CHANGE_INPUT = 'CHANGE_INPUT';
 	var changeInput = function(e){
 		console.log(e.target.id);
+		if(e.target.value===""){
+			var answer = 0;
+		}
+		else if(isNaN(e.target.value)){ //for letters
+			var answer = e.target.value;
+			console.log('input is not numeric '+answer);
+		}
+		else{
+			var answer = parseInt(e.target.value);
+			console.log('input is numeric' + answer); 
+		}
 		return{
 			type: CHANGE_INPUT, 
 			index: e.target.id,
-			answer: e.target.value
+			answer: answer
 		}
 	};
 	exports.CHANGE_INPUT = CHANGE_INPUT;
@@ -28757,9 +28786,11 @@
 	                line: 'Please log in',
 	                input: ['APN/ID Code', 'Password'],
 	                disabled: true,
-	                popover: ['This is printed on the letter you should have received in the mail. \
+	                validate: ['number', 'number'],
+	                error: [],
+	                popover: ['You can find this number on the letter you should have received in the mail. \
 		                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
-		                ,'This is also included in your letter. Capitalization does matter.'
+		                ,'Also found on your letter'
 		            ],
 	                changeCounter: [1]
 	             	
@@ -46326,6 +46357,7 @@
 	var FormGroup = __webpack_require__(270).FormGroup;
 	var ControlLabel = __webpack_require__(270).ControlLabel;
 	var FormControl = __webpack_require__(270).FormControl;
+	var HelpBlock = __webpack_require__(270).HelpBlock;
 	var Overlay = __webpack_require__(270).Overlay;
 	var OverlayTrigger = __webpack_require__(270).OverlayTrigger;
 	var Popover = __webpack_require__(270).Popover;
@@ -46369,23 +46401,31 @@
 			var inputs = [];
 			for (var n = 0; n < props.question.input.length; n++) {
 				inputs.push(React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
-					React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
+					'div',
+					null,
 					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								props.question.popover[n]
-							) },
+						ButtonToolbar,
+						{ className: 'flex' },
+						React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], id: n, className: 'input', type: 'text', onChange: props.handleChange }),
 						React.createElement(
-							Button,
-							{ className: 'popoverButton' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+							OverlayTrigger,
+							{ trigger: 'click', placement: 'top', overlay: React.createElement(
+									Popover,
+									{ id: 'popover-trigger-click' },
+									props.question.popover[n]
+								) },
+							React.createElement(
+								Button,
+								{ className: 'popoverButton' },
+								React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+							)
 						)
 					),
-					React.createElement(FormControl.Feedback, null)
+					React.createElement(
+						HelpBlock,
+						{ className: props.question.error[n] ? '' : 'hidden' },
+						props.question.error[n]
+					)
 				));
 			}
 		}

@@ -5,9 +5,11 @@ var infoOrderState = {
                 line: 'Please log in',
                 input: ['APN/ID Code', 'Password'],
                 disabled: true,
-                popover: ['This is printed on the letter you should have received in the mail. \
+                validate: ['number', 'number'],
+                error: [],
+                popover: ['You can find this number on the letter you should have received in the mail. \
 	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
-	                ,'This is also included in your letter. Capitalization does matter.'
+	                ,'Also found on your letter'
 	            ],
                 changeCounter: [1]
              	

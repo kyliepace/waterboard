@@ -3,6 +3,7 @@ var Row = require('react-bootstrap').Row;
 var FormGroup = require('react-bootstrap').FormGroup;
 var ControlLabel = require('react-bootstrap').ControlLabel;
 var FormControl = require('react-bootstrap').FormControl;
+var HelpBlock = require('react-bootstrap').HelpBlock;
 var Overlay = require('react-bootstrap').Overlay;
 var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 var Popover = require('react-bootstrap').Popover;
@@ -42,13 +43,15 @@ var Question = function(props){
 		var inputs = [];
 		for (var n=0; n<props.question.input.length; n++){
 			inputs.push(
-				<ButtonToolbar className='flex'>
-					<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
-					<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
-						<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
-					</OverlayTrigger>
-					<FormControl.Feedback />
-				</ButtonToolbar>
+				<div>
+					<ButtonToolbar className='flex'>
+						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
+						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
+							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
+						</OverlayTrigger>
+					</ButtonToolbar>
+					<HelpBlock className={props.question.error[n]? '': 'hidden'}>{props.question.error[n]}</HelpBlock>
+				</div>
 			);
 		}	
 	}

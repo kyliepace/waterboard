@@ -32,27 +32,45 @@ var infoOrderReducer= function(state, action) {
         var question = state.questions[counter];
         var index = action.index; //which of the input bars is being changed
         var answer = action.answer; //save the input value
-
-        //update the answers object
-        var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
-            console.log(newAnswer); //incoming value
-            console.log(state.answers[sourceCounter][counter]); //old answer array - why is this still blank?
-    
-            console.log('updating water source answers');
-          
-        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
-        console.log(newAnswersForSource);
-        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-        var next = question.changeCounter[0] + counter;
-        //turn off the disabled value
-        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
-        var before = state.questions.slice(0, counter);
-        var after = state.questions.slice(counter+1);
-        var newQuestions = before.concat(newQuestion, after); 
-            
-        //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
-        return newState;
+        // validate text input
+        console.log('type of answer '+typeof(answer));
+        console.log('must be '+question.validate[index]);
+        
+        var error = [];
+        question.error.forEach(function(message){
+            error.push(message); //copy error array
+        });
+        if(typeof(answer)===question.validate[index]){
+             //update the answers object
+            var newAnswer = state.answers[sourceCounter][counter].slice(0, index).concat(answer, state.answers[sourceCounter][counter].slice(index+1));
+                console.log(newAnswer); //incoming value
+                console.log('updating water source answers');
+              
+            var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
+            console.log(newAnswersForSource);
+            var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
+            var next = question.changeCounter[0] + counter; //set new next value
+            //turn off the disabled value and clear any error message
+            error[index]="";
+            var newQuestion = Object.assign({}, question, {disabled: false, error: error}); //update the question state
+            var before = state.questions.slice(0, counter);
+            var after = state.questions.slice(counter+1);
+            var newQuestions = before.concat(newQuestion, after);        
+            //update the state
+            var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+            return newState; 
+        }
+        else{
+            error[index]=('please enter a '+question.validate[index]);
+            var newQuestion = Object.assign({}, question, {error: error, disabled: true});
+            var before = state.questions.slice(0, counter);
+            var after = state.questions.slice(counter+1);
+            var newQuestions = before.concat(newQuestion, after);        
+            //update the state
+            var newState = Object.assign({}, state, {questions: newQuestions}); //update only the questions
+            return newState; 
+        }
+                 
     }
 
 /////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
