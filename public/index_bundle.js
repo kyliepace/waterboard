@@ -28586,7 +28586,7 @@
 	        }
 	        //increase question.next 
 	        var increaseBy = question.changeCounter[question.answerIndex];
-	        
+	        console.log('increase by: '+increaseBy);
 	        //update the question with new answer index and un-disable next arrow
 	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
 	        //create new question array
@@ -46265,8 +46265,9 @@
 		onSubmit: function (e) {
 			console.log("submit");
 			e.preventDefault();
-			console.log(this.props.infoOrder.questions[this.props.infoOrder.counter].next);
-			this.props.history.push('/infoOrder/' + this.props.infoOrder.questions[this.props.infoOrder.counter].next);
+			var that = this;
+			console.log(this.props.infoOrder.questions[that.props.infoOrder.counter].next);
+			this.props.history.push('/infoOrder/' + that.props.infoOrder.questions[that.props.infoOrder.counter].next);
 			this.props.dispatch(actions.submitAnswer());
 		},
 		sendData: function () {},

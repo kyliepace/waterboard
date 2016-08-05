@@ -21,7 +21,6 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
-		console.log('click'+ e.target.value);
 		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
@@ -30,8 +29,9 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
-		console.log(this.props.infoOrder.questions[this.props.infoOrder.counter].next);
-		this.props.history.push('/infoOrder/'+this.props.infoOrder.questions[this.props.infoOrder.counter].next);
+		var that = this;
+		console.log(this.props.infoOrder.questions[that.props.infoOrder.counter].next);
+		this.props.history.push('/infoOrder/'+that.props.infoOrder.questions[that.props.infoOrder.counter].next);
 		this.props.dispatch(actions.submitAnswer());
 	},
 	sendData: function(){

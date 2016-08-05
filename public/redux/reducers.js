@@ -76,7 +76,7 @@ var infoOrderReducer= function(state, action) {
         }
         //increase question.next 
         var increaseBy = question.changeCounter[question.answerIndex];
-        
+        console.log('increase by: '+increaseBy);
         //update the question with new answer index and un-disable next arrow
         var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
         //create new question array
