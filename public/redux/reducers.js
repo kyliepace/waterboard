@@ -88,19 +88,6 @@ var infoOrderReducer= function(state, action) {
         console.log(newState);
         return newState;
     }
-
-//////////////// PREVIOUS QUESTION //////////////////////////////////////
-    if(action.type === actions.PREV_QUESTION){
-        var counter = state.counter;
-        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
-        console.log('the form will go back by '+ reduceCounter);
-        counter -= reduceCounter;
-        var clicks = state.clicks;
-        clicks --;
-   
-    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
-    return newState;
-    }
     
 ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {

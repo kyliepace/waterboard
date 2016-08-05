@@ -53,18 +53,6 @@ var changeInput = function(e){
 exports.CHANGE_INPUT = CHANGE_INPUT;
 exports.changeInput = changeInput;
 
-
-////// when previous arrow is clicked ///////////////
-var PREV_QUESTION= 'PREV_QUESTION';
-var prevQuestion = function() {
-	console.log('action: previous question');
-    return {
-        type: PREV_QUESTION
-    }
-};
-exports.PREV_QUESTION = PREV_QUESTION;
-exports.prevQuestion = prevQuestion;
-
 ////// when next arrow is clicked ///////////////
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
 var submitAnswer = function() {

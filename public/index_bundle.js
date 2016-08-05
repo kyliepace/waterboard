@@ -28598,19 +28598,6 @@
 	        console.log(newState);
 	        return newState;
 	    }
-
-	//////////////// PREVIOUS QUESTION //////////////////////////////////////
-	    if(action.type === actions.PREV_QUESTION){
-	        var counter = state.counter;
-	        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
-	        console.log('the form will go back by '+ reduceCounter);
-	        counter -= reduceCounter;
-	        var clicks = state.clicks;
-	        clicks --;
-	   
-	    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
-	    return newState;
-	    }
 	    
 	////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
@@ -28756,18 +28743,6 @@
 	exports.CHANGE_INPUT = CHANGE_INPUT;
 	exports.changeInput = changeInput;
 
-
-	////// when previous arrow is clicked ///////////////
-	var PREV_QUESTION= 'PREV_QUESTION';
-	var prevQuestion = function() {
-		console.log('action: previous question');
-	    return {
-	        type: PREV_QUESTION
-	    }
-	};
-	exports.PREV_QUESTION = PREV_QUESTION;
-	exports.prevQuestion = prevQuestion;
-
 	////// when next arrow is clicked ///////////////
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
 	var submitAnswer = function() {
@@ -28820,7 +28795,7 @@
 	            {	number: 4,
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
-	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+	                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
 	              	disabled: true,
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 		                is usually either a surface diversion or a well, depending on whether the \
@@ -28850,7 +28825,7 @@
 	            {	number: 6,
 	                line: 'You reported that this property is served by a water supplier. \
 	                Who is that water supplier?',
-	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
+	                selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
 	               	selected: [false, false],
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 		                is usually either a surface diversion or a well, depending on whether the \
@@ -28931,7 +28906,7 @@
 	            },
 	            {	number: 13, 
 	            	line: 'How is water from this source used on the property?',
-	            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+	            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
 	            	mult: true,
 	            	disabled: true,
 	            	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
@@ -28939,7 +28914,7 @@
 	            	changeCounter: [2, 1, 1, 1, 1]
 	            },
 	            {	number: 14,
-	            	line: 'We\'re almost done! Let\s figure out your water use',
+	            	line: 'We\'re almost done! Let\'s figure out your water use',
 	            	input: ['total use January 2015 (gallons)', 
 	            		'total use May 2015 (gallons)', 
 	            		'total use June 2015 (gallons)', 
@@ -46177,7 +46152,7 @@
 					{ className: 'menu', xs: 10, md: 4, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
 						Link,
-						{ to: '/infoOrder' },
+						{ to: '/infoOrder/0' },
 						React.createElement(
 							Button,
 							{ type: 'button', className: 'button' },
@@ -46294,10 +46269,6 @@
 			this.props.history.push('/infoOrder/' + this.props.infoOrder.questions[this.props.infoOrder.counter].next);
 			this.props.dispatch(actions.submitAnswer());
 		},
-		prevQuestion: function () {
-			//dispatch an action that will reduce the counter by the amount that was just added to it
-			this.props.dispatch(actions.prevQuestion());
-		},
 		sendData: function () {},
 		addSource: function () {},
 		saveForm: function () {},
@@ -46364,47 +46335,37 @@
 	var ButtonToolbar = __webpack_require__(270).ButtonToolbar;
 
 	var Question = function (props) {
-		console.log(props.question.next);
-		//if the question should have a dropdown box:
-		if (props.question.dropdown) {
-			var dropdown = [React.createElement(
-				'option',
-				{ selected: true, disabled: true },
-				'Select One'
-			)];
-			for (var j = 0; j < props.question.dropdown.length; j++) {
-				dropdown.push(React.createElement(
-					'option',
-					{ value: props.question.dropdown[j], id: j },
+		// console.log(props.question.next);
+		// //if the question should have a dropdown box:
+		// if(props.question.dropdown){
+		// 	var dropdown = [<option selected disabled>Select One</option>];
+		// 	for (var j=0; j<props.question.dropdown.length; j++){
+		// 		dropdown.push(
+		// 			<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
+		// 		)
+		// 	}
+		// 	var options = (
+		// 		<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
+		// 			{dropdown}
+		// 		</FormControl>
+		// 	)
+		// }
+
+		//if the question is multiple choice, create a box for each option
+		if (props.question.selection) {
+			var options = [];
+			for (var i = 0; i < props.question.selection.length; i++) {
+				options.push(React.createElement(
+					Button,
+					{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
 					React.createElement(
 						'h3',
-						null,
-						props.question.dropdown[j]
+						{ id: i, onClick: props.handleClick },
+						props.question.selection[i]
 					)
 				));
 			}
-			var options = React.createElement(
-				FormControl,
-				{ componentClass: 'select', placeholder: 'select one', className: 'input', onChange: props.handleClick },
-				dropdown
-			);
 		}
-
-		//if the question is multiple choice, create a box for each option
-		else if (props.question.selection) {
-				var options = [];
-				for (var i = 0; i < props.question.selection.length; i++) {
-					options.push(React.createElement(
-						Button,
-						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
-						React.createElement(
-							'h3',
-							{ id: i, onClick: props.handleClick },
-							props.question.selection[i]
-						)
-					));
-				}
-			}
 		//if the question has a form text input, create a row for each input and popover
 		if (props.question.input) {
 			var inputs = [];
@@ -46455,7 +46416,7 @@
 			),
 			React.createElement(
 				FormGroup,
-				{ className: props.question.input ? 'hidden' : 'selector' },
+				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
 					ButtonToolbar,
 					{ className: 'flex' },
@@ -46487,11 +46448,6 @@
 			React.createElement(
 				'div',
 				{ className: 'flex' },
-				React.createElement(
-					Button,
-					{ className: 'button', onClick: props.onClick, type: 'button' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-				),
 				React.createElement(
 					Button,
 					{ className: 'button', disabled: props.disabled, type: 'submit' },

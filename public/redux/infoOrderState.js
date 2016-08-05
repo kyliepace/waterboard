@@ -34,7 +34,7 @@ var infoOrderState = {
             {	number: 4,
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
-                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
               	disabled: true,
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
@@ -64,7 +64,7 @@ var infoOrderState = {
             {	number: 6,
                 line: 'You reported that this property is served by a water supplier. \
                 Who is that water supplier?',
-                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
+                selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
                	selected: [false, false],
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
@@ -145,7 +145,7 @@ var infoOrderState = {
             },
             {	number: 13, 
             	line: 'How is water from this source used on the property?',
-            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
             	mult: true,
             	disabled: true,
             	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
@@ -153,7 +153,7 @@ var infoOrderState = {
             	changeCounter: [2, 1, 1, 1, 1]
             },
             {	number: 14,
-            	line: 'We\'re almost done! Let\s figure out your water use',
+            	line: 'We\'re almost done! Let\'s figure out your water use',
             	input: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
             		'total use June 2015 (gallons)', 

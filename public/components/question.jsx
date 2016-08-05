@@ -10,24 +10,24 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 var Question = function(props){
-	console.log(props.question.next);
-	//if the question should have a dropdown box:
-	if(props.question.dropdown){
-		var dropdown = [<option selected disabled>Select One</option>];
-		for (var j=0; j<props.question.dropdown.length; j++){
-			dropdown.push(
-				<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
-			)
-		}
-		var options = (
-			<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
-				{dropdown}
-			</FormControl>
-		)
-	}
+	// console.log(props.question.next);
+	// //if the question should have a dropdown box:
+	// if(props.question.dropdown){
+	// 	var dropdown = [<option selected disabled>Select One</option>];
+	// 	for (var j=0; j<props.question.dropdown.length; j++){
+	// 		dropdown.push(
+	// 			<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
+	// 		)
+	// 	}
+	// 	var options = (
+	// 		<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
+	// 			{dropdown}
+	// 		</FormControl>
+	// 	)
+	// }
 
 	//if the question is multiple choice, create a box for each option
-	else if(props.question.selection){
+	if(props.question.selection){
 		var options = [];
 		for (var i=0; i<props.question.selection.length; i++){
 			options.push(
@@ -62,7 +62,7 @@ var Question = function(props){
 			{inputs}
 		</FormGroup>
 
-		<FormGroup className={props.question.input ? 'hidden': 'selector'}>
+		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
 			<ButtonToolbar className='flex'>
 				<h3>{props.question.line}</h3>
 				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover}</Popover>}>
@@ -75,7 +75,7 @@ var Question = function(props){
 		</FormGroup>
 
 		<div className='flex'>
-			<Button className='button' onClick={props.onClick} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
+			
 			<Button className='button' disabled={props.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		</div>
 	</form>

@@ -34,10 +34,6 @@ var InfoOrder = React.createClass({
 		this.props.history.push('/infoOrder/'+this.props.infoOrder.questions[this.props.infoOrder.counter].next);
 		this.props.dispatch(actions.submitAnswer());
 	},
-	prevQuestion: function(){
-		//dispatch an action that will reduce the counter by the amount that was just added to it
-		this.props.dispatch(actions.prevQuestion());
-	},
 	sendData: function(){
 
 	},
