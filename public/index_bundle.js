@@ -28571,7 +28571,15 @@
 	        var next = state.next; //the value of next becomes the new counter index
 	        var clicks = state.clicks + 1;
 
-	        var newState = Object.assign({}, state, {answers: data.answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
+	        //update the state answers if they have already been saved to server
+	        if(data.answers){ 
+	            var answers = data.answers;
+	        }
+	        else{
+	            var answers = state.answers;
+	        }
+
+	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
 	        return newState;
 	    }
 
@@ -46873,6 +46881,7 @@
 				//if this is the log-in page being submitted, talk to server
 				//dispatch logIn function with idCode and password from state
 				this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
+
 				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
 			} else {
 				console.log('next will be ' + this.props.infoOrder.next);

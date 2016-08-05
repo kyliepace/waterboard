@@ -32,7 +32,15 @@ var infoOrderReducer= function(state, action) {
         var next = state.next; //the value of next becomes the new counter index
         var clicks = state.clicks + 1;
 
-        var newState = Object.assign({}, state, {answers: data.answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
+        //update the state answers if they have already been saved to server
+        if(data.answers){ 
+            var answers = data.answers;
+        }
+        else{
+            var answers = state.answers;
+        }
+
+        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
         return newState;
     }
 

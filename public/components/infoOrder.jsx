@@ -33,6 +33,7 @@ var InfoOrder = React.createClass({
 		if(parseInt(this.props.params.counter)===0){ //if this is the log-in page being submitted, talk to server
 			//dispatch logIn function with idCode and password from state
 			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
+			
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 		}
 		else{

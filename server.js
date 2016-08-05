@@ -9,6 +9,7 @@ var app = express();
 app.use('/', express.static('public'));
 app.use(bodyParser());
 
+
 app.post('/logIn', function(req, res){
 	//client is sending idCode and password
 	var idCode = req.body.idCode;
@@ -18,14 +19,14 @@ app.post('/logIn', function(req, res){
 		if(data[i].idCode === idCode && data[i].password === password){
 			var savedData = {
 				owner: data[i].owner, 
-				address: data[i].address,
-				answers: data[i].answers
+				address: data[i].address
+				
 			};
 			console.log(savedData);
 			res.status(200).json(savedData).end(); //if the password matches, send back some data
 		}
 		else{
-			res.status(404);
+			res.status(404).json('incorrect login').end();
 		}
 
 	}	
