@@ -6,7 +6,6 @@ var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
-var browserHistory = require('react-router').browserHistory;
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -62,13 +61,10 @@ var InfoOrder = React.createClass({
 			);
 		}
 		else{
-			// var show = (
-			// 	<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
-   //  			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
-			// );
-			var show = React.Children.map(this.props.children, function(child){
-				React.cloneElement(child, {question: singleQuestion, answer: answer});
-			})
+			var show = (
+				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
+    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+			);
 		}
 		return(
 		    <section className='container'>

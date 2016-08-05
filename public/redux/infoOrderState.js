@@ -148,6 +148,7 @@ var infoOrderState = {
             	line: 'How is water from this source used on the property?',
             	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
             	mult: true,
+                selected: [false, false, false, false, false],
             	disabled: true,
             	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
             		Agricultural use applies if you sell any food products raised on your property',

@@ -76,7 +76,7 @@ var infoOrderReducer= function(state, action) {
         }
         //increase question.next 
         
-        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter
+        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter to calculate the next index
       
         console.log('next index: '+next);
         //update the question with new answer index and un-disable next arrow
@@ -95,21 +95,18 @@ var infoOrderReducer= function(state, action) {
     if (action.type === actions.SUBMIT_ANSWER) {
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
-        
         //check to see if counter>questions.length and if so, send answers to server
 
-        //if multiple choice, save answer string to state
+        //if multiple choice, save answer string to state. If not multiple choice, this has already been done onChange.
         if(!question.input){
             console.log('answer index is '+question.answerIndex); //for multiple-choice questions
             if(question.selection){
                 var answer = question.selection[question.answerIndex];
             }
-            else if(question.dropdown){
-                var answer = question.dropdown[question.answerIndex];
-            }
+            
             //update the state.answers array
             var newAnswerArray = state.answers[state.sourceCounter][counter].concat(answer);
-             var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: newAnswerArray}); //update the question object within the water source answers object within the answers object
+            var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: newAnswerArray}); //update the question object within the water source answers object within the answers object
             var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
             console.log(newAnswersForState);
         }
@@ -118,22 +115,11 @@ var infoOrderReducer= function(state, action) {
             var newAnswersForState = state.answers;
         }
         
-       //increase infoOrder.counter ++
-        var changeCounterBy = function(){
-            if(question.changeCounter.length>1){
-                return question.changeCounter[question.answerIndex]//appropriate number to add to counter
-            }
-            else{
-                return question.changeCounter[0];
-            }   
-        }
-        console.log('the form will advance by'+ changeCounterBy());
-        var increaseBy = changeCounterBy();
-        counter +=  increaseBy; //increase the counter by the chosen value
+        var next = state.next; //the value of next becomes the new counter index
         var clicks = state.clicks;
         clicks ++;
-        var newPrevQuestion = state.prevQuestion.slice(0, counter).concat(increaseBy, state.prevQuestion.slice(counter+1)); //record that increase value in the prevQuestion array
-        var newState = Object.assign({}, state, {counter: counter, clicks: clicks, prevQuestion: newPrevQuestion, answers: newAnswersForState}); //update state with new counter
+        
+        var newState = Object.assign({}, state, {counter: next, clicks: clicks, answers: newAnswersForState}); //update state with new counter
         console.log('new state'); console.log(newState);
         return newState;
     }
