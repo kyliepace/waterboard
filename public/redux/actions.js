@@ -23,15 +23,8 @@ exports.logInSuccess = logInSuccess;
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
 var chooseOption = function(e){
 	console.log('choose option ');
-	console.log(e.target.value);
-	console.log(e.target.id);
-	if(e.target.value){
-		console.log('dropdown selected ' + e.target.value);
-		var index = e.target.value;
-	}
-	else{
-		var index = e.target.id;
-	}
+	var index = e.target.id;
+	
 	return{
 		type: CHOOSE_OPTION,
 		answerIndex: index //which option of the selection array
@@ -52,18 +45,6 @@ var changeInput = function(e){
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;
 exports.changeInput = changeInput;
-
-
-////// when previous arrow is clicked ///////////////
-var PREV_QUESTION= 'PREV_QUESTION';
-var prevQuestion = function() {
-	console.log('action: previous question');
-    return {
-        type: PREV_QUESTION
-    }
-};
-exports.PREV_QUESTION = PREV_QUESTION;
-exports.prevQuestion = prevQuestion;
 
 ////// when next arrow is clicked ///////////////
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';

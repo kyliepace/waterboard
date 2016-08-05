@@ -6,6 +6,7 @@ var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
+var browserHistory = require('react-router').browserHistory;
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -20,7 +21,6 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
-		console.log('click'+ e.target.value);
 		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 	},
 	handleChange: function(e){
@@ -29,11 +29,10 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		console.log("submit");
 		e.preventDefault();
+		var that = this;
+		console.log(this.props.infoOrder.next);
+		this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 		this.props.dispatch(actions.submitAnswer());
-	},
-	prevQuestion: function(){
-		//dispatch an action that will reduce the counter by the amount that was just added to it
-		this.props.dispatch(actions.prevQuestion());
 	},
 	sendData: function(){
 
@@ -48,7 +47,7 @@ var InfoOrder = React.createClass({
 		var that = this;
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
-		var index = that.props.infoOrder.counter;
+		var index = that.props.params.counter;
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 

@@ -4,7 +4,9 @@ var Provider = require('react-redux').Provider;
 var router = require('react-router');
 var Router = router.Router;
 var Route = router.Route;
-var browserHistory = router.browserHistory;
+
+var hashHistory = router.hashHistory;
+
 var IndexRoute = router.IndexRoute;
 
 var IO_LogIn = require('./public/components/infoOrder/logIn.jsx');
@@ -37,22 +39,9 @@ var routes = (
 	  <Router history={browserHistory} >
 	    <Route path='/' component={Main}>
 	      	<IndexRoute component={Menu}/>
-	      	<Route path='/infoOrder' component={InfoOrder}>
-	      		<Route component={IO_LogIn}/>
-	      		<Route path='/IO_2' component={IO_2}/>
-	      		<Route path='/IO_3' component={IO_3}/>
-	      		<Route path='/IO_4' component={IO_4}/>
-	      		<Route path='/IO_5' component={IO_5}/>
-	      		<Route path='/IO_6' component={IO_6}/>
-	      		<Route path='/IO_7' component={IO_7}/>
-	      		<Route path='/IO_8' component={IO_8}/>
-	      		<Route path='/IO_9' component={IO_9}/>
-	      		<Route path='/IO_10' component={IO_10}/>
-	      		<Route path='/IO_11' component={IO_11}/>
-	      		<Route path='/IO_12' component={IO_12}/>
-	      		<Route path='/IO_13' component={IO_13}/>
-	      		<Route path='/IO_14' component={IO_14}/>
-	      	</Route>
+
+	      	<Route path='/infoOrder/:counter' component={InfoOrder}/>
+
 	      	<Route path='/waterRights' component={WaterRights}/>
 	      	<Route path='/infoOrderFaq' component={InfoOrderFaq}/>
 	      	<Route path='/waterRightsFaq' component={WaterRightsFaq}/>

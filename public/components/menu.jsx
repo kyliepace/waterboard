@@ -10,7 +10,7 @@ var Menu = function(props){
 	    <section>
 	    	<Row >
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={1}>
-	    			<Link to='/infoOrder'><Button type='button' className='button'>
+	    			<Link to='/infoOrder/0'><Button type='button' className='button'>
 	    				<h2>Respond to Info Order</h2>
 	    			</Button></Link>
 	    		</Col>	    		

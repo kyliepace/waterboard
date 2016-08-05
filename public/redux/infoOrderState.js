@@ -1,7 +1,7 @@
 var infoOrderState = {
-
+    next: 1,
 	questions: [
-             {	number: 1,
+             {	number: 0,
                 line: 'Please log in',
                 input: ['APN/ID Code', 'Password'],
                 disabled: true,
@@ -10,8 +10,9 @@ var infoOrderState = {
 	                ,'This is also included in your letter. Capitalization does matter.'
 	            ],
                 changeCounter: [1]
+             	
              }, 
-             {	number: 2,
+             {	number: 1,
                 line: 'Is this parcel connected to a water source?',
                 disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
@@ -19,6 +20,7 @@ var infoOrderState = {
                 selection: ['Yes', 'No'],
                 selected: [false, false],
                 changeCounter: [1, 100]
+             
             },
             {	number: 3,
                 line: 'How many sources supply water to this parcel?',
@@ -27,11 +29,13 @@ var infoOrderState = {
                 	wells, springs, ponds...'
                	],
                 changeCounter: [1]
+         
             },
             {	number: 4,
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
-                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+                selected: [false, false, false, false],
               	disabled: true,
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
@@ -55,12 +59,13 @@ var infoOrderState = {
                 ],
                 link: "http://www.mapcoordinates.net/en",
                 changeCounter: [8]
+               
            },
               
             {	number: 6,
                 line: 'You reported that this property is served by a water supplier. \
                 Who is that water supplier?',
-                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
+                selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
                	selected: [false, false],
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
@@ -141,7 +146,7 @@ var infoOrderState = {
             },
             {	number: 13, 
             	line: 'How is water from this source used on the property?',
-            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
             	mult: true,
             	disabled: true,
             	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
@@ -149,7 +154,7 @@ var infoOrderState = {
             	changeCounter: [2, 1, 1, 1, 1]
             },
             {	number: 14,
-            	line: 'We\'re almost done! Let\s figure out your water use',
+            	line: 'We\'re almost done! Let\'s figure out your water use',
             	input: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
             		'total use June 2015 (gallons)', 

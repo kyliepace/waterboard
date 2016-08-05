@@ -57,7 +57,9 @@
 	var router = __webpack_require__(201);
 	var Router = router.Router;
 	var Route = router.Route;
-	var browserHistory = router.browserHistory;
+
+	var hashHistory = router.hashHistory;
+
 	var IndexRoute = router.IndexRoute;
 
 	var IO_LogIn = __webpack_require__(264);
@@ -94,24 +96,7 @@
 													Route,
 													{ path: '/', component: Main },
 													React.createElement(IndexRoute, { component: Menu }),
-													React.createElement(
-																	Route,
-																	{ path: '/infoOrder', component: InfoOrder },
-																	React.createElement(Route, { component: IO_LogIn }),
-																	React.createElement(Route, { path: '/IO_2', component: IO_2 }),
-																	React.createElement(Route, { path: '/IO_3', component: IO_3 }),
-																	React.createElement(Route, { path: '/IO_4', component: IO_4 }),
-																	React.createElement(Route, { path: '/IO_5', component: IO_5 }),
-																	React.createElement(Route, { path: '/IO_6', component: IO_6 }),
-																	React.createElement(Route, { path: '/IO_7', component: IO_7 }),
-																	React.createElement(Route, { path: '/IO_8', component: IO_8 }),
-																	React.createElement(Route, { path: '/IO_9', component: IO_9 }),
-																	React.createElement(Route, { path: '/IO_10', component: IO_10 }),
-																	React.createElement(Route, { path: '/IO_11', component: IO_11 }),
-																	React.createElement(Route, { path: '/IO_12', component: IO_12 }),
-																	React.createElement(Route, { path: '/IO_13', component: IO_13 }),
-																	React.createElement(Route, { path: '/IO_14', component: IO_14 })
-													),
+													React.createElement(Route, { path: '/infoOrder/:counter', component: InfoOrder }),
 													React.createElement(Route, { path: '/waterRights', component: WaterRights }),
 													React.createElement(Route, { path: '/infoOrderFaq', component: InfoOrderFaq }),
 													React.createElement(Route, { path: '/waterRightsFaq', component: WaterRightsFaq })
@@ -45765,7 +45750,7 @@
 	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
 	        console.log(newAnswersForSource);
 	        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-
+	        var next = question.changeCounter[0] + counter;
 	        //turn off the disabled value
 	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
 	        var before = state.questions.slice(0, counter);
@@ -45773,11 +45758,11 @@
 	        var newQuestions = before.concat(newQuestion, after); 
 	            
 	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+	        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
 	        return newState;
 	    }
 
-	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ 
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
@@ -45792,33 +45777,25 @@
 	            newArray[answerIndex] = true;
 	            console.log(newArray);
 	        }
-	        else{ //if a dropdown question
+	        else{ //if an input
 	            var selected = []
-	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+	            var answerIndex = 0;
 	        }
+	        //increase question.next 
+	        
+	        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter
+	      
+	        console.log('next index: '+next);
 	        //update the question with new answer index and un-disable next arrow
 	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
 	        //create new question array
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
 	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
+	        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter, next: next}); //if I don't include counter here, it doesn't get copied
 	        console.log('new state:')
 	        console.log(newState);
 	        return newState;
-	    }
-
-	//////////////// PREVIOUS QUESTION //////////////////////////////////////
-	    if(action.type === actions.PREV_QUESTION){
-	        var counter = state.counter;
-	        var reduceCounter = state.prevQuestion[state.clicks]; //see what value was added to the counter in the last submit
-	        console.log('the form will go back by '+ reduceCounter);
-	        counter -= reduceCounter;
-	        var clicks = state.clicks;
-	        clicks --;
-	   
-	    var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter 
-	    return newState;
 	    }
 	    
 	////////////// SUBMIT ANSWER /////////////////////////////////////////////
@@ -45857,7 +45834,7 @@
 	                return question.changeCounter[0];
 	            }   
 	        }
-	        console.log('the quiz will advance by'+ changeCounterBy());
+	        console.log('the form will advance by'+ changeCounterBy());
 	        var increaseBy = changeCounterBy();
 	        counter +=  increaseBy; //increase the counter by the chosen value
 	        var clicks = state.clicks;
@@ -45935,15 +45912,8 @@
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e){
 		console.log('choose option ');
-		console.log(e.target.value);
-		console.log(e.target.id);
-		if(e.target.value){
-			console.log('dropdown selected ' + e.target.value);
-			var index = e.target.value;
-		}
-		else{
-			var index = e.target.id;
-		}
+		var index = e.target.id;
+		
 		return{
 			type: CHOOSE_OPTION,
 			answerIndex: index //which option of the selection array
@@ -45965,18 +45935,6 @@
 	exports.CHANGE_INPUT = CHANGE_INPUT;
 	exports.changeInput = changeInput;
 
-
-	////// when previous arrow is clicked ///////////////
-	var PREV_QUESTION= 'PREV_QUESTION';
-	var prevQuestion = function() {
-		console.log('action: previous question');
-	    return {
-	        type: PREV_QUESTION
-	    }
-	};
-	exports.PREV_QUESTION = PREV_QUESTION;
-	exports.prevQuestion = prevQuestion;
-
 	////// when next arrow is clicked ///////////////
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
 	var submitAnswer = function() {
@@ -45994,9 +45952,9 @@
 /***/ function(module, exports) {
 
 	var infoOrderState = {
-
+	    next: 1,
 		questions: [
-	             {	number: 1,
+	             {	number: 0,
 	                line: 'Please log in',
 	                input: ['APN/ID Code', 'Password'],
 	                disabled: true,
@@ -46005,8 +45963,9 @@
 		                ,'This is also included in your letter. Capitalization does matter.'
 		            ],
 	                changeCounter: [1]
+	             	
 	             }, 
-	             {	number: 2,
+	             {	number: 1,
 	                line: 'Is this parcel connected to a water source?',
 	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
@@ -46014,6 +45973,7 @@
 	                selection: ['Yes', 'No'],
 	                selected: [false, false],
 	                changeCounter: [1, 100]
+	             
 	            },
 	            {	number: 3,
 	                line: 'How many sources supply water to this parcel?',
@@ -46022,11 +45982,13 @@
 	                	wells, springs, ponds...'
 	               	],
 	                changeCounter: [1]
+	         
 	            },
 	            {	number: 4,
 	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
-	                dropdown: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+	                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+	                selected: [false, false, false, false],
 	              	disabled: true,
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 		                is usually either a surface diversion or a well, depending on whether the \
@@ -46050,12 +46012,13 @@
 	                ],
 	                link: "http://www.mapcoordinates.net/en",
 	                changeCounter: [8]
+	               
 	           },
 	              
 	            {	number: 6,
 	                line: 'You reported that this property is served by a water supplier. \
 	                Who is that water supplier?',
-	                dropdown: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
+	                selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
 	               	selected: [false, false],
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 		                is usually either a surface diversion or a well, depending on whether the \
@@ -46136,7 +46099,7 @@
 	            },
 	            {	number: 13, 
 	            	line: 'How is water from this source used on the property?',
-	            	dropdown: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+	            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
 	            	mult: true,
 	            	disabled: true,
 	            	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
@@ -46144,7 +46107,7 @@
 	            	changeCounter: [2, 1, 1, 1, 1]
 	            },
 	            {	number: 14,
-	            	line: 'We\'re almost done! Let\s figure out your water use',
+	            	line: 'We\'re almost done! Let\'s figure out your water use',
 	            	input: ['total use January 2015 (gallons)', 
 	            		'total use May 2015 (gallons)', 
 	            		'total use June 2015 (gallons)', 
@@ -46367,7 +46330,7 @@
 					{ className: 'menu', xs: 10, md: 4, xsOffset: 1, mdOffset: 1 },
 					React.createElement(
 						Link,
-						{ to: '/infoOrder' },
+						{ to: '/infoOrder/0' },
 						React.createElement(
 							Button,
 							{ type: 'button', className: 'button' },
@@ -46454,6 +46417,7 @@
 	var connect = __webpack_require__(173).connect;
 	var actions = __webpack_require__(496);
 	var Confirm = __webpack_require__(504);
+	var browserHistory = __webpack_require__(201).browserHistory;
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -46470,7 +46434,6 @@
 			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 		},
 		handleClick: function (e) {
-			console.log('click' + e.target.value);
 			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
@@ -46479,11 +46442,10 @@
 		onSubmit: function (e) {
 			console.log("submit");
 			e.preventDefault();
+			var that = this;
+			console.log(this.props.infoOrder.next);
+			this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
 			this.props.dispatch(actions.submitAnswer());
-		},
-		prevQuestion: function () {
-			//dispatch an action that will reduce the counter by the amount that was just added to it
-			this.props.dispatch(actions.prevQuestion());
 		},
 		sendData: function () {},
 		addSource: function () {},
@@ -46492,7 +46454,7 @@
 			var that = this;
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
-			var index = that.props.infoOrder.counter;
+			var index = that.props.params.counter;
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
@@ -46556,46 +46518,37 @@
 	var ButtonToolbar = __webpack_require__(265).ButtonToolbar;
 
 	var Question = function (props) {
-		//if the question should have a dropdown box:
-		if (props.question.dropdown) {
-			var dropdown = [React.createElement(
-				'option',
-				{ selected: true, disabled: true },
-				'Select One'
-			)];
-			for (var j = 0; j < props.question.dropdown.length; j++) {
-				dropdown.push(React.createElement(
-					'option',
-					{ value: props.question.dropdown[j], id: j },
+		// console.log(props.question.next);
+		// //if the question should have a dropdown box:
+		// if(props.question.dropdown){
+		// 	var dropdown = [<option selected disabled>Select One</option>];
+		// 	for (var j=0; j<props.question.dropdown.length; j++){
+		// 		dropdown.push(
+		// 			<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
+		// 		)
+		// 	}
+		// 	var options = (
+		// 		<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
+		// 			{dropdown}
+		// 		</FormControl>
+		// 	)
+		// }
+
+		//if the question is multiple choice, create a box for each option
+		if (props.question.selection) {
+			var options = [];
+			for (var i = 0; i < props.question.selection.length; i++) {
+				options.push(React.createElement(
+					Button,
+					{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
 					React.createElement(
 						'h3',
-						null,
-						props.question.dropdown[j]
+						{ id: i, onClick: props.handleClick },
+						props.question.selection[i]
 					)
 				));
 			}
-			var options = React.createElement(
-				FormControl,
-				{ componentClass: 'select', placeholder: 'select one', className: 'input', onChange: props.handleClick },
-				dropdown
-			);
 		}
-
-		//if the question is multiple choice, create a box for each option
-		else if (props.question.selection) {
-				var options = [];
-				for (var i = 0; i < props.question.selection.length; i++) {
-					options.push(React.createElement(
-						Button,
-						{ className: props.question.selected[i] ? "selected" : 'option', type: 'button', id: i, onClick: props.handleClick },
-						React.createElement(
-							'h3',
-							{ id: i, onClick: props.handleClick },
-							props.question.selection[i]
-						)
-					));
-				}
-			}
 		//if the question has a form text input, create a row for each input and popover
 		if (props.question.input) {
 			var inputs = [];
@@ -46646,7 +46599,7 @@
 			),
 			React.createElement(
 				FormGroup,
-				{ className: props.question.input ? 'hidden' : 'selector' },
+				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
 					ButtonToolbar,
 					{ className: 'flex' },
@@ -46678,11 +46631,6 @@
 			React.createElement(
 				'div',
 				{ className: 'flex' },
-				React.createElement(
-					Button,
-					{ className: 'button', onClick: props.onClick, type: 'button' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-				),
 				React.createElement(
 					Button,
 					{ className: 'button', disabled: props.disabled, type: 'submit' },
