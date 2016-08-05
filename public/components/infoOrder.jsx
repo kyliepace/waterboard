@@ -67,7 +67,7 @@ var InfoOrder = React.createClass({
 			);
 		}
 		return(
-		    <section className='container'>
+		    <section>
 		    	{show}
     			
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>

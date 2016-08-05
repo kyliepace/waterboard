@@ -6,13 +6,13 @@ var Link = router.Link;
 
 var Header = function(props){
 	return(
-	    <header>
+	    <header className='container'>
 	      <Row>
-	      	<Col xs={7} xsOffset={1} md={5} mdOffset={1}>
+	      	<Col xs={6}  md={5} mdOffset={1}>
 	      		<Link to='/'><h3>State Water Resources Control Board</h3></Link>
 	      	</Col>
-	      	<Col xs={4} md={5} mdOffset={1}>
-	      		<h3>California Environmental Protection Agency</h3>
+	      	<Col xs={6} md={5} mdOffset={1} class='pull-right'>
+	      		<h3 style={{'text-align': 'right'}}>California Environmental Protection Agency</h3>
 	      	</Col>
 	      </Row>
 	    </header>

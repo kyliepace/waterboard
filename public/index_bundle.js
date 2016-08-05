@@ -28575,8 +28575,19 @@
 	            console.log('answer:'+ answerIndex);
 	            
 	            //updated the selected array so that the button has selected=true
-	            var newArray = [false, false];
-	            newArray[answerIndex] = true;
+	            var newArray = [];
+	            if(question.mult){
+	                question.selected.forEach(function(select){
+	                    newArray.push(select);
+	                }); //copy the question.selected array
+	                newArray[answerIndex]=!question.selected[answerIndex]; //toggle
+	            }
+	            else{
+	                question.selected.forEach(function(){
+	                    newArray.push(false);
+	                }); //fill newArray with false
+	                newArray[answerIndex] = true; //make the selected one true
+	            }
 	            console.log(newArray);
 	        }
 	        else{ //if an input
@@ -29024,13 +29035,13 @@
 	var Header = function (props) {
 		return React.createElement(
 			'header',
-			null,
+			{ className: 'container' },
 			React.createElement(
 				Row,
 				null,
 				React.createElement(
 					Col,
-					{ xs: 7, xsOffset: 1, md: 5, mdOffset: 1 },
+					{ xs: 6, md: 5, mdOffset: 1 },
 					React.createElement(
 						Link,
 						{ to: '/' },
@@ -29043,10 +29054,10 @@
 				),
 				React.createElement(
 					Col,
-					{ xs: 4, md: 5, mdOffset: 1 },
+					{ xs: 6, md: 5, mdOffset: 1, 'class': 'pull-right' },
 					React.createElement(
 						'h3',
-						null,
+						{ style: { 'text-align': 'right' } },
 						'California Environmental Protection Agency'
 					)
 				)
@@ -46141,7 +46152,9 @@
 							React.createElement(
 								'h2',
 								null,
-								'Respond to Info Order'
+								'Respond to ',
+								React.createElement('br', null),
+								'Info Order'
 							)
 						)
 					)
@@ -46156,7 +46169,7 @@
 							Link,
 							{ to: '/waterRights' },
 							React.createElement(
-								'span',
+								'h2',
 								null,
 								'Claim or Apply for',
 								React.createElement('br', null),
@@ -46179,9 +46192,11 @@
 							Link,
 							{ to: '/infoOrderFaq' },
 							React.createElement(
-								'span',
+								'h3',
 								null,
-								'What is this Info Order all about?'
+								'What is this Info Order ',
+								React.createElement('br', null),
+								'all about?'
 							)
 						)
 					)
@@ -46196,9 +46211,11 @@
 							Link,
 							{ to: '/waterRightsFaq' },
 							React.createElement(
-								'span',
+								'h3',
 								null,
-								'What is a water right and do I need one?'
+								'What is a water right ',
+								React.createElement('br', null),
+								'and do I need one?'
 							)
 						)
 					)
@@ -46275,7 +46292,7 @@
 			}
 			return React.createElement(
 				'section',
-				{ className: 'container' },
+				null,
 				show,
 				React.createElement(
 					Col,
@@ -46364,7 +46381,7 @@
 							) },
 						React.createElement(
 							Button,
-							{ className: 'button' },
+							{ className: 'popoverButton' },
 							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 						)
 					),
@@ -46399,25 +46416,21 @@
 				FormGroup,
 				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
+					'h3',
+					null,
+					props.question.line
+				),
+				React.createElement(
+					OverlayTrigger,
+					{ trigger: 'click', placement: 'top', overlay: React.createElement(
+							Popover,
+							{ id: 'popover-trigger-click' },
+							props.question.popover
+						) },
 					React.createElement(
-						'h3',
-						null,
-						props.question.line
-					),
-					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								props.question.popover
-							) },
-						React.createElement(
-							Button,
-							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
-						)
+						Button,
+						{ className: 'popoverButton' },
+						React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
 					)
 				),
 				React.createElement(
@@ -46427,13 +46440,10 @@
 				)
 			),
 			React.createElement(
-				'div',
-				{ className: 'flex' },
-				React.createElement(
-					Button,
-					{ className: 'button', disabled: props.disabled, type: 'submit' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-				)
+				Button,
+				{ className: 'button', id: 'submitButton', disabled: props.disabled, type: 'submit' },
+				'Next',
+				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 			)
 		);
 	};
@@ -46519,13 +46529,10 @@
 				)
 			),
 			React.createElement(
-				'div',
-				{ className: 'flex' },
-				React.createElement(
-					Button,
-					{ className: 'button', onClick: props.onClick, type: 'button' },
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-left', 'aria-hidden': 'left' })
-				)
+				Button,
+				{ className: 'button', id: 'submitButton', disabled: props.disabled, type: 'submit' },
+				'Next',
+				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 			)
 		);
 	};

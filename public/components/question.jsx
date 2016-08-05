@@ -45,7 +45,7 @@ var Question = function(props){
 				<ButtonToolbar className='flex'>
 					<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
 					<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
-						<Button className={'button'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
+						<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 					</OverlayTrigger>
 					<FormControl.Feedback />
 				</ButtonToolbar>
@@ -63,20 +63,20 @@ var Question = function(props){
 		</FormGroup>
 
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
-			<ButtonToolbar className='flex'>
+			
 				<h3>{props.question.line}</h3>
 				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover}</Popover>}>
-					<Button className='button'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
+					<Button className='popoverButton'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 				</OverlayTrigger>
-			</ButtonToolbar>
+			
 			<Row className='options'>
 				{options}
 			</Row>
 		</FormGroup>
 
-		<div className='flex'>
-			<Button className='button' disabled={props.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-		</div>
+		
+		<Button className='button' id='submitButton' disabled={props.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		
 	</form>
 	);		
 };

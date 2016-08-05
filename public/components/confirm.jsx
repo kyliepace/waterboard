@@ -33,9 +33,7 @@ var Confirm = function(props){
 			</Row>
 		</FormGroup>
 
-		<div className='flex'>
-			<Button className='button' onClick={props.onClick} type='button'><span className='glyphicon glyphicon-arrow-left' aria-hidden='left'></span></Button>
-		</div>
+		<Button className='button' id='submitButton' disabled={props.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 	</form>
 	);		
 };

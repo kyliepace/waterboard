@@ -66,8 +66,19 @@ var infoOrderReducer= function(state, action) {
             console.log('answer:'+ answerIndex);
             
             //updated the selected array so that the button has selected=true
-            var newArray = [false, false];
-            newArray[answerIndex] = true;
+            var newArray = [];
+            if(question.mult){
+                question.selected.forEach(function(select){
+                    newArray.push(select);
+                }); //copy the question.selected array
+                newArray[answerIndex]=!question.selected[answerIndex]; //toggle
+            }
+            else{
+                question.selected.forEach(function(){
+                    newArray.push(false);
+                }); //fill newArray with false
+                newArray[answerIndex] = true; //make the selected one true
+            }
             console.log(newArray);
         }
         else{ //if an input
