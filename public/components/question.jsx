@@ -11,22 +11,6 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 var Question = function(props){
-	// console.log(props.question.next);
-	// //if the question should have a dropdown box:
-	// if(props.question.dropdown){
-	// 	var dropdown = [<option selected disabled>Select One</option>];
-	// 	for (var j=0; j<props.question.dropdown.length; j++){
-	// 		dropdown.push(
-	// 			<option value ={props.question.dropdown[j]} id={j}><h3>{props.question.dropdown[j]}</h3></option>
-	// 		)
-	// 	}
-	// 	var options = (
-	// 		<FormControl componentClass='select' placeholder='select one' className='input' onChange={props.handleClick}>
-	// 			{dropdown}
-	// 		</FormControl>
-	// 	)
-	// }
-
 	//if the question is multiple choice, create a box for each option
 	if(props.question.selection){
 		var options = [];
@@ -45,7 +29,7 @@ var Question = function(props){
 			inputs.push(
 				<div>
 					<ButtonToolbar className='flex'>
-						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} id={n} className='input' type='text' onChange={props.handleChange}/>
+						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} name={n} className='input' type='text' onChange={props.handleChange}/>
 						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
 							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 						</OverlayTrigger>

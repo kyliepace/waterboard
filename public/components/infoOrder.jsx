@@ -17,7 +17,9 @@ var InfoOrder = React.createClass({
 		};
 	},
 	componentWillMount: function(){
-		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+		if(parseInt(this.props.params.counter) ===0){
+			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+		}
 	},
 	handleClick: function(e){
 		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
@@ -47,6 +49,7 @@ var InfoOrder = React.createClass({
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.params.counter;
+		console.log('index is '+index);
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 

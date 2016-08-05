@@ -36,7 +36,7 @@ exports.chooseOption = chooseOption;
 //////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
 var changeInput = function(e){
-	console.log(e.target.id);
+	console.log(e.target.name);
 	if(e.target.value===""){
 		var answer = 0;
 	}
@@ -50,7 +50,7 @@ var changeInput = function(e){
 	}
 	return{
 		type: CHANGE_INPUT, 
-		index: e.target.id,
+		index: e.target.name,
 		answer: answer
 	}
 };

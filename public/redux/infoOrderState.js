@@ -27,6 +27,9 @@ var infoOrderState = {
             {	number: 3,
                 line: 'How many sources supply water to this parcel?',
                 input: ['Number'],
+                disabled: true,
+                validate: ['number'],
+                error: [],
                 popover: ['Examples of water sources include water companies, rivers or streams, \
                 	wells, springs, ponds...'
                	],
@@ -53,6 +56,9 @@ var infoOrderState = {
                 	'How many feet deep is the well?',
                 	'Who owned the property when the well was dug?'
                 ], 
+                disabled: true,
+                validate: ['number', 'number', 'number', 'string'],
+                error: ["","","",""],
                 popover: [
 	                'Please use the linked mapping tool to find the coordinates',
 	                'Enter the approximate year of construction',
@@ -69,6 +75,7 @@ var infoOrderState = {
                 Who is that water supplier?',
                 selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
                	selected: [false, false],
+                disabled: true,
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
@@ -82,6 +89,9 @@ var infoOrderState = {
                 	'What is the individual water supplier\'s name?',
                 	'What is the Accessor\'s Parcel Number of the parcel that supplies your water?',
                 ],
+                disabled: true,
+                validate: ['string', 'number'],
+                error: [],
                 popover: ['If you don\'t know some details, that\'s ok.',
                 	'The APN is also the 12-digit ID Code used to log into this form'
                 ],
@@ -106,6 +116,9 @@ var infoOrderState = {
             {	number: 9,
                 line: 'You have already reported your use! Awesome! What\'s your application number?',
                 input: ['App Id'],
+                disabled: true,
+                validate: ['string'],
+                error: [],
                 popover: ['The application number usually starts with a letter and looks like \
                 	A111111 or S111111, for example'
                 ],
@@ -167,6 +180,9 @@ var infoOrderState = {
             		'total use October 2015 (gallons)', 
             		'total use November 2015 (gallons)', 
             	],
+                disabled: true,
+                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+                error: [],
             	popover: ['Tally the number of gallons of water used from this water source in January of 2015. You may \
             	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
             	are useful tools.',
@@ -215,6 +231,9 @@ var infoOrderState = {
             		'October 2015', 
             		'November 2015'
             	],
+                disabled: true,
+                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+                error: [],
             	popover: ['If a person was only living there for 1/2 the month, add them as 0.5',
             	'We know they are a full person',
             	'but we will multiply the estimated water use per person per month by 0.5',
