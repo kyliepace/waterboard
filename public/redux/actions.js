@@ -38,7 +38,7 @@ var CHANGE_INPUT = 'CHANGE_INPUT';
 var changeInput = function(e){
 	console.log(e.target.name);
 	if(e.target.value===""){
-		var answer = 0;
+		var answer = "";
 	}
 	else if(isNaN(e.target.value)){ //for letters
 		var answer = e.target.value;
