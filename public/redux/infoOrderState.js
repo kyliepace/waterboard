@@ -1,7 +1,7 @@
 var infoOrderState = {
-
+    next: 1,
 	questions: [
-             {	number: 1,
+             {	number: 0,
                 line: 'Please log in',
                 input: ['APN/ID Code', 'Password'],
                 disabled: true,
@@ -9,10 +9,10 @@ var infoOrderState = {
 	                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 	                ,'This is also included in your letter. Capitalization does matter.'
 	            ],
-                changeCounter: [1],
-             	next: 1
+                changeCounter: [1]
+             	
              }, 
-             {	number: 2,
+             {	number: 1,
                 line: 'Is this parcel connected to a water source?',
                 disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
@@ -35,6 +35,7 @@ var infoOrderState = {
                 line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
                 selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
+                selected: [false, false, false, false];
               	disabled: true,
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \

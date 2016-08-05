@@ -43,19 +43,19 @@ var infoOrderReducer= function(state, action) {
         var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
         console.log(newAnswersForSource);
         var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-        var next = question.changeCounter[0];
+        var next = question.changeCounter[0] + counter;
         //turn off the disabled value
-        var newQuestion = Object.assign({}, question, {disabled: false, next: next}); //update the question state
+        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
         var before = state.questions.slice(0, counter);
         var after = state.questions.slice(counter+1);
         var newQuestions = before.concat(newQuestion, after); 
             
         //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
         return newState;
     }
 
-/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ 
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
@@ -70,20 +70,22 @@ var infoOrderReducer= function(state, action) {
             newArray[answerIndex] = true;
             console.log(newArray);
         }
-        else{ //if a dropdown question
+        else{ //if an input
             var selected = []
-            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+            var answerIndex = 0;
         }
         //increase question.next 
-        var increaseBy = question.changeCounter[question.answerIndex];
-        console.log('increase by: '+increaseBy);
+        
+        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter
+      
+        console.log('next index: '+next);
         //update the question with new answer index and un-disable next arrow
-        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
+        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
         //create new question array
         var after = state.questions.slice(counter+1);
         var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
         //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
+        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter, next: next}); //if I don't include counter here, it doesn't get copied
         console.log('new state:')
         console.log(newState);
         return newState;
@@ -125,7 +127,7 @@ var infoOrderReducer= function(state, action) {
                 return question.changeCounter[0];
             }   
         }
-        console.log('the quiz will advance by'+ changeCounterBy());
+        console.log('the form will advance by'+ changeCounterBy());
         var increaseBy = changeCounterBy();
         counter +=  increaseBy; //increase the counter by the chosen value
         var clicks = state.clicks;

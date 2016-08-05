@@ -28553,19 +28553,19 @@
 	        var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswer});
 	        console.log(newAnswersForSource);
 	        var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
-	        var next = question.changeCounter[0];
+	        var next = question.changeCounter[0] + counter;
 	        //turn off the disabled value
-	        var newQuestion = Object.assign({}, question, {disabled: false, next: next}); //update the question state
+	        var newQuestion = Object.assign({}, question, {disabled: false}); //update the question state
 	        var before = state.questions.slice(0, counter);
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = before.concat(newQuestion, after); 
 	            
 	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+	        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
 	        return newState;
 	    }
 
-	/////////////// CHOOSE OPTION ////////////////////////////////////////////////
+	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ 
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
@@ -28580,20 +28580,22 @@
 	            newArray[answerIndex] = true;
 	            console.log(newArray);
 	        }
-	        else{ //if a dropdown question
+	        else{ //if an input
 	            var selected = []
-	            var answerIndex = question.dropdown.indexOf(action.answerIndex);
+	            var answerIndex = 0;
 	        }
 	        //increase question.next 
-	        var increaseBy = question.changeCounter[question.answerIndex];
-	        console.log('increase by: '+increaseBy);
+	        
+	        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter
+	      
+	        console.log('next index: '+next);
 	        //update the question with new answer index and un-disable next arrow
-	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false, next: increaseBy});
+	        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
 	        //create new question array
 	        var after = state.questions.slice(counter+1);
 	        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
 	        //update the state
-	        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter}); //if I don't include counter here, it doesn't get copied
+	        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter, next: next}); //if I don't include counter here, it doesn't get copied
 	        console.log('new state:')
 	        console.log(newState);
 	        return newState;
@@ -28635,7 +28637,7 @@
 	                return question.changeCounter[0];
 	            }   
 	        }
-	        console.log('the quiz will advance by'+ changeCounterBy());
+	        console.log('the form will advance by'+ changeCounterBy());
 	        var increaseBy = changeCounterBy();
 	        counter +=  increaseBy; //increase the counter by the chosen value
 	        var clicks = state.clicks;
@@ -28713,15 +28715,8 @@
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e){
 		console.log('choose option ');
-		console.log(e.target.value);
-		console.log(e.target.id);
-		if(e.target.value){
-			console.log('dropdown selected ' + e.target.value);
-			var index = e.target.value;
-		}
-		else{
-			var index = e.target.id;
-		}
+		var index = e.target.id;
+		
 		return{
 			type: CHOOSE_OPTION,
 			answerIndex: index //which option of the selection array
@@ -28760,9 +28755,9 @@
 /***/ function(module, exports) {
 
 	var infoOrderState = {
-
+	    next: 1,
 		questions: [
-	             {	number: 1,
+	             {	number: 0,
 	                line: 'Please log in',
 	                input: ['APN/ID Code', 'Password'],
 	                disabled: true,
@@ -28770,10 +28765,10 @@
 		                For most people, this is the same as your property\'s Accessor\'s Parcel Number',
 		                ,'This is also included in your letter. Capitalization does matter.'
 		            ],
-	                changeCounter: [1],
-	             	next: 1
+	                changeCounter: [1]
+	             	
 	             }, 
-	             {	number: 2,
+	             {	number: 1,
 	                line: 'Is this parcel connected to a water source?',
 	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
@@ -46256,7 +46251,6 @@
 			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 		},
 		handleClick: function (e) {
-			console.log('click' + e.target.value);
 			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
 		},
 		handleChange: function (e) {
@@ -46266,8 +46260,8 @@
 			console.log("submit");
 			e.preventDefault();
 			var that = this;
-			console.log(this.props.infoOrder.questions[that.props.infoOrder.counter].next);
-			this.props.history.push('/infoOrder/' + that.props.infoOrder.questions[that.props.infoOrder.counter].next);
+			console.log(this.props.infoOrder.next);
+			this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
 			this.props.dispatch(actions.submitAnswer());
 		},
 		sendData: function () {},

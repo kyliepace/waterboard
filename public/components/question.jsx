@@ -75,7 +75,6 @@ var Question = function(props){
 		</FormGroup>
 
 		<div className='flex'>
-			
 			<Button className='button' disabled={props.disabled} type='submit'><span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		</div>
 	</form>
