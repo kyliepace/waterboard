@@ -26,7 +26,15 @@ var infoOrderReducer= function(state, action) {
     }
 
     //////////// LOG IN SUCCESS //////////////////////////
-    
+    if(action.type === actions.LOG_IN_SUCCESS){
+        var data = action.data;
+        //update state to include data.owner, data.address, data.answers as well as updated counters
+        var next = state.next; //the value of next becomes the new counter index
+        var clicks = state.clicks + 1;
+
+        var newState = Object.assign({}, state, {answers: data.answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
+        return newState;
+    }
 
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){

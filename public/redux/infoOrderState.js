@@ -7,7 +7,7 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['number', 'number'],
                 error: [],
-                popover: ['1', 'welcome'],
+                popover: ['1', '1'],
                 changeCounter: [1]
              	
              }, 
@@ -252,7 +252,6 @@ var infoOrderState = {
             }
         ],
 		counter: 0, //count the question index
-		prevQuestion: [0],
 		clicks: 0,
 		sourceCounter: 0, //count which water source being answered for
 		answers:{ 

@@ -33,12 +33,14 @@ var InfoOrder = React.createClass({
 		if(parseInt(this.props.params.counter)===0){ //if this is the log-in page being submitted, talk to server
 			//dispatch logIn function with idCode and password from state
 			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
-		})
+			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
+		}
 		else{
 			console.log('next will be '+ this.props.infoOrder.next);
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 			this.props.dispatch(actions.submitAnswer());
 		}
+
 	},
 	sendData: function(){
 
@@ -51,6 +53,7 @@ var InfoOrder = React.createClass({
 	},
 	render: function(props){
 		var that = this;
+		
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
 		var index = that.props.params.counter;
@@ -80,6 +83,8 @@ var InfoOrder = React.createClass({
     			
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>
+		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
+		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
 		    	</Col>
 		    </section>
 		)

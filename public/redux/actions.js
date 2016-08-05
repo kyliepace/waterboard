@@ -16,29 +16,31 @@ var logIn = function(idCode, password){
 		var url='/logIn';
 		var data= JSON.stringify({idCode: idCode, password: password});
 		var params={
-			{
-				method: 'GET',
-				body: data
-			}
+			headers: {'Content-Type': 'application/json'},
+			method: 'POST',
+			body: data
 		};
 		return fetch(url, params).then(function(res){
 			if(res.state<200 || res.status >= 300){
 				var error = new Error(res.statusText)
+				console.log(error);
 				error.res = res
 				throw error;
 			}
 			return res;
 		})
 		.then(function(res){
+			console.log(res);
 			return res.json();
 		})
 		.then(function(data){
 			console.log(data);
 			return dispatch(
-				logInSuccess(data);
+				logInSuccess(data)
 			);
 		})
 		.catch(function(error){
+			console.log(error);
 			return dispatch(
 				logInNotSuccess(error)
 			);
