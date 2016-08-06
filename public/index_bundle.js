@@ -64,9 +64,9 @@
 	var Main = __webpack_require__(271);
 	var Menu = __webpack_require__(489);
 	var InfoOrder = __webpack_require__(490);
-	var WaterRights = __webpack_require__(493);
-	var WaterRightsFaq = __webpack_require__(494);
-	var InfoOrderFaq = __webpack_require__(495);
+	var WaterRights = __webpack_require__(495);
+	var WaterRightsFaq = __webpack_require__(496);
+	var InfoOrderFaq = __webpack_require__(497);
 
 	var routes = React.createElement(
 					Provider,
@@ -28568,7 +28568,7 @@
 	    if(action.type === actions.LOG_IN_SUCCESS){
 	        var data = action.data;
 	        //update state to include data.owner, data.address, data.answers as well as updated counters
-	        var next = state.next; //the value of next becomes the new counter index
+	        var counter = state.next; //the value of next becomes the new counter index
 	        var clicks = state.clicks + 1;
 
 	        //update the state answers if they have already been saved to server
@@ -28579,7 +28579,7 @@
 	            var answers = state.answers;
 	        }
 	        
-	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
+	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
 	        return newState;
 	    }
 
@@ -28715,11 +28715,11 @@
 	        var counter = state.counter;
 	        var question = state.questions[counter]; //which question?
 	  
-	        var next = state.next; //the value of next becomes the new counter index
+	        var counter = state.next; //the value of next becomes the new counter index
 	        var clicks = state.clicks;
 	        clicks ++;
 	        
-	        var newState = Object.assign({}, state, {counter: next, clicks: clicks}); //update state with new counter
+	        var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter
 	        console.log('new state'); console.log(newState);
 	        return newState;
 	    }
@@ -28889,6 +28889,66 @@
 	};
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 	exports.submitAnswer = submitAnswer;
+
+
+	////////// SUBMIT WATER SOURCE ////////////////////////////
+	var submitSource = function(idCode, answers){
+		return function(dispatch){
+			var url='/submit';
+			var data= JSON.stringify({idCode: idCode, answers: answer});
+			var params={
+				headers: {'Content-Type': 'application/json'},
+				method: 'PUT',
+				body: data
+			};
+			return fetch(url, params).then(function(res){
+				if(res.state<200 || res.status >= 300){
+					var error = new Error(res.statusText)
+					console.log(error);
+					error.res = res
+					throw error;
+				}
+				return res;
+			})
+			.then(function(res){
+				return res.json();
+			})
+			.then(function(){
+				return dispatch(
+					submitSuccess()
+				);
+			})
+			.catch(function(error){
+				console.log(error);
+				return dispatch(
+					submitNotSuccess(error)
+				);
+			});
+		}
+	};
+	exports.submitSource = submitSource;
+
+	////////// SUBMIT SUCCESS////////////////////
+	var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
+	var submitSuccess = function(){
+		console.log('successful submit');
+		return{
+			type: SUBMIT_SUCCESS
+		}
+	};
+	exports.SUBMIT_SUCCESS = SUBMIT_SUCCESS;
+	exports.submitSuccess = submitSuccess;
+
+	/////////// SUBMIT NOT SUCCESS ////////////////
+	var SUBMIT_NOT_SUCCESS = 'SUBMIT_NOT_SUCCESS';
+	var submitNotSuccess = function(){
+		console.log('not successful submit');
+		return{
+			type: SUBMIT_NOT_SUCCESS
+		}
+	};
+	exports.SUBMIT_NOT_SUCCESS = SUBMIT_NOT_SUCCESS;
+	exports.submitNotSuccess = submitNotSuccess;
 
 
 /***/ },
@@ -29349,7 +29409,7 @@
 	var infoOrderState = {
 	    next: 1,
 		questions: [
-	             {	number: 0,
+	             {	
 	                line: 'Please log in',
 	                input: ['APN/ID Code', 'Password'],
 	                disabled: true,
@@ -29359,7 +29419,14 @@
 	                changeCounter: [1]
 	             	
 	             }, 
-	             {	number: 1,
+	             {  
+	                //the log-in page will be shown when counter === 1
+	                selected: [false], 
+	                disabled: true,
+	                changeCounter: [1]
+	                
+	             },
+	             {	
 	                line: 'Is this parcel connected to a water source?',
 	                disabled: true,
 	                popover: 'Examples of water sources include water utilities, a river or\
@@ -29369,7 +29436,7 @@
 	                changeCounter: [1, 100]
 	             
 	            },
-	            {	number: 3,
+	            {	
 	                line: 'How many sources supply water to this parcel?',
 	                input: ['Number'],
 	                disabled: true,
@@ -29411,7 +29478,7 @@
 		                'Even just a last name will help us locate the record, if one exists.'
 	                ],
 	                link: "http://www.mapcoordinates.net/en",
-	                changeCounter: [8]
+	                changeCounter: [8] //go to water use
 	               
 	           },
 	              
@@ -29444,8 +29511,7 @@
 	             },
 	                
 	            {	number: 8,
-	                line: 'You reported that the property\'s water source is surface water. \
-		                Because surface water requires a water right, let\'s figure out if you already \
+	                line: 'Because surface water requires a water right, let\'s figure out if you already \
 		                have a water right or if you need to apply for one. Have you already \
 		                applied for or claimed a water right?',
 	              
@@ -29467,7 +29533,7 @@
 	                popover: ['The application number usually starts with a letter and looks like \
 	                	A111111 or S111111, for example'
 	                ],
-	                changeCounter: [100] //go to confirmation
+	                changeCounter: [7] //go to confirmation
 	            },
 	            {	number: 10,
 	                line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
@@ -29481,7 +29547,7 @@
 	            {	number: 11,
 	                line: 'It looks like you have a riparian water right. To claim this right, you need \
 	                	to file a statement of use.',
-	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
+	                selection: ['I will do that', 
 	                	'This source is a spring that would never run off my property'
 	                ],
 	                selected: [false, false],
@@ -29491,18 +29557,18 @@
 		                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
 		                does not flow off the property, even in the winter, even if you were diverting none of it.'
 		            ],
-	                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
+	                changeCounter: [2, 2] //confirm and go to water rights, go back to new source, or go to water use
 	            },
 	            {	number: 12,
 	                line: 'If you\'re using water from a stream that doesn\'t touch your property, \
-	                you need to apply for a water right.',
-	                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
+	                you likely need to apply for a water right.',
+	                selection: ['I will do that',
 	                'But this is only for a small, domestic property'],
 	                selected: [false, false],
 	                disabled: true,
 	                popover: 'If you have questions, which you probably do, please call the \
 	                	Division of Water Rights Help Line at (916) 341-5300',
-	                changeCounter: [200, -100, 200]
+	                changeCounter: [1, 1]
 	            },
 	            {	number: 13, 
 	            	line: 'How is water from this source used on the property?',
@@ -29588,15 +29654,7 @@
 	            	'Hope that wasn\'t so bad',
 	            	'Learn how much water you use each month!'
 	            	],
-	            	changeCounter: [1]
-	            },
-	            {	number: 17,
-	            	line: 'I confirm that the information I\'ve entered is true to the best of my knowledge',
-	            	disabled: true,
-	            	selection: ['Yes', 'Let me save the form and get back to it later'],
-	            	selected: [false, false],
-	            	popover: ['If you save the form, be sure to log back in soon.'],
-	            	changeCounter: [100, 1000]
+	            	changeCounter: [100]
 	            }
 	        ],
 			counter: 0, //count the question index
@@ -46851,6 +46909,8 @@
 	var connect = __webpack_require__(173).connect;
 	var actions = __webpack_require__(267);
 	var Confirm = __webpack_require__(492);
+	var LogIn = __webpack_require__(493);
+	var User = __webpack_require__(494);
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -46880,43 +46940,47 @@
 			if (parseInt(this.props.infoOrder.counter) === 0) {
 				//if this is the log-in page being submitted, talk to server
 				//dispatch logIn function with idCode and password from state
+				console.log('submit called from log in');
 				this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
-
-				//this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 			} else {
 				console.log('next will be ' + this.props.infoOrder.next);
 				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
 				this.props.dispatch(actions.submitAnswer());
 			}
 		},
-		sendData: function () {},
+		sendData: function () {
+			console.log('sending data');
+			this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
+		},
 		addSource: function () {},
 		saveForm: function () {},
 		render: function (props) {
 			var that = this;
-
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
+
 			if (that.props.infoOrder.counter === 1) {
-				var index = 1;
+				console.log('logged in');
+				var index = 1; //since logging in won't push to history
 			} else {
 				var index = that.props.params.counter;
+				console.log('index taken from url');
 			}
 
 			console.log('index is ' + index);
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-			if (index > 1000) {
-				var show = React.createElement(
-					'h4',
-					null,
-					'Saving...'
-				);
+			if (index === 0) {
+				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
+			} else if (index === 1) {
+				console.log('show user screen');
+				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit });
+				console.log(show);
 			} else if (index > 100) {
-				var show = React.createElement(Confirm, { sendData: that.sendData, addSource: that.addSource, saveForm: that.saveForm, onClick: that.prevQuestion });
+				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {
-				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, disabled: singleQuestion.disabled,
+				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion,
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
 			}
 			return React.createElement(
@@ -47073,7 +47137,7 @@
 			),
 			React.createElement(
 				Button,
-				{ className: 'button', id: 'submitButton', disabled: props.disabled, type: 'submit' },
+				{ className: 'button', id: 'submitButton', disabled: props.question.disabled, type: 'submit' },
 				'Next',
 				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 			)
@@ -47098,6 +47162,7 @@
 	var ButtonToolbar = __webpack_require__(273).ButtonToolbar;
 
 	var Confirm = function (props) {
+
 		return React.createElement(
 			'form',
 			{ onSubmit: props.sendData },
@@ -47105,66 +47170,23 @@
 				FormGroup,
 				{ className: 'selector' },
 				React.createElement(
-					ButtonToolbar,
-					{ className: 'flex' },
-					React.createElement(
-						'h2',
-						null,
-						'Congrats, you\'ve completed the form for this water source!'
-					),
-					React.createElement(
-						OverlayTrigger,
-						{ trigger: 'click', placement: 'top', overlay: React.createElement(
-								Popover,
-								{ id: 'popover-trigger-click' },
-								'If you have multiple sources of water on this parcel, you have not completed your response to the Info Order. If you were contacted regarding multiple properties, please complete this parcel and sign in with the next parcel\'s identification code (APN)'
-							) },
-						React.createElement(
-							Button,
-							{ className: 'button' },
-							React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
-						)
-					)
+					'h2',
+					null,
+					'I confirm that the information I\\\'ve entered is true to the best of my knowledge'
 				),
 				React.createElement(
 					Row,
 					{ className: 'options' },
 					React.createElement(
 						Button,
-						{ className: 'option', type: 'button', id: 0, onClick: props.addSource },
+						{ className: 'option', type: 'button', onClick: props.addSource },
 						React.createElement(
-							'span',
-							{ id: 0, onClick: props.addSource },
-							'I have more sources to report'
-						)
-					),
-					React.createElement(
-						Button,
-						{ className: 'option', type: 'button', id: 1, onClick: props.saveForm },
-						React.createElement(
-							'span',
-							{ id: 1, onClick: props.saveForm },
-							'I\'m unsure of some details.',
-							React.createElement('br', null),
-							' Save the form but don\'t submit it yet.'
-						)
-					),
-					React.createElement(
-						Button,
-						{ className: 'option', type: 'button', id: 1, onClick: props.submitForm },
-						React.createElement(
-							'span',
-							{ id: 2, onClick: props.submitForm },
-							'Submit the form.'
+							'h3',
+							{ onClick: props.sendData },
+							'Yes. Submit info for this water source\''
 						)
 					)
 				)
-			),
-			React.createElement(
-				Button,
-				{ className: 'button', id: 'submitButton', disabled: props.disabled, type: 'submit' },
-				'Next',
-				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 			)
 		);
 	};
@@ -47173,6 +47195,167 @@
 
 /***/ },
 /* 493 */
+/***/ function(module, exports, __webpack_require__) {
+
+	React = __webpack_require__(2);
+	var Row = __webpack_require__(273).Row;
+	var FormGroup = __webpack_require__(273).FormGroup;
+	var ControlLabel = __webpack_require__(273).ControlLabel;
+	var FormControl = __webpack_require__(273).FormControl;
+	var HelpBlock = __webpack_require__(273).HelpBlock;
+	var Overlay = __webpack_require__(273).Overlay;
+	var OverlayTrigger = __webpack_require__(273).OverlayTrigger;
+	var Popover = __webpack_require__(273).Popover;
+	var Button = __webpack_require__(273).Button;
+	var ButtonToolbar = __webpack_require__(273).ButtonToolbar;
+
+	var LogIn = function (props) {
+		return React.createElement(
+			'form',
+			{ onSubmit: props.onSubmit },
+			React.createElement(
+				FormGroup,
+				null,
+				React.createElement(
+					'h3',
+					null,
+					'Please Log In'
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement(
+						ButtonToolbar,
+						{ className: 'flex' },
+						React.createElement(FormControl, { placeholder: 'APN/ID Code', name: 0, className: 'input', type: 'text', onChange: props.handleChange }),
+						React.createElement(
+							OverlayTrigger,
+							{ trigger: 'click', placement: 'top', overlay: React.createElement(
+									Popover,
+									{ id: 'popover-trigger-click' },
+									'1'
+								) },
+							React.createElement(
+								Button,
+								{ className: 'popoverButton' },
+								React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+							)
+						)
+					),
+					React.createElement(
+						HelpBlock,
+						{ className: props.question.error[n] ? '' : 'hidden' },
+						props.question.error[n]
+					)
+				),
+				React.createElement(
+					'div',
+					null,
+					React.createElement(
+						ButtonToolbar,
+						{ className: 'flex' },
+						React.createElement(FormControl, { placeholder: 'Password', name: 1, className: 'input', type: 'text', onChange: props.handleChange }),
+						React.createElement(
+							OverlayTrigger,
+							{ trigger: 'click', placement: 'top', overlay: React.createElement(
+									Popover,
+									{ id: 'popover-trigger-click' },
+									'1'
+								) },
+							React.createElement(
+								Button,
+								{ className: 'popoverButton' },
+								React.createElement('span', { className: 'glyphicon glyphicon-question-sign', 'aria-hidden': 'true' })
+							)
+						)
+					),
+					React.createElement(
+						HelpBlock,
+						{ className: props.question.error[n] ? '' : 'hidden' },
+						props.question.error[n]
+					)
+				)
+			),
+			React.createElement(
+				Button,
+				{ className: 'button', id: 'submitButton', disabled: props.question.disabled, type: 'submit' },
+				'Log In',
+				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+			)
+		);
+	};
+
+	module.exports = LogIn;
+
+/***/ },
+/* 494 */
+/***/ function(module, exports, __webpack_require__) {
+
+	React = __webpack_require__(2);
+	var Row = __webpack_require__(273).Row;
+	var FormGroup = __webpack_require__(273).FormGroup;
+
+	var Button = __webpack_require__(273).Button;
+
+	var User = function (props) {
+		return React.createElement(
+			'form',
+			{ onSubmit: props.onSubmit },
+			React.createElement(
+				'h3',
+				null,
+				'Welcome ',
+				props.user.owner
+			),
+			React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'h3',
+					null,
+					'This APN refers to a parcel at ',
+					props.user.address
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: props.user.multParcels ? '' : 'hidden' },
+				React.createElement(
+					'h3',
+					null,
+					'Our records indicate that you own multiple parcels subject to the Info Order. ',
+					React.createElement('br', null),
+					'Please note that you must log in and complete the form for each parcel.'
+				)
+			),
+			React.createElement(
+				'div',
+				{ className: props.user.sources ? '' : 'hidden' },
+				React.createElement(
+					'h3',
+					null,
+					'You have indicated that this parcel is served by ',
+					props.user.sources,
+					' water sources. ',
+					React.createElement('br', null),
+					'You have submitted information for ',
+					props.user.answers.length,
+					' water sources.'
+				)
+			),
+			React.createElement(
+				Button,
+				{ className: 'button', id: 'submitButton', type: 'submit' },
+				'Continue to Form',
+				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+			)
+		);
+	};
+
+	module.exports = User;
+
+/***/ },
+/* 495 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -47215,7 +47398,7 @@
 	module.exports = WaterRights;
 
 /***/ },
-/* 494 */
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -47246,7 +47429,7 @@
 	module.exports = WaterRightsFaq;
 
 /***/ },
-/* 495 */
+/* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);

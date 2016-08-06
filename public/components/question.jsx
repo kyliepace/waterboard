@@ -62,7 +62,7 @@ var Question = function(props){
 		</FormGroup>
 
 		
-		<Button className='button' id='submitButton' disabled={props.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		<Button className='button' id='submitButton' disabled={props.question.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		
 	</form>
 	);		

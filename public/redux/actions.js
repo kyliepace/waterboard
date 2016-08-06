@@ -121,3 +121,63 @@ var submitAnswer = function() {
 };
 exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 exports.submitAnswer = submitAnswer;
+
+
+////////// SUBMIT WATER SOURCE ////////////////////////////
+var submitSource = function(idCode, answers){
+	return function(dispatch){
+		var url='/submit';
+		var data= JSON.stringify({idCode: idCode, answers: answer});
+		var params={
+			headers: {'Content-Type': 'application/json'},
+			method: 'PUT',
+			body: data
+		};
+		return fetch(url, params).then(function(res){
+			if(res.state<200 || res.status >= 300){
+				var error = new Error(res.statusText)
+				console.log(error);
+				error.res = res
+				throw error;
+			}
+			return res;
+		})
+		.then(function(res){
+			return res.json();
+		})
+		.then(function(){
+			return dispatch(
+				submitSuccess()
+			);
+		})
+		.catch(function(error){
+			console.log(error);
+			return dispatch(
+				submitNotSuccess(error)
+			);
+		});
+	}
+};
+exports.submitSource = submitSource;
+
+////////// SUBMIT SUCCESS////////////////////
+var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
+var submitSuccess = function(){
+	console.log('successful submit');
+	return{
+		type: SUBMIT_SUCCESS
+	}
+};
+exports.SUBMIT_SUCCESS = SUBMIT_SUCCESS;
+exports.submitSuccess = submitSuccess;
+
+/////////// SUBMIT NOT SUCCESS ////////////////
+var SUBMIT_NOT_SUCCESS = 'SUBMIT_NOT_SUCCESS';
+var submitNotSuccess = function(){
+	console.log('not successful submit');
+	return{
+		type: SUBMIT_NOT_SUCCESS
+	}
+};
+exports.SUBMIT_NOT_SUCCESS = SUBMIT_NOT_SUCCESS;
+exports.submitNotSuccess = submitNotSuccess;

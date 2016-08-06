@@ -1,7 +1,7 @@
 var infoOrderState = {
     next: 1,
 	questions: [
-             {	number: 0,
+             {	
                 line: 'Please log in',
                 input: ['APN/ID Code', 'Password'],
                 disabled: true,
@@ -11,7 +11,14 @@ var infoOrderState = {
                 changeCounter: [1]
              	
              }, 
-             {	number: 1,
+             {  
+                //the log-in page will be shown when counter === 1
+                selected: [false], 
+                disabled: true,
+                changeCounter: [1]
+                
+             },
+             {	
                 line: 'Is this parcel connected to a water source?',
                 disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
@@ -21,7 +28,7 @@ var infoOrderState = {
                 changeCounter: [1, 100]
              
             },
-            {	number: 3,
+            {	
                 line: 'How many sources supply water to this parcel?',
                 input: ['Number'],
                 disabled: true,
@@ -63,7 +70,7 @@ var infoOrderState = {
 	                'Even just a last name will help us locate the record, if one exists.'
                 ],
                 link: "http://www.mapcoordinates.net/en",
-                changeCounter: [8]
+                changeCounter: [8] //go to water use
                
            },
               
@@ -96,8 +103,7 @@ var infoOrderState = {
              },
                 
             {	number: 8,
-                line: 'You reported that the property\'s water source is surface water. \
-	                Because surface water requires a water right, let\'s figure out if you already \
+                line: 'Because surface water requires a water right, let\'s figure out if you already \
 	                have a water right or if you need to apply for one. Have you already \
 	                applied for or claimed a water right?',
               
@@ -119,7 +125,7 @@ var infoOrderState = {
                 popover: ['The application number usually starts with a letter and looks like \
                 	A111111 or S111111, for example'
                 ],
-                changeCounter: [100] //go to confirmation
+                changeCounter: [7] //go to confirmation
             },
             {	number: 10,
                 line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
@@ -133,7 +139,7 @@ var infoOrderState = {
             {	number: 11,
                 line: 'It looks like you have a riparian water right. To claim this right, you need \
                 	to file a statement of use.',
-                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement', 
+                selection: ['I will do that', 
                 	'This source is a spring that would never run off my property'
                 ],
                 selected: [false, false],
@@ -143,18 +149,18 @@ var infoOrderState = {
 	                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
 	                does not flow off the property, even in the winter, even if you were diverting none of it.'
 	            ],
-                changeCounter: [200, -100 , 2] //confirm and go to water rights, go back to new source, or go to water use
+                changeCounter: [2, 2] //confirm and go to water rights, go back to new source, or go to water use
             },
             {	number: 12,
                 line: 'If you\'re using water from a stream that doesn\'t touch your property, \
-                you need to apply for a water right.',
-                selection: ['File statement now', 'Understood. Let\'s finish my other sources before I file this statement',
+                you likely need to apply for a water right.',
+                selection: ['I will do that',
                 'But this is only for a small, domestic property'],
                 selected: [false, false],
                 disabled: true,
                 popover: 'If you have questions, which you probably do, please call the \
                 	Division of Water Rights Help Line at (916) 341-5300',
-                changeCounter: [200, -100, 200]
+                changeCounter: [1, 1]
             },
             {	number: 13, 
             	line: 'How is water from this source used on the property?',
@@ -240,15 +246,7 @@ var infoOrderState = {
             	'Hope that wasn\'t so bad',
             	'Learn how much water you use each month!'
             	],
-            	changeCounter: [1]
-            },
-            {	number: 17,
-            	line: 'I confirm that the information I\'ve entered is true to the best of my knowledge',
-            	disabled: true,
-            	selection: ['Yes', 'Let me save the form and get back to it later'],
-            	selected: [false, false],
-            	popover: ['If you save the form, be sure to log back in soon.'],
-            	changeCounter: [100, 1000]
+            	changeCounter: [100]
             }
         ],
 		counter: 0, //count the question index

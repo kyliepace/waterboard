@@ -6,6 +6,8 @@ var Button = require('react-bootstrap').Button;
 var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
+var LogIn = require('./logIn.jsx');
+var User = require('./user.jsx');
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -32,9 +34,8 @@ var InfoOrder = React.createClass({
 		var that = this;
 		if(parseInt(this.props.infoOrder.counter)===0){ //if this is the log-in page being submitted, talk to server
 			//dispatch logIn function with idCode and password from state
+			console.log('submit called from log in');
 			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
-			
-			//this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
 		}
 		else{
 			console.log('next will be '+ this.props.infoOrder.next);
@@ -44,7 +45,8 @@ var InfoOrder = React.createClass({
 
 	},
 	sendData: function(){
-
+		console.log('sending data');
+		this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
 	},
 	addSource: function(){
 
@@ -54,33 +56,42 @@ var InfoOrder = React.createClass({
 	},
 	render: function(props){
 		var that = this;
-		
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
+
 		if(that.props.infoOrder.counter === 1){
-			var index= 1;
+			console.log('logged in');
+			var index= 1; //since logging in won't push to history
 		}
 		else{
 			var index = that.props.params.counter;
+			console.log('index taken from url');
 		}
 		
 		console.log('index is '+index);
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-		if(index>1000){
+		if(index === 0){
 			var show = (
-				<h4>Saving...</h4>
+				<LogIn question={singleQuestion} handleChange={that.handleChange} onSubmit={that.onSubmit}/>
 			);
+		}
+		else if(index === 1){
+			console.log('show user screen');
+			var show=(
+				<User user={that.props.infoOrder} onSubmit={that.onSubmit}/>
+			);
+			console.log(show);
 		}
 		else if(index>100){
 			var show = (
-				<Confirm sendData={that.sendData} addSource={that.addSource} saveForm={that.saveForm} onClick={that.prevQuestion}/>
+				<Confirm sendData={that.sendData} />
 			);
 		}
 		else{
 			var show = (
-				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} disabled={singleQuestion.disabled}
+				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} 
     			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
 			);
 		}

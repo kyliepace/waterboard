@@ -135,7 +135,7 @@ form .selector .options .selected {
   box-shadow: 1px 0px 20px white;
   border: 2px solid white;
   width: 90%;
-  height: 150px;
+  height: 100px;
   padding: 2rem;
   margin: 2rem;
   text-align: center;
@@ -146,6 +146,7 @@ form .selector .options .selected:active {
 }
 .popover {
   color: black;
+  font-size: 2rem;
 }
 footer {
   background-color: #8A25E8;

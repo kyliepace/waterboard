@@ -3,7 +3,10 @@ var data = [
 		owner: 'Kenyatta Everyperson',
 		address: '101 Bodega Highway, Sebastopol, CA',
 		idCode: 1,
-		password: 1
+		password: 1,
+		answers: '', 
+		multParcels: false,
+		sources: null
 	},
 	{ //this is parcel #2
 

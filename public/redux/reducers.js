@@ -29,7 +29,7 @@ var infoOrderReducer= function(state, action) {
     if(action.type === actions.LOG_IN_SUCCESS){
         var data = action.data;
         //update state to include data.owner, data.address, data.answers as well as updated counters
-        var next = state.next; //the value of next becomes the new counter index
+        var counter = state.next; //the value of next becomes the new counter index
         var clicks = state.clicks + 1;
 
         //update the state answers if they have already been saved to server
@@ -40,7 +40,7 @@ var infoOrderReducer= function(state, action) {
             var answers = state.answers;
         }
         
-        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: next, clicks: clicks})
+        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
         return newState;
     }
 
@@ -176,11 +176,11 @@ var infoOrderReducer= function(state, action) {
         var counter = state.counter;
         var question = state.questions[counter]; //which question?
   
-        var next = state.next; //the value of next becomes the new counter index
+        var counter = state.next; //the value of next becomes the new counter index
         var clicks = state.clicks;
         clicks ++;
         
-        var newState = Object.assign({}, state, {counter: next, clicks: clicks}); //update state with new counter
+        var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter
         console.log('new state'); console.log(newState);
         return newState;
     }
