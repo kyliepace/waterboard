@@ -8,6 +8,7 @@ var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
 var LogIn = require('./logIn.jsx');
 var User = require('./user.jsx');
+var Final = require('./final.jsx');
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -81,9 +82,14 @@ var InfoOrder = React.createClass({
 			);
 			console.log(show);
 		}
-		else if(index>100){
+		else if(100<index<1000){
 			var show = (
 				<Confirm sendData={that.sendData} />
+			);
+		}
+		else if(index>1000){
+			var show=(
+				<Final />
 			);
 		}
 		else{

@@ -38,6 +38,8 @@ app.put('/submit', function(req, res){
 	//client is sending idCode and answers
 	var idCode = req.body.idCode;
 	var answers = req.body.answers;
+
+	//find number of indicated sources
 	for(var i=0; i<data.length; i++){
 		if(data[i].idCode === idCode){
 			data[i].answers = answers; //set equal to client's state
@@ -49,9 +51,17 @@ app.put('/submit', function(req, res){
 			}
 		}
 	}
-	console.log(answers[0][3]);
-	var numSources = answers[0][3];
-	var reportedSources = answers.length;
+	var numSources = data[i].sources;
+	console.log('numSources: '+numSources);
+
+	//check how many sources have been reported
+	var reportedSources = 0;
+	for (var j=0; j<answers.lenght; j++){
+		if(answers[j][4]){
+			reportedSources ++;
+		}
+	}
+	console.log('reported sources: '+reportedSources)
 	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
 

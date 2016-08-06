@@ -19,7 +19,7 @@ var infoOrderReducer= function(state, action) {
             answerObject[i] = []; //assign a new key:value pair to the object for each question
             
         }
-        var newAnswers = Object.assign({}, state.answers, {0: answerObject});
+        var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
         var newState =  Object.assign({}, state, {answers: newAnswers});
         console.log(newState);
         return newState;
@@ -193,16 +193,33 @@ var infoOrderReducer= function(state, action) {
 
     /////////////// SUBMIT SUCCESS//////////////
     if(action.type === actions.SUBMIT_SUCCESS){
+        console.log('successfully submitted source info');
         //print out copy of answers
+
+        console.log(action.data.numSources); //check number of reported water sources
+        var numSources = action.data.numSources;
+        var reportedSources = action.data.reportedSources; 
 
         //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
         //alert that we are taking them to report for an additional source
-        //
+        if(numSources > reportedSources){
+            var newSourceCounter = sourceCounter ++;
+            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
+            var newState = Object.assign({}, state, {counter: 4, sourceCounter: newSourceCounter, clicks: 3, next: 5}) //next should be 5 at the point we're re-entering the form
+            return newState;
+        }
 
         //if state.mult === true, take back to login screen.
-        //alert that they need to log in for other parcels if they haven't already done so
+        else if(state.multParcels === true){
+            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
+            //reload the page
+        }
 
-        //if all done, play fireworks 
+        else{
+            var newState = Object.assign({}, state, {counter: 1001});
+            return newState;
+        }
+        
     }
 
     //////// SUBMIT NOT SUCCESS///////////
