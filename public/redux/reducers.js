@@ -43,6 +43,12 @@ var infoOrderReducer= function(state, action) {
         var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
         return newState;
     }
+    /////////// CHANGE SOURCE COUNTER//////////////////////////
+    if(action.type === actions.CHANGE_SOURCE){
+        var newSourceCounter = action.index;
+        var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
+        return newState;
+    }
 
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){
@@ -184,8 +190,33 @@ var infoOrderReducer= function(state, action) {
         console.log('new state'); console.log(newState);
         return newState;
     }
+
+    /////////////// SUBMIT SUCCESS//////////////
+    if(action.type === actions.SUBMIT_SUCCESS){
+        //print out copy of answers
+
+        //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
+        //alert that we are taking them to report for an additional source
+        //
+
+        //if state.mult === true, take back to login screen.
+        //alert that they need to log in for other parcels if they haven't already done so
+
+        //if all done, play fireworks 
+    }
+
+    //////// SUBMIT NOT SUCCESS///////////
+    if(action.type === actions.SUBMIT_NOT_SUCCESS){
+
+    }
+
+
     return state;
 };
+
+
+
+
 var infoOrderFaqReducer= function(state, action) {
     state = state || initialRepositoryState;
     if (action.type === actions.SUBMIT_ANSWER) {

@@ -28582,6 +28582,12 @@
 	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
 	        return newState;
 	    }
+	    /////////// CHANGE SOURCE COUNTER//////////////////////////
+	    if(action.type === actions.CHANGE_SOURCE){
+	        var newSourceCounter = action.index;
+	        var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
+	        return newState;
+	    }
 
 	    //////////// CHANGE INPUT /////////////////////////////////////////////////
 	    if (action.type === actions.CHANGE_INPUT){
@@ -28723,8 +28729,33 @@
 	        console.log('new state'); console.log(newState);
 	        return newState;
 	    }
+
+	    /////////////// SUBMIT SUCCESS//////////////
+	    if(action.type === actions.SUBMIT_SUCCESS){
+	        //print out copy of answers
+
+	        //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
+	        //alert that we are taking them to report for an additional source
+	        //
+
+	        //if state.mult === true, take back to login screen.
+	        //alert that they need to log in for other parcels if they haven't already done so
+
+	        //if all done, play fireworks 
+	    }
+
+	    //////// SUBMIT NOT SUCCESS///////////
+	    if(action.type === actions.SUBMIT_NOT_SUCCESS){
+
+	    }
+
+
 	    return state;
 	};
+
+
+
+
 	var infoOrderFaqReducer= function(state, action) {
 	    state = state || initialRepositoryState;
 	    if (action.type === actions.SUBMIT_ANSWER) {
@@ -28841,6 +28872,17 @@
 	exports.LOG_IN_NOT_SUCCESS = LOG_IN_NOT_SUCCESS;
 	exports.logInNotSuccess = logInNotSuccess;
 
+	var CHANGE_SOURCE = 'CHANGE_SOURCE';
+	var changeSource = function(e){
+		console.log(e.target.value);
+		return{
+			type: CHANGE_SOURCE, 
+			index: e.target.value
+		}
+	};
+	exports.CHANGE_SOURCE = CHANGE_SOURCE;
+	exports.changeSource = changeSource;
+
 	//////  if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
 	var chooseOption = function(e){
@@ -28895,7 +28937,7 @@
 	var submitSource = function(idCode, answers){
 		return function(dispatch){
 			var url='/submit';
-			var data= JSON.stringify({idCode: idCode, answers: answer});
+			var data= JSON.stringify({idCode: idCode, answers: answers});
 			var params={
 				headers: {'Content-Type': 'application/json'},
 				method: 'PUT',
@@ -28913,9 +28955,9 @@
 			.then(function(res){
 				return res.json();
 			})
-			.then(function(){
+			.then(function(data){
 				return dispatch(
-					submitSuccess()
+					submitSuccess(data)
 				);
 			})
 			.catch(function(error){
@@ -28930,10 +28972,11 @@
 
 	////////// SUBMIT SUCCESS////////////////////
 	var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
-	var submitSuccess = function(){
+	var submitSuccess = function(data){
 		console.log('successful submit');
 		return{
-			type: SUBMIT_SUCCESS
+			type: SUBMIT_SUCCESS, 
+			data: data
 		}
 	};
 	exports.SUBMIT_SUCCESS = SUBMIT_SUCCESS;
@@ -29449,7 +29492,8 @@
 	         
 	            },
 	            {	number: 4,
-	                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
+	                changeSourceCounter: true,
+	                line: 'Let\s take this one water source at a time. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
 	                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
 	                selected: [false, false, false, false],
@@ -29491,7 +29535,7 @@
 	                popover: 'Select the type of water source from the drop-down list. A spring \
 		                is usually either a surface diversion or a well, depending on whether the \
 		                water comes all the way to the surface',
-	                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
+	                changeCounter: [100,100,1,1] //go to confirmation or continue to more supplier info
 	            }
 	            ,
 	            {	number: 7,
@@ -29580,7 +29624,7 @@
 	            		Agricultural use applies if you sell any food products raised on your property',
 	            	changeCounter: [2, 1, 1, 1, 1]
 	            },
-	            {	number: 14,
+	            {	
 	            	line: 'We\'re almost done! Let\'s figure out your water use',
 	            	input: ['total use January 2015 (gallons)', 
 	            		'total use May 2015 (gallons)', 
@@ -29617,7 +29661,7 @@
 	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
 	            	are useful tools.'
 	            	],
-	            	changeCounter: [3]
+	            	changeCounter: [100]
 
 	            },
 	            {	number: 15,
@@ -46950,21 +46994,22 @@
 		},
 		sendData: function () {
 			console.log('sending data');
+			var that = this;
 			this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
 		},
-		addSource: function () {},
-		saveForm: function () {},
+		changeSource: function (e) {
+			//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
+			this.props.dispatch(actions.changeSource(e));
+		},
 		render: function (props) {
 			var that = this;
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
 
 			if (that.props.infoOrder.counter === 1) {
-				console.log('logged in');
 				var index = 1; //since logging in won't push to history
 			} else {
-				var index = that.props.params.counter;
-				console.log('index taken from url');
+				var index = that.props.params.counter;console.log('index taken from url');
 			}
 
 			console.log('index is ' + index);
@@ -46980,8 +47025,9 @@
 			} else if (index > 100) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {
-				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion,
-					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange });
+				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, user: that.props.infoOrder,
+					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
+					changeSource: that.changeSource });
 			}
 			return React.createElement(
 				'section',
@@ -47004,6 +47050,14 @@
 						'h4',
 						{ className: this.props.infoOrder.address ? '' : 'hidden' },
 						this.props.infoOrder.address
+					),
+					React.createElement(
+						'h4',
+						{ className: this.props.infoOrder.sources ? '' : 'hidden' },
+						this.props.infoOrder.sourceCounter,
+						' of ',
+						this.props.infoOrder.sources,
+						' water sources'
 					)
 				)
 			);
@@ -47085,6 +47139,18 @@
 				));
 			}
 		}
+		//if this question should let the user change which water source they are reporting
+		if (props.question.changeSourceCounter) {
+			var dropdowns = [];
+			for (var n = 0; n < props.user.sources; n++) {
+				dropdowns.push(React.createElement(
+					'option',
+					{ value: n, id: n },
+					n + 1
+				) //give a dropdown option up to the number of sources
+				);
+			}
+		}
 
 		return React.createElement(
 			'form',
@@ -47111,6 +47177,20 @@
 			React.createElement(
 				FormGroup,
 				{ className: props.question.selection ? 'selector' : 'hidden' },
+				React.createElement(
+					'div',
+					{ className: props.user.sources ? 'options' : 'hidden' },
+					React.createElement(
+						'h4',
+						null,
+						'Submit form for water source #'
+					),
+					React.createElement(
+						FormControl,
+						{ componentClass: 'select', onChange: props.changeSource, placeholder: '', className: props.question.changeSourceCounter ? 'dropdown' : 'hidden' },
+						dropdowns
+					)
+				),
 				React.createElement(
 					'h3',
 					null,
@@ -47172,18 +47252,18 @@
 				React.createElement(
 					'h2',
 					null,
-					'I confirm that the information I\\\'ve entered is true to the best of my knowledge'
+					'I confirm that the information I\'ve entered is true to the best of my knowledge'
 				),
 				React.createElement(
 					Row,
 					{ className: 'options' },
 					React.createElement(
 						Button,
-						{ className: 'option', type: 'button', onClick: props.addSource },
+						{ className: 'option', type: 'button', onClick: props.sendData },
 						React.createElement(
 							'h3',
 							{ onClick: props.sendData },
-							'Yes. Submit info for this water source\''
+							'Yes. Submit info for this water source'
 						)
 					)
 				)

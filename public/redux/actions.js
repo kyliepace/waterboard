@@ -73,6 +73,17 @@ var logInNotSuccess = function(error){
 exports.LOG_IN_NOT_SUCCESS = LOG_IN_NOT_SUCCESS;
 exports.logInNotSuccess = logInNotSuccess;
 
+var CHANGE_SOURCE = 'CHANGE_SOURCE';
+var changeSource = function(e){
+	console.log(e.target.value);
+	return{
+		type: CHANGE_SOURCE, 
+		index: e.target.value
+	}
+};
+exports.CHANGE_SOURCE = CHANGE_SOURCE;
+exports.changeSource = changeSource;
+
 //////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
 var chooseOption = function(e){
@@ -127,7 +138,7 @@ exports.submitAnswer = submitAnswer;
 var submitSource = function(idCode, answers){
 	return function(dispatch){
 		var url='/submit';
-		var data= JSON.stringify({idCode: idCode, answers: answer});
+		var data= JSON.stringify({idCode: idCode, answers: answers});
 		var params={
 			headers: {'Content-Type': 'application/json'},
 			method: 'PUT',
@@ -145,9 +156,9 @@ var submitSource = function(idCode, answers){
 		.then(function(res){
 			return res.json();
 		})
-		.then(function(){
+		.then(function(data){
 			return dispatch(
-				submitSuccess()
+				submitSuccess(data)
 			);
 		})
 		.catch(function(error){
@@ -162,10 +173,11 @@ exports.submitSource = submitSource;
 
 ////////// SUBMIT SUCCESS////////////////////
 var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
-var submitSuccess = function(){
+var submitSuccess = function(data){
 	console.log('successful submit');
 	return{
-		type: SUBMIT_SUCCESS
+		type: SUBMIT_SUCCESS, 
+		data: data
 	}
 };
 exports.SUBMIT_SUCCESS = SUBMIT_SUCCESS;

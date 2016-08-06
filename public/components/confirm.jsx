@@ -15,11 +15,11 @@ var Confirm = function(props){
 	<form onSubmit={props.sendData}>
 		<FormGroup className={'selector'}>
 			
-			<h2>I confirm that the information I\'ve entered is true to the best of my knowledge</h2>
+			<h2>I confirm that the information I've entered is true to the best of my knowledge</h2>
 
 			<Row className='options'>
-				<Button className={'option'} type='button' onClick={props.addSource}>
-					<h3 onClick={props.sendData}>Yes. Submit info for this water source'</h3>
+				<Button className={'option'} type='button' onClick={props.sendData}>
+					<h3 onClick={props.sendData}>Yes. Submit info for this water source</h3>
 				</Button>		
 			</Row>
 		</FormGroup>

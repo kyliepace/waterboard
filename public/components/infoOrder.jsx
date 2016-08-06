@@ -46,13 +46,12 @@ var InfoOrder = React.createClass({
 	},
 	sendData: function(){
 		console.log('sending data');
+		var that = this;
 		this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
 	},
-	addSource: function(){
-
-	},
-	saveForm: function(){
-
+	changeSource: function(e){
+		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
+		this.props.dispatch(actions.changeSource(e));
 	},
 	render: function(props){
 		var that = this;
@@ -60,12 +59,10 @@ var InfoOrder = React.createClass({
 		var questions = that.props.infoOrder.questions;
 
 		if(that.props.infoOrder.counter === 1){
-			console.log('logged in');
 			var index= 1; //since logging in won't push to history
 		}
 		else{
-			var index = that.props.params.counter;
-			console.log('index taken from url');
+			var index = that.props.params.counter;  console.log('index taken from url');
 		}
 		
 		console.log('index is '+index);
@@ -91,8 +88,9 @@ var InfoOrder = React.createClass({
 		}
 		else{
 			var show = (
-				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} 
-    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}/>
+				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} user={that.props.infoOrder}
+    			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}
+    			changeSource={that.changeSource}/>
 			);
 		}
 		return(
@@ -103,6 +101,7 @@ var InfoOrder = React.createClass({
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
 		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
+		    		<h4 className={this.props.infoOrder.sources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.sources} water sources</h4>
 		    	</Col>
 		    </section>
 		)

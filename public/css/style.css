@@ -144,6 +144,9 @@ form .selector .options .selected:hover,
 form .selector .options .selected:active {
   box-shadow: none;
 }
+form .selector .dropdown {
+  width: 20%;
+}
 .popover {
   color: black;
   font-size: 2rem;

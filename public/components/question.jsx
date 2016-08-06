@@ -39,6 +39,15 @@ var Question = function(props){
 			);
 		}	
 	}
+	//if this question should let the user change which water source they are reporting
+	if(props.question.changeSourceCounter){
+		var dropdowns = [];
+		for (var n=0; n<props.user.sources; n++){ 
+			dropdowns.push(
+				<option value={n} id={n}>{n+1}</option> //give a dropdown option up to the number of sources
+			)
+		}
+	}
 	
 	return(
 	<form onSubmit={props.onSubmit}>
@@ -49,13 +58,21 @@ var Question = function(props){
 			{inputs}
 		</FormGroup>
 
+
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
-			
-				<h3>{props.question.line}</h3>
-				<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover}</Popover>}>
-					<Button className='popoverButton'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
-				</OverlayTrigger>
-			
+
+			<div className={props.user.sources ? 'options':'hidden'}>
+				<h4>Submit form for water source #</h4>
+				<FormControl componentClass='select' onChange={props.changeSource} placeholder='' className={props.question.changeSourceCounter? 'dropdown': 'hidden'}>
+					{dropdowns}
+				</FormControl>
+			</div>
+
+			<h3>{props.question.line}</h3>
+			<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover}</Popover>}>
+				<Button className='popoverButton'><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
+			</OverlayTrigger>
+
 			<Row className='options'>
 				{options}
 			</Row>

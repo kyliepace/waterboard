@@ -41,7 +41,8 @@ var infoOrderState = {
          
             },
             {	number: 4,
-                line: 'Let\s talk about this water source. Is it groundwater (i.e. from a well), \
+                changeSourceCounter: true,
+                line: 'Let\s take this one water source at a time. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
                 selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
                 selected: [false, false, false, false],
@@ -83,7 +84,7 @@ var infoOrderState = {
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
-                changeCounter: [7,7,1,1] //go to water use or continue to more supplier info
+                changeCounter: [100,100,1,1] //go to confirmation or continue to more supplier info
             }
             ,
             {	number: 7,
@@ -172,7 +173,7 @@ var infoOrderState = {
             		Agricultural use applies if you sell any food products raised on your property',
             	changeCounter: [2, 1, 1, 1, 1]
             },
-            {	number: 14,
+            {	
             	line: 'We\'re almost done! Let\'s figure out your water use',
             	input: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
@@ -209,7 +210,7 @@ var infoOrderState = {
             	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
             	are useful tools.'
             	],
-            	changeCounter: [3]
+            	changeCounter: [100]
 
             },
             {	number: 15,

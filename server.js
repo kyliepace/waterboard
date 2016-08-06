@@ -41,10 +41,18 @@ app.put('/submit', function(req, res){
 	for(var i=0; i<data.length; i++){
 		if(data[i].idCode === idCode){
 			data[i].answers = answers; //set equal to client's state
+			if(answers[0][3]){
+				data[i].sources = answers[0][3]; //set equal to the reported number of sources
+			}
+			else{
+				data[i].sources = 0; //if this answer space is falsey, there must be 0 sources
+			}
 		}
 	}
-	console.log(answers[0][2]);
-	var sources = answers[0][2];
+	console.log(answers[0][3]);
+	var numSources = answers[0][3];
+	var reportedSources = answers.length;
+	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
 
 app.listen(8080);
