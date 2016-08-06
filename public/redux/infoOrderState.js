@@ -211,7 +211,7 @@ var infoOrderState = {
             	reside on the property',
             	disabled: true,
             	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
-            	selection: ['Sounds great!', 'Cool, but I can estimate the usage'],
+            	selection: ['Sounds great!', 'That\'s ok, I can estimate the usage another way'],
             	selected: [false, false],
             	changeCounter: [1,2]
             },

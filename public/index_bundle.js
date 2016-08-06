@@ -29559,7 +29559,7 @@
 	            	reside on the property',
 	            	disabled: true,
 	            	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
-	            	selection: ['Sounds great!', 'Cool, but I can estimate the usage'],
+	            	selection: ['Sounds great!', 'That\'s ok, I can estimate the usage another way'],
 	            	selected: [false, false],
 	            	changeCounter: [1,2]
 	            },
@@ -46897,7 +46897,12 @@
 
 			console.log(that.props.infoOrder);
 			var questions = that.props.infoOrder.questions;
-			var index = that.props.infoOrder.counter;
+			if (that.props.infoOrder.counter === 1) {
+				var index = 1;
+			} else {
+				var index = that.props.params.counter;
+			}
+
 			console.log('index is ' + index);
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array

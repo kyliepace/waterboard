@@ -57,7 +57,13 @@ var InfoOrder = React.createClass({
 		
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions;
-		var index = that.props.infoOrder.counter;
+		if(that.props.infoOrder.counter === 1){
+			var index= 1;
+		}
+		else{
+			var index = that.props.params.counter;
+		}
+		
 		console.log('index is '+index);
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
