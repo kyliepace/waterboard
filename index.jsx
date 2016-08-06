@@ -17,7 +17,7 @@ var InfoOrderFaq=require('./public/components/infoOrderFaq.jsx');
 
 var routes = (
 	<Provider store={store}>
-	  <Router history={hashHistory} >
+	  <Router history={hashHistory} onUpdate={()=> window.scrollTo(0,0)}>
 	    <Route path='/' component={Main}>
 	      	<IndexRoute component={Menu}/>
 

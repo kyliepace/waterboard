@@ -73,7 +73,7 @@
 					{ store: store },
 					React.createElement(
 									Router,
-									{ history: hashHistory },
+									{ history: hashHistory, onUpdate: () => window.scrollTo(0, 0) },
 									React.createElement(
 													Route,
 													{ path: '/', component: Main },
