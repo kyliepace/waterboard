@@ -61,7 +61,7 @@ var Question = function(props){
 
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
 
-			<div className={props.user.changeSourceCounter ? 'options':'hidden'}>
+			<div className={props.question.changeSourceCounter ? 'options':'hidden'}>
 				<h4>This is for water source number: </h4>
 				<FormControl componentClass='select' onChange={props.changeSource} placeholder='' className={props.question.changeSourceCounter? 'dropdown': 'hidden'}>
 					{dropdowns}
