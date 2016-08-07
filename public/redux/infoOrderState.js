@@ -81,9 +81,7 @@ var infoOrderState = {
                 selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
                	selected: [false, false],
                 disabled: true,
-                popover: 'Select the type of water source from the drop-down list. A spring \
-	                is usually either a surface diversion or a well, depending on whether the \
-	                water comes all the way to the surface',
+                popover: 'Select the name of your water supplier. If your water comes from another property that you own, select self. If your water comes from someone else\'s property, select neighbor',
                 changeCounter: [100,100,1,1] //go to confirmation or continue to more supplier info
             }
             ,

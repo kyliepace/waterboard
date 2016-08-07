@@ -22,7 +22,7 @@ var User = function(props){
 
 			<div className={ props.user.sources ? '': 'hidden'}>
 				<h3 >You have indicated that this parcel is served by {props.user.sources} water sources. <br/>
-				You have submitted information for {props.user.answers.length} water sources.</h3>
+				You have submitted information for {props.user.reportedSources} water sources.</h3>
 			</div>
 	
 

@@ -22,7 +22,8 @@ app.post('/logIn', function(req, res){
 				address: data[i].address, 
 				answers: data[i].answers,
 				sources: data[i].sources, 
-				multParcels: data[i].multParcels	
+				multParcels: data[i].multParcels,
+				reportedSources: data[i].reportedSources	
 			};
 			console.log(savedData);
 			res.status(200).json(savedData).end(); //if the password matches, send back some data
@@ -39,6 +40,17 @@ app.put('/submit', function(req, res){
 	var idCode = req.body.idCode;
 	var answers = req.body.answers;
 
+	//check how many sources have been reported
+	var reportedSources = 0;
+	
+	for (var j=0; j<5; j++){
+		if(answers[j][4].length>1){ //this is the array of answers to the question 'what is the water source'
+			var reportedSources = reportedSources + 1; 
+			console.log(reportedSources);
+		}
+	}
+	console.log('reported sources: '+reportedSources)
+
 	//find number of indicated sources
 	for(var i=0; i<data.length; i++){
 		if(data[i].idCode === idCode){
@@ -49,19 +61,13 @@ app.put('/submit', function(req, res){
 			else{
 				data[i].sources = 0; //if this answer space is falsey, there must be 0 sources
 			}
+			var numSources = data[i].sources;
+			data[i].reportedSources = reportedSources; //set equal to newly calculated number of reported sources
 		}
 	}
-	var numSources = data[i].sources;
 	console.log('numSources: '+numSources);
 
-	//check how many sources have been reported
-	var reportedSources = 0;
-	for (var j=0; j<answers.lenght; j++){
-		if(answers[j][4]){
-			reportedSources ++;
-		}
-	}
-	console.log('reported sources: '+reportedSources)
+	
 	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
 

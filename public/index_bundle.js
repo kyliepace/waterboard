@@ -64,9 +64,9 @@
 	var Main = __webpack_require__(271);
 	var Menu = __webpack_require__(489);
 	var InfoOrder = __webpack_require__(490);
-	var WaterRights = __webpack_require__(495);
-	var WaterRightsFaq = __webpack_require__(496);
-	var InfoOrderFaq = __webpack_require__(497);
+	var WaterRights = __webpack_require__(496);
+	var WaterRightsFaq = __webpack_require__(497);
+	var InfoOrderFaq = __webpack_require__(498);
 
 	var routes = React.createElement(
 					Provider,
@@ -28558,7 +28558,7 @@
 	            answerObject[i] = []; //assign a new key:value pair to the object for each question
 	            
 	        }
-	        var newAnswers = Object.assign({}, state.answers, {0: answerObject});
+	        var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
 	        var newState =  Object.assign({}, state, {answers: newAnswers});
 	        console.log(newState);
 	        return newState;
@@ -28579,7 +28579,7 @@
 	            var answers = state.answers;
 	        }
 	        
-	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
+	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels, reportedSources: data.reportedSources})
 	        return newState;
 	    }
 	    /////////// CHANGE SOURCE COUNTER//////////////////////////
@@ -28732,16 +28732,36 @@
 
 	    /////////////// SUBMIT SUCCESS//////////////
 	    if(action.type === actions.SUBMIT_SUCCESS){
+	        console.log('successfully submitted source info');
 	        //print out copy of answers
+
+	        console.log(action.data.numSources); //check number of reported water sources
+	        var numSources = action.data.numSources;
+	        var reportedSources = action.data.reportedSources; 
 
 	        //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
 	        //alert that we are taking them to report for an additional source
-	        //
+	        if(numSources > reportedSources){
+	            var newSourceCounter = state.sourceCounter +1;
+	            console.log(newSourceCounter);
+	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
+	            var newState = Object.assign({}, state, {counter: 1, sources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
+	            
+	            return newState;
+	        }
 
 	        //if state.mult === true, take back to login screen.
-	        //alert that they need to log in for other parcels if they haven't already done so
+	        else if(state.multParcels === true){
+	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
+	            //reload the page
+	        }
 
-	        //if all done, play fireworks 
+	        else{
+	            var newState = Object.assign({}, state, {counter: 1001});
+	            return newState;
+	        }
+	        
+
 	    }
 
 	    //////// SUBMIT NOT SUCCESS///////////
@@ -29532,9 +29552,7 @@
 	                selection: ["California Larkfield-American", "City of Sebastopol","myself", "a neighbor"],
 	               	selected: [false, false],
 	                disabled: true,
-	                popover: 'Select the type of water source from the drop-down list. A spring \
-		                is usually either a surface diversion or a well, depending on whether the \
-		                water comes all the way to the surface',
+	                popover: 'Select the name of your water supplier. If your water comes from another property that you own, select self. If your water comes from someone else\'s property, select neighbor',
 	                changeCounter: [100,100,1,1] //go to confirmation or continue to more supplier info
 	            }
 	            ,
@@ -46955,6 +46973,7 @@
 	var Confirm = __webpack_require__(492);
 	var LogIn = __webpack_require__(493);
 	var User = __webpack_require__(494);
+	var Final = __webpack_require__(495);
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -46996,6 +47015,7 @@
 			console.log('sending data');
 			var that = this;
 			this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
+			this.props.history.push('/infoOrder/0');
 		},
 		changeSource: function (e) {
 			//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
@@ -47008,9 +47028,13 @@
 
 			if (that.props.infoOrder.counter === 1) {
 				var index = 1; //since logging in won't push to history
-			} else {
-				var index = that.props.params.counter;console.log('index taken from url');
 			}
+			// else if(that.props.infoOrder.counter ===4){
+			// 	var index = 4; //for going back into the form for a new source
+			// }
+			else {
+					var index = that.props.params.counter;console.log('index taken from url');
+				} //this should be the default method so that clicking the back button renders the right page
 
 			console.log('index is ' + index);
 			var singleQuestion = questions[index];
@@ -47022,8 +47046,10 @@
 				console.log('show user screen');
 				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit });
 				console.log(show);
-			} else if (index > 100) {
+			} else if (index > 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
+			} else if (index > 1000) {
+				var show = React.createElement(Final, null);
 			} else {
 				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, user: that.props.infoOrder,
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
@@ -47419,7 +47445,7 @@
 					' water sources. ',
 					React.createElement('br', null),
 					'You have submitted information for ',
-					props.user.answers.length,
+					props.user.reportedSources,
 					' water sources.'
 				)
 			),
@@ -47436,6 +47462,30 @@
 
 /***/ },
 /* 495 */
+/***/ function(module, exports, __webpack_require__) {
+
+	React = __webpack_require__(2);
+
+	var Final = function (props) {
+		return React.createElement(
+			'div',
+			{ id: 'final' },
+			React.createElement(
+				'div',
+				null,
+				React.createElement(
+					'h1',
+					null,
+					'All Done!'
+				)
+			)
+		);
+	};
+
+	module.exports = Final;
+
+/***/ },
+/* 496 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -47478,7 +47528,7 @@
 	module.exports = WaterRights;
 
 /***/ },
-/* 496 */
+/* 497 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
@@ -47509,7 +47559,7 @@
 	module.exports = WaterRightsFaq;
 
 /***/ },
-/* 497 */
+/* 498 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);

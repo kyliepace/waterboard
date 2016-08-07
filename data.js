@@ -5,8 +5,9 @@ var data = [
 		idCode: 1,
 		password: 1,
 		answers: '', 
-		multParcels: false,
-		sources: null
+		multParcels: false, 
+		sources: 0,
+		reportedSources: 0
 	},
 	{ //this is parcel #2
 

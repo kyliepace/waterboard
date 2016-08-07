@@ -49,6 +49,7 @@ var InfoOrder = React.createClass({
 		console.log('sending data');
 		var that = this;
 		this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
+		this.props.history.push('/infoOrder/0');
 	},
 	changeSource: function(e){
 		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
@@ -62,9 +63,12 @@ var InfoOrder = React.createClass({
 		if(that.props.infoOrder.counter === 1){
 			var index= 1; //since logging in won't push to history
 		}
+		// else if(that.props.infoOrder.counter ===4){
+		// 	var index = 4; //for going back into the form for a new source
+		// }
 		else{
 			var index = that.props.params.counter;  console.log('index taken from url');
-		}
+		}//this should be the default method so that clicking the back button renders the right page
 		
 		console.log('index is '+index);
 		var singleQuestion = questions[index];
@@ -82,7 +86,7 @@ var InfoOrder = React.createClass({
 			);
 			console.log(show);
 		}
-		else if(100<index<1000){
+		else if(index>100 && index<1000){
 			var show = (
 				<Confirm sendData={that.sendData} />
 			);

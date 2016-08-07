@@ -40,7 +40,7 @@ var infoOrderReducer= function(state, action) {
             var answers = state.answers;
         }
         
-        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels})
+        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels, reportedSources: data.reportedSources})
         return newState;
     }
     /////////// CHANGE SOURCE COUNTER//////////////////////////
@@ -203,9 +203,11 @@ var infoOrderReducer= function(state, action) {
         //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
         //alert that we are taking them to report for an additional source
         if(numSources > reportedSources){
-            var newSourceCounter = sourceCounter ++;
+            var newSourceCounter = state.sourceCounter +1;
+            console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-            var newState = Object.assign({}, state, {counter: 4, sourceCounter: newSourceCounter, clicks: 3, next: 5}) //next should be 5 at the point we're re-entering the form
+            var newState = Object.assign({}, state, {counter: 1, sources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
+            
             return newState;
         }
 
@@ -220,6 +222,7 @@ var infoOrderReducer= function(state, action) {
             return newState;
         }
         
+
     }
 
     //////// SUBMIT NOT SUCCESS///////////
