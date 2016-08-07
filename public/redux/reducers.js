@@ -225,7 +225,7 @@ var infoOrderReducer= function(state, action) {
         //if state.mult === true, take back to login screen.
         else if(state.multParcels === true){
             alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+            //var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
             location.reload(true);
         }
 

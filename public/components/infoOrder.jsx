@@ -62,6 +62,7 @@ var InfoOrder = React.createClass({
 
 		if(that.props.infoOrder.counter === 1){
 			var index= 1; //since logging in won't push to history
+			console.log('index set equal to 1');
 		}
 		else if(that.props.infoOrder.counter ===1001){
 			var index = 1001; //for going back into the form for a new source
@@ -74,7 +75,8 @@ var InfoOrder = React.createClass({
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-		if(index === 0){
+		if(parseInt(index) === 0){
+			console.log('index equal to 0, show login');
 			var show = (
 				<LogIn question={singleQuestion} handleChange={that.handleChange} onSubmit={that.onSubmit}/>
 			);

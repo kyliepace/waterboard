@@ -28764,7 +28764,7 @@
 	        //if state.mult === true, take back to login screen.
 	        else if(state.multParcels === true){
 	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-	            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+	            //var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
 	            location.reload(true);
 	        }
 
@@ -47039,6 +47039,7 @@
 
 			if (that.props.infoOrder.counter === 1) {
 				var index = 1; //since logging in won't push to history
+				console.log('index set equal to 1');
 			} else if (that.props.infoOrder.counter === 1001) {
 				var index = 1001; //for going back into the form for a new source
 			} else {
@@ -47049,7 +47050,8 @@
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
-			if (index === 0) {
+			if (parseInt(index) === 0) {
+				console.log('index equal to 0, show login');
 				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
 			} else if (index === 1) {
 				console.log('show user screen');
@@ -47359,8 +47361,8 @@
 					),
 					React.createElement(
 						HelpBlock,
-						{ className: props.question.error[n] ? '' : 'hidden' },
-						props.question.error[n]
+						{ className: props.question.error[0] ? '' : 'hidden' },
+						props.question.error[0]
 					)
 				),
 				React.createElement(
@@ -47369,7 +47371,7 @@
 					React.createElement(
 						ButtonToolbar,
 						{ className: 'flex' },
-						React.createElement(FormControl, { placeholder: 'Password', name: 1, className: 'input', type: 'text', onChange: props.handleChange }),
+						React.createElement(FormControl, { placeholder: 'Password', name: 1, className: 'input', type: 'password', onChange: props.handleChange }),
 						React.createElement(
 							OverlayTrigger,
 							{ trigger: 'click', placement: 'top', overlay: React.createElement(
@@ -47386,8 +47388,8 @@
 					),
 					React.createElement(
 						HelpBlock,
-						{ className: props.question.error[n] ? '' : 'hidden' },
-						props.question.error[n]
+						{ className: props.question.error[1] ? '' : 'hidden' },
+						props.question.error[1]
 					)
 				)
 			),

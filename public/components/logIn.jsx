@@ -23,17 +23,17 @@ var LogIn = function(props){
 							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 						</OverlayTrigger>
 					</ButtonToolbar>
-					<HelpBlock className={props.question.error[n]? '': 'hidden'}>{props.question.error[n]}</HelpBlock>
+					<HelpBlock className={props.question.error[0]? '': 'hidden'}>{props.question.error[0]}</HelpBlock>
 				</div>
 
 				<div>
 					<ButtonToolbar className='flex'>
-						<FormControl placeholder='Password' name={1} className='input' type='text' onChange={props.handleChange}/>
+						<FormControl placeholder='Password' name={1} className='input' type='password' onChange={props.handleChange}/>
 						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>1</Popover>}>
 							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 						</OverlayTrigger>
 					</ButtonToolbar>
-					<HelpBlock className={props.question.error[n]? '': 'hidden'}>{props.question.error[n]}</HelpBlock>
+					<HelpBlock className={props.question.error[1]? '': 'hidden'}>{props.question.error[1]}</HelpBlock>
 				</div>
 		</FormGroup>
 
