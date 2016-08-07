@@ -28557,7 +28557,9 @@
 	        if(localStorage.getItem('infoOrder')){
 	            var storage = localStorage.getItem('infoOrder'); 
 	            console.log('from storage', JSON.parse(storage));
-	            var newState = Object.assign({}, state, JSON.parse(storage));
+	            var newState = Object.assign({}, state, JSON.parse(storage)); //copy state and update with stored values
+	            // if state.counter === 0, should the localStorage counter be reset?
+	            // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
 	        }
 	        else{
 	            console.log('reset state');
@@ -28603,7 +28605,7 @@
 	    //////////// CHANGE INPUT /////////////////////////////////////////////////
 	    if (action.type === actions.CHANGE_INPUT){
 	        //change the infoOrder.questions[counter].id.value to the e.target.value
-	        var counter = state.counter;
+	        var counter = action.counter;
 	        var sourceCounter = state.sourceCounter;
 	        var question = state.questions[counter];
 	        var index = action.index; //which of the input bars is being changed
@@ -28633,7 +28635,7 @@
 	            console.log(newAnswersForSource);
 	            var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
 	            
-	            var next = question.changeCounter[0] + counter; //set new next value
+	            var next = question.changeCounter[0] + parseInt(counter); //set new next value
 	            //turn off the disabled value and clear any error message
 	            error[index]="";
 	            var newQuestion = Object.assign({}, question, { error: error, disabled: false}); //update the question state
@@ -28668,8 +28670,8 @@
 
 	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
-	        var counter = state.counter;
-	        var question = state.questions[action.counter]; //which question?
+	        var counter = action.counter;
+	        var question = state.questions[counter]; //which question?
 	        var answer = question.selection[action.answerIndex]; //which answer?
 	        
 	         //change the answer value
@@ -28729,7 +28731,7 @@
 	    
 	////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
-	        var counter = state.counter;
+	        var counter = action.counter;
 	        var question = state.questions[counter]; //which question?
 	  
 	        var counter = state.next; //the value of next becomes the new counter index
@@ -28935,7 +28937,7 @@
 
 	//////////  if question.input, then update the state when form is changed////////////////////
 	var CHANGE_INPUT = 'CHANGE_INPUT';
-	var changeInput = function(e){
+	var changeInput = function(e, counter){
 		console.log(e.target.name);
 		if(e.target.value===""){
 			var answer = "";
@@ -28948,10 +28950,12 @@
 			var answer = parseInt(e.target.value);
 			console.log('input is numeric' + answer); 
 		}
+		console.log('counter is '+ counter);
 		return{
 			type: CHANGE_INPUT, 
 			index: e.target.name,
-			answer: answer
+			answer: answer,
+			counter: counter
 		}
 	};
 	exports.CHANGE_INPUT = CHANGE_INPUT;
@@ -28959,10 +28963,11 @@
 
 	////// when next arrow is clicked ///////////////
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-	var submitAnswer = function() {
+	var submitAnswer = function(counter) {
 		console.log('action: submitAnswer');
 	    return {
-	        type: SUBMIT_ANSWER
+	        type: SUBMIT_ANSWER, 
+	        counter: counter
 	    }
 	};
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
@@ -47006,13 +47011,12 @@
 			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 		},
 		handleClick: function (e) {
-			//decide what value the index should be
-			var index = this.props.params.counter;
-
+			var index = this.props.params.counter; //decide what value the index should be
 			this.props.dispatch(actions.chooseOption(e, index)); ///send the action e - which button has been clicked - and index - where in the question array to look
 		},
 		handleChange: function (e) {
-			this.props.dispatch(actions.changeInput(e));
+			var index = this.props.params.counter; //decide what value the index should be
+			this.props.dispatch(actions.changeInput(e, index));
 		},
 		onSubmit: function (e) {
 			e.preventDefault();
@@ -47023,9 +47027,10 @@
 				console.log('submit called from log in');
 				this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
 			} else {
+				var index = this.props.params.counter; //decide what value the index should be
 				console.log('next will be ' + this.props.infoOrder.next);
 				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
-				this.props.dispatch(actions.submitAnswer());
+				this.props.dispatch(actions.submitAnswer(index));
 			}
 		},
 		sendData: function () {

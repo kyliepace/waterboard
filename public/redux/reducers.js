@@ -18,7 +18,9 @@ var infoOrderReducer= function(state, action) {
         if(localStorage.getItem('infoOrder')){
             var storage = localStorage.getItem('infoOrder'); 
             console.log('from storage', JSON.parse(storage));
-            var newState = Object.assign({}, state, JSON.parse(storage));
+            var newState = Object.assign({}, state, JSON.parse(storage)); //copy state and update with stored values
+            // if state.counter === 0, should the localStorage counter be reset?
+            // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
         }
         else{
             console.log('reset state');
@@ -64,7 +66,7 @@ var infoOrderReducer= function(state, action) {
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){
         //change the infoOrder.questions[counter].id.value to the e.target.value
-        var counter = state.counter;
+        var counter = action.counter;
         var sourceCounter = state.sourceCounter;
         var question = state.questions[counter];
         var index = action.index; //which of the input bars is being changed
@@ -94,7 +96,7 @@ var infoOrderReducer= function(state, action) {
             console.log(newAnswersForSource);
             var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
             
-            var next = question.changeCounter[0] + counter; //set new next value
+            var next = question.changeCounter[0] + parseInt(counter); //set new next value
             //turn off the disabled value and clear any error message
             error[index]="";
             var newQuestion = Object.assign({}, question, { error: error, disabled: false}); //update the question state
@@ -129,8 +131,8 @@ var infoOrderReducer= function(state, action) {
 
 /////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
-        var counter = state.counter;
-        var question = state.questions[action.counter]; //which question?
+        var counter = action.counter;
+        var question = state.questions[counter]; //which question?
         var answer = question.selection[action.answerIndex]; //which answer?
         
          //change the answer value
@@ -165,7 +167,7 @@ var infoOrderReducer= function(state, action) {
         };
 
         //increase question.next        
-        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter to calculate the next index
+        var next = question.changeCounter[answerIndex]+parseInt(counter); //add a specified number to the counter to calculate the next index
       
         console.log('next index: '+next);
         //update the question with new answer index and un-disable next arrow
@@ -190,7 +192,7 @@ var infoOrderReducer= function(state, action) {
     
 ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
-        var counter = state.counter;
+        var counter = action.counter;
         var question = state.questions[counter]; //which question?
   
         var counter = state.next; //the value of next becomes the new counter index

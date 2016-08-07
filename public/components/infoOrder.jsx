@@ -23,13 +23,12 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
-		//decide what value the index should be
-		var index = this.props.params.counter; 
-		
+		var index = this.props.params.counter; //decide what value the index should be
 		this.props.dispatch(actions.chooseOption(e, index)); ///send the action e - which button has been clicked - and index - where in the question array to look
 	},
 	handleChange: function(e){
-		this.props.dispatch(actions.changeInput(e)); 
+		var index = this.props.params.counter; //decide what value the index should be
+		this.props.dispatch(actions.changeInput(e, index)); 
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -40,9 +39,10 @@ var InfoOrder = React.createClass({
 			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
 		}
 		else{
+			var index = this.props.params.counter; //decide what value the index should be
 			console.log('next will be '+ this.props.infoOrder.next);
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
-			this.props.dispatch(actions.submitAnswer());
+			this.props.dispatch(actions.submitAnswer(index));
 		}
 
 	},

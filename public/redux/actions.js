@@ -101,7 +101,7 @@ exports.chooseOption = chooseOption;
 
 //////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
-var changeInput = function(e){
+var changeInput = function(e, counter){
 	console.log(e.target.name);
 	if(e.target.value===""){
 		var answer = "";
@@ -114,10 +114,12 @@ var changeInput = function(e){
 		var answer = parseInt(e.target.value);
 		console.log('input is numeric' + answer); 
 	}
+	console.log('counter is '+ counter);
 	return{
 		type: CHANGE_INPUT, 
 		index: e.target.name,
-		answer: answer
+		answer: answer,
+		counter: counter
 	}
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;
@@ -125,10 +127,11 @@ exports.changeInput = changeInput;
 
 ////// when next arrow is clicked ///////////////
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-var submitAnswer = function() {
+var submitAnswer = function(counter) {
 	console.log('action: submitAnswer');
     return {
-        type: SUBMIT_ANSWER
+        type: SUBMIT_ANSWER, 
+        counter: counter
     }
 };
 exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
