@@ -28548,19 +28548,30 @@
 	};
 
 	var infoOrderReducer= function(state, action) {
-	    state = state || infoOrder;
+	    state = state || JSON.parse(localStorage.getItem('infoOrder'));
 	    //////////////// ON LOAD ////////////////////////////////////////
 	    if(action.type === actions.ON_LOAD){
 	        console.log('reducer: on load');
-	        //set up first answer object with one array for each question
-	        var answerObject = {}; //this will be the answer object for the first water source
-	        for (var i = 0; i<state.questions.length; i++){
-	            answerObject[i] = []; //assign a new key:value pair to the object for each question
-	            
+
+	        //if already in local storage, use that
+	        if(localStorage.getItem('infoOrder') && infoOrder.counter > 1){
+	            var storage = localStorage.getItem('infoOrder'); 
+	            console.log('from storage', JSON.parse(storage));
+	            var newState = Object.assign({}, infoOrder, JSON.parse(storage));
 	        }
-	        var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
-	        var newState =  Object.assign({}, state, {answers: newAnswers});
-	        console.log(newState);
+	        else{
+	            console.log('reset state');
+	            //set up first answer object with one array for each question
+	            var answerObject = {}; //this will be the answer object for the first water source
+	            for (var i = 0; i<infoOrder.questions.length; i++){
+	                answerObject[i] = []; //assign a new key:value pair to the object for each question
+	                
+	            }
+	            var newAnswers = Object.assign({}, infoOrder.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
+	            var newState =  Object.assign({}, infoOrder, {answers: newAnswers});
+	            console.log(newState);
+	            
+	        } 
 	        return newState;
 	    }
 
@@ -28727,6 +28738,7 @@
 	        
 	        var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter
 	        console.log('new state'); console.log(newState);
+	        localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
 	        return newState;
 	    }
 
