@@ -54,11 +54,12 @@ var infoOrderReducer= function(state, action) {
             var answers = state.answers;
         }
         
-        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, sources: data.sources, multParcels: data.multParcels, reportedSources: data.reportedSources})
+        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, numSources: data.numSources, multParcels: data.multParcels, reportedSources: data.reportedSources})
         return newState;
     }
     /////////// CHANGE SOURCE COUNTER//////////////////////////
     if(action.type === actions.CHANGE_SOURCE){
+        console.log('reducer: change source counter');
         var newSourceCounter = action.index;
         var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
         return newState;
