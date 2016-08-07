@@ -17,12 +17,9 @@ var infoOrderReducer= function(state, action) {
         //if already in local storage, use that
         if(localStorage.getItem('infoOrder') && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
             var storage = JSON.parse(localStorage.getItem('infoOrder')); 
-            console.log('from storage', storage);
-          
-            var newState = Object.assign({}, state, storage); //copy state and update with stored values
-            // if state.counter === 0, should the localStorage counter be reset?
             // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
-            
+            console.log('from storage', storage); 
+            var newState = Object.assign({}, state, storage); //copy state and update with stored values    
         }
         else{
             console.log('reset state');
@@ -216,8 +213,9 @@ var infoOrderReducer= function(state, action) {
         var numSources = action.data.numSources;
         var reportedSources = action.data.reportedSources; 
 
-        //if more water sources reported than submitted, sourceCounter ++ and counter to 4. 
+        //if more water sources reported than submitted, sourceCounter ++ and counter to 1. 
         //alert that we are taking them to report for an additional source
+        //send back to user overview page and then from there, to water source question (4)
         if(numSources > reportedSources){
             var newSourceCounter = state.sourceCounter +1;
             console.log(newSourceCounter);
@@ -236,7 +234,7 @@ var infoOrderReducer= function(state, action) {
             var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
             //reset local storage 
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-            location.reload(true);
+            location.reload(true); //is this still necessary?
         }
 
         else{

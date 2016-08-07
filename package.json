@@ -46,21 +46,7 @@
     "html-webpack-plugin": "^2.22.0",
     "less": "^2.7.1",
     "webpack": "^1.13.1"
-<<<<<<< HEAD
-  },
-  "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "isomorphic-fetch": "^2.2.1",
-    "react": "^15.2.1",
-    "react-bootstrap": "^0.30.0",
-    "react-dom": "^15.2.1",
-    "react-redux": "^4.4.5",
-    "react-router": "^2.6.0",
-    "react-router-redux": "^4.0.5",
-    "redux": "^3.5.2",
-    "redux-thunk": "^2.1.0"
-=======
->>>>>>> dropdown
+
   }
+  
 }
