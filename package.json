@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "less": "lessc public/css/style.less public/css/style.css",
-    "start": "webpack && npm run less && node server.js"
+    "start": "node server.js",
+    "dev": "webpack && npm run less"
   },
   "keywords": [
     "React",
