@@ -20,7 +20,8 @@ var InfoOrder = React.createClass({
 		};
 	},
 	componentWillMount: function(){
-		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+		var index = this.props.params.counter;
+		this.props.dispatch(actions.onLoad(index)); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
 		var index = this.props.params.counter; //decide what value the index should be

@@ -28898,10 +28898,12 @@
 	    state = state || infoOrder;
 	    //////////////// ON LOAD ////////////////////////////////////////
 	    if(action.type === actions.ON_LOAD){
-	        console.log('reducer: on load');
+	        console.log('reducer: on load');    
+	        console.log('url counter is at '+ action.counter);
 
 	        //if already in local storage, use that
-	        if(localStorage.getItem('infoOrder') && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
+	        //if url is infoOrder/0 then we're at the login screen 
+	        if(localStorage.getItem('infoOrder') && action.counter>0 && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
 	            var storage = JSON.parse(localStorage.getItem('infoOrder')); 
 	            // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
 	            console.log('from storage', storage); 
@@ -28924,6 +28926,7 @@
 
 	    //////////// LOG IN SUCCESS //////////////////////////
 	    if(action.type === actions.LOG_IN_SUCCESS){
+	        console.log('reducer: log in success');
 	        var data = action.data;
 	        //update state to include data.owner, data.address, data.answers as well as updated counters
 	        var counter = state.next; //the value of next becomes the new counter index
@@ -29186,10 +29189,11 @@
 	__webpack_require__(271);
 
 	var ON_LOAD= 'ON_LOAD';
-	var onLoad = function(e) {
+	var onLoad = function(counter) {
 		console.log('action: onLoad');
 	    return {
-	        type: ON_LOAD
+	        type: ON_LOAD, 
+	        counter: counter
 	    }
 	};
 	exports.ON_LOAD = ON_LOAD;
@@ -49152,7 +49156,8 @@
 			};
 		},
 		componentWillMount: function () {
-			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
+			var index = this.props.params.counter;
+			this.props.dispatch(actions.onLoad(index)); //dispatch the reducer to set up the answer objects
 		},
 		handleClick: function (e) {
 			var index = this.props.params.counter; //decide what value the index should be

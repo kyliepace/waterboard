@@ -1,10 +1,11 @@
 require('isomorphic-fetch');
 
 var ON_LOAD= 'ON_LOAD';
-var onLoad = function(e) {
+var onLoad = function(counter) {
 	console.log('action: onLoad');
     return {
-        type: ON_LOAD
+        type: ON_LOAD, 
+        counter: counter
     }
 };
 exports.ON_LOAD = ON_LOAD;
