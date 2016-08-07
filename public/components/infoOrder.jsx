@@ -118,7 +118,7 @@ var InfoOrder = React.createClass({
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
 		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
-		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.numSources} water sources</h4>
+		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{parseInt(this.props.infoOrder.sourceCounter) +1} of {this.props.infoOrder.numSources} water sources</h4>
 		    	</Col>
 		    </section>
 		)

@@ -1,14 +1,14 @@
 {
   "name": "waterboard",
   "version": "1.0.0",
-  "description": "final Thinkful project",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "less": "lessc public/css/style.less public/css/style.css",
-    "start": "node server.js",
-    "postinstall": "node deploy.js",
-    "dev": "webpack && npm run less"
+
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack && npm run less && node server.js"
+
   },
   "keywords": [
     "React",
@@ -26,10 +26,19 @@
   },
   "author": "Kylie Pace",
   "license": "ISC",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "react": "^15.3.0",
+    "react-bootstrap": "^0.30.2",
+    "react-dom": "^15.3.0",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.6.1",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
+  },
   "devDependencies": {
-    "babel-core": "^6.11.4",
+    "babel-core": "^6.13.2",
     "babel-loader": "^6.2.4",
-    "babel-plugin-object-assign": "^1.2.1",
     "babel-preset-es2016": "^6.11.3",
     "babel-preset-react": "^6.11.1",
     "body-parser": "^1.15.2",
@@ -37,6 +46,7 @@
     "html-webpack-plugin": "^2.22.0",
     "less": "^2.7.1",
     "webpack": "^1.13.1"
+<<<<<<< HEAD
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -50,5 +60,7 @@
     "react-router-redux": "^4.0.5",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0"
+=======
+>>>>>>> dropdown
   }
 }
