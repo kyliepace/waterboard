@@ -38,6 +38,10 @@ var InfoOrder = React.createClass({
 			console.log('submit called from log in');
 			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
 		}
+		else if(parseInt(this.props.infoOrder.counter)===1){
+			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
+			this.props.dispatch(actions.submitAnswer(1));
+		}
 		else{
 			var index = this.props.params.counter; //decide what value the index should be
 			console.log('next will be '+ this.props.infoOrder.next);
@@ -59,7 +63,7 @@ var InfoOrder = React.createClass({
 	render: function(props){
 		var that = this;
 		console.log(that.props.infoOrder); 
-		var questions = that.props.infoOrder.questions;
+		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 
 		if(that.props.infoOrder.counter === 1){
 			var index= 1; //since logging in won't push to history
@@ -114,7 +118,7 @@ var InfoOrder = React.createClass({
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
 		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
-		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.sources} water sources</h4>
+		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.numSources} water sources</h4>
 		    	</Col>
 		    </section>
 		)

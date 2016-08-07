@@ -40,9 +40,9 @@ var Question = function(props){
 		}	
 	}
 	//if this question should let the user change which water source they are reporting
-	if(props.question.changeSourceCounter){
+	if(props.question.changeSourceCounter){ //only do this for the water source question
 		var dropdowns = [];
-		for (var n=0; n<props.user.sources; n++){ 
+		for (var n=0; n<props.user.numSources; n++){ 
 			dropdowns.push(
 				<option value={n} id={n}>{n+1}</option> //give a dropdown option up to the number of sources
 			)
@@ -61,7 +61,7 @@ var Question = function(props){
 
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
 
-			<div className={props.user.numSources ? 'options':'hidden'}>
+			<div className={props.user.changeSourceCounter ? 'options':'hidden'}>
 				<h4>This is for water source number: </h4>
 				<FormControl componentClass='select' onChange={props.changeSource} placeholder='' className={props.question.changeSourceCounter? 'dropdown': 'hidden'}>
 					{dropdowns}

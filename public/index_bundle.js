@@ -28548,18 +28548,20 @@
 	};
 
 	var infoOrderReducer= function(state, action) {
-	    state = state || initialRepositoryState.infoOrder;
+	    state = state || infoOrder;
 	    //////////////// ON LOAD ////////////////////////////////////////
 	    if(action.type === actions.ON_LOAD){
 	        console.log('reducer: on load');
 
 	        //if already in local storage, use that
-	        if(localStorage.getItem('infoOrder')){
-	            var storage = localStorage.getItem('infoOrder'); 
-	            console.log('from storage', JSON.parse(storage));
-	            var newState = Object.assign({}, state, JSON.parse(storage)); //copy state and update with stored values
+	        if(localStorage.getItem('infoOrder') && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
+	            var storage = JSON.parse(localStorage.getItem('infoOrder')); 
+	            console.log('from storage', storage);
+	          
+	            var newState = Object.assign({}, state, storage); //copy state and update with stored values
 	            // if state.counter === 0, should the localStorage counter be reset?
 	            // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
+	            
 	        }
 	        else{
 	            console.log('reset state');
@@ -28571,8 +28573,7 @@
 	            }
 	            var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
 	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions, counter: 0});
-	            console.log(newState);
-	            
+	            console.log(newState);        
 	        } 
 	        return newState;
 	    }
@@ -28605,7 +28606,7 @@
 	    //////////// CHANGE INPUT /////////////////////////////////////////////////
 	    if (action.type === actions.CHANGE_INPUT){
 	        //change the infoOrder.questions[counter].id.value to the e.target.value
-	        var counter = action.counter;
+	        var counter = parseInt(action.counter);
 	        var sourceCounter = state.sourceCounter;
 	        var question = state.questions[counter];
 	        var index = action.index; //which of the input bars is being changed
@@ -28635,7 +28636,7 @@
 	            console.log(newAnswersForSource);
 	            var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
 	            
-	            var next = question.changeCounter[0] + parseInt(counter); //set new next value
+	            var next = question.changeCounter[0] + counter; //set new next value
 	            //turn off the disabled value and clear any error message
 	            error[index]="";
 	            var newQuestion = Object.assign({}, question, { error: error, disabled: false}); //update the question state
@@ -28670,7 +28671,7 @@
 
 	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
-	        var counter = action.counter;
+	        var counter = parseInt(action.counter);
 	        var question = state.questions[counter]; //which question?
 	        var answer = question.selection[action.answerIndex]; //which answer?
 	        
@@ -28759,7 +28760,9 @@
 	            var newSourceCounter = state.sourceCounter +1;
 	            console.log(newSourceCounter);
 	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-	            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
+	            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, 
+	                sourceCounter: newSourceCounter, clicks: 3, next: 4, questions: infoOrder.questions}) 
+	                //next should be 4 at the point we're re-entering the form. questions should be re-set so that multiple choice questions don't appear re-selected
 	            //update local storage
 	            localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
 	            return newState;
@@ -47026,6 +47029,9 @@
 				//dispatch logIn function with idCode and password from state
 				console.log('submit called from log in');
 				this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
+			} else if (parseInt(this.props.infoOrder.counter) === 1) {
+				this.props.history.push('/infoOrder/' + that.props.infoOrder.next);
+				this.props.dispatch(actions.submitAnswer(1));
 			} else {
 				var index = this.props.params.counter; //decide what value the index should be
 				console.log('next will be ' + this.props.infoOrder.next);
@@ -47046,7 +47052,7 @@
 		render: function (props) {
 			var that = this;
 			console.log(that.props.infoOrder);
-			var questions = that.props.infoOrder.questions;
+			var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 
 			if (that.props.infoOrder.counter === 1) {
 				var index = 1; //since logging in won't push to history
@@ -47104,7 +47110,7 @@
 						{ className: this.props.infoOrder.numSources ? '' : 'hidden' },
 						this.props.infoOrder.sourceCounter,
 						' of ',
-						this.props.infoOrder.sources,
+						this.props.infoOrder.numSources,
 						' water sources'
 					)
 				)
@@ -47189,8 +47195,9 @@
 		}
 		//if this question should let the user change which water source they are reporting
 		if (props.question.changeSourceCounter) {
+			//only do this for the water source question
 			var dropdowns = [];
-			for (var n = 0; n < props.user.sources; n++) {
+			for (var n = 0; n < props.user.numSources; n++) {
 				dropdowns.push(React.createElement(
 					'option',
 					{ value: n, id: n },
@@ -47227,7 +47234,7 @@
 				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
 					'div',
-					{ className: props.user.numSources ? 'options' : 'hidden' },
+					{ className: props.user.changeSourceCounter ? 'options' : 'hidden' },
 					React.createElement(
 						'h4',
 						null,

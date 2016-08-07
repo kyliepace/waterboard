@@ -9,18 +9,20 @@ var initialRepositoryState = {
 };
 
 var infoOrderReducer= function(state, action) {
-    state = state || initialRepositoryState.infoOrder;
+    state = state || infoOrder;
     //////////////// ON LOAD ////////////////////////////////////////
     if(action.type === actions.ON_LOAD){
         console.log('reducer: on load');
 
         //if already in local storage, use that
-        if(localStorage.getItem('infoOrder')){
-            var storage = localStorage.getItem('infoOrder'); 
-            console.log('from storage', JSON.parse(storage));
-            var newState = Object.assign({}, state, JSON.parse(storage)); //copy state and update with stored values
+        if(localStorage.getItem('infoOrder') && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
+            var storage = JSON.parse(localStorage.getItem('infoOrder')); 
+            console.log('from storage', storage);
+          
+            var newState = Object.assign({}, state, storage); //copy state and update with stored values
             // if state.counter === 0, should the localStorage counter be reset?
             // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
+            
         }
         else{
             console.log('reset state');
@@ -32,8 +34,7 @@ var infoOrderReducer= function(state, action) {
             }
             var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
             var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions, counter: 0});
-            console.log(newState);
-            
+            console.log(newState);        
         } 
         return newState;
     }
@@ -66,7 +67,7 @@ var infoOrderReducer= function(state, action) {
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){
         //change the infoOrder.questions[counter].id.value to the e.target.value
-        var counter = action.counter;
+        var counter = parseInt(action.counter);
         var sourceCounter = state.sourceCounter;
         var question = state.questions[counter];
         var index = action.index; //which of the input bars is being changed
@@ -96,7 +97,7 @@ var infoOrderReducer= function(state, action) {
             console.log(newAnswersForSource);
             var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
             
-            var next = question.changeCounter[0] + parseInt(counter); //set new next value
+            var next = question.changeCounter[0] + counter; //set new next value
             //turn off the disabled value and clear any error message
             error[index]="";
             var newQuestion = Object.assign({}, question, { error: error, disabled: false}); //update the question state
@@ -131,7 +132,7 @@ var infoOrderReducer= function(state, action) {
 
 /////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
-        var counter = action.counter;
+        var counter = parseInt(action.counter);
         var question = state.questions[counter]; //which question?
         var answer = question.selection[action.answerIndex]; //which answer?
         
@@ -167,7 +168,7 @@ var infoOrderReducer= function(state, action) {
         };
 
         //increase question.next        
-        var next = question.changeCounter[answerIndex]+parseInt(counter); //add a specified number to the counter to calculate the next index
+        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter to calculate the next index
       
         console.log('next index: '+next);
         //update the question with new answer index and un-disable next arrow
@@ -220,7 +221,9 @@ var infoOrderReducer= function(state, action) {
             var newSourceCounter = state.sourceCounter +1;
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
+            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, 
+                sourceCounter: newSourceCounter, clicks: 3, next: 4, questions: infoOrder.questions}) 
+                //next should be 4 at the point we're re-entering the form. questions should be re-set so that multiple choice questions don't appear re-selected
             //update local storage
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
             return newState;
