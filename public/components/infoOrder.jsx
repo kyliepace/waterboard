@@ -20,9 +20,7 @@ var InfoOrder = React.createClass({
 		};
 	},
 	componentWillMount: function(){
-		if(parseInt(this.props.params.counter) ===0){
-			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
-		}
+		this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
 		//decide what value the index should be
@@ -116,7 +114,7 @@ var InfoOrder = React.createClass({
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
 		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
-		    		<h4 className={this.props.infoOrder.sources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.sources} water sources</h4>
+		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{this.props.infoOrder.sourceCounter} of {this.props.infoOrder.sources} water sources</h4>
 		    	</Col>
 		    </section>
 		)

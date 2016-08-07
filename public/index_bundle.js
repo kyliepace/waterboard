@@ -28554,21 +28554,21 @@
 	        console.log('reducer: on load');
 
 	        //if already in local storage, use that
-	        if(localStorage.getItem('infoOrder') && infoOrder.counter > 1){
+	        if(localStorage.getItem('infoOrder')){
 	            var storage = localStorage.getItem('infoOrder'); 
 	            console.log('from storage', JSON.parse(storage));
-	            var newState = Object.assign({}, infoOrder, JSON.parse(storage));
+	            var newState = Object.assign({}, state, JSON.parse(storage));
 	        }
 	        else{
 	            console.log('reset state');
 	            //set up first answer object with one array for each question
 	            var answerObject = {}; //this will be the answer object for the first water source
-	            for (var i = 0; i<infoOrder.questions.length; i++){
+	            for (var i = 0; i<state.questions.length; i++){
 	                answerObject[i] = []; //assign a new key:value pair to the object for each question
 	                
 	            }
-	            var newAnswers = Object.assign({}, infoOrder.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
-	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: infoOrder.questions, counter: 0});
+	            var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
+	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions, counter: 0});
 	            console.log(newState);
 	            
 	        } 
@@ -28758,13 +28758,17 @@
 	            console.log(newSourceCounter);
 	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
 	            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
+	            //update local storage
+	            localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
 	            return newState;
 	        }
 
 	        //if state.mult === true, take back to login screen.
 	        else if(numSources <= reportedSources && state.multParcels === true){
 	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-	            //var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+	            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+	            //reset local storage 
+	            localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
 	            location.reload(true);
 	        }
 
@@ -46999,9 +47003,7 @@
 			};
 		},
 		componentWillMount: function () {
-			if (parseInt(this.props.params.counter) === 0) {
-				this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
-			}
+			this.props.dispatch(actions.onLoad()); //dispatch the reducer to set up the answer objects
 		},
 		handleClick: function (e) {
 			//decide what value the index should be
@@ -47094,7 +47096,7 @@
 					),
 					React.createElement(
 						'h4',
-						{ className: this.props.infoOrder.sources ? '' : 'hidden' },
+						{ className: this.props.infoOrder.numSources ? '' : 'hidden' },
 						this.props.infoOrder.sourceCounter,
 						' of ',
 						this.props.infoOrder.sources,
