@@ -206,15 +206,15 @@ var infoOrderReducer= function(state, action) {
             var newSourceCounter = state.sourceCounter +1;
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-            var newState = Object.assign({}, state, {counter: 1, sources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
-            
+            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
             return newState;
         }
 
         //if state.mult === true, take back to login screen.
         else if(state.multParcels === true){
             alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-            //reload the page
+            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+            location.reload(true);
         }
 
         else{
@@ -222,7 +222,6 @@ var infoOrderReducer= function(state, action) {
             return newState;
         }
         
-
     }
 
     //////// SUBMIT NOT SUCCESS///////////

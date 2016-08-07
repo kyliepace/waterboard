@@ -63,9 +63,9 @@ var InfoOrder = React.createClass({
 		if(that.props.infoOrder.counter === 1){
 			var index= 1; //since logging in won't push to history
 		}
-		// else if(that.props.infoOrder.counter ===4){
-		// 	var index = 4; //for going back into the form for a new source
-		// }
+		else if(that.props.infoOrder.counter ===1001){
+			var index = 1001; //for going back into the form for a new source
+		}
 		else{
 			var index = that.props.params.counter;  console.log('index taken from url');
 		}//this should be the default method so that clicking the back button renders the right page

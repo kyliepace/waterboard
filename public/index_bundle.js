@@ -28745,15 +28745,15 @@
 	            var newSourceCounter = state.sourceCounter +1;
 	            console.log(newSourceCounter);
 	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-	            var newState = Object.assign({}, state, {counter: 1, sources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
-	            
+	            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, sourceCounter: newSourceCounter, clicks: 3, next: 2}) //next should be 5 at the point we're re-entering the form
 	            return newState;
 	        }
 
 	        //if state.mult === true, take back to login screen.
 	        else if(state.multParcels === true){
 	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-	            //reload the page
+	            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+	            location.reload(true);
 	        }
 
 	        else{
@@ -28761,7 +28761,6 @@
 	            return newState;
 	        }
 	        
-
 	    }
 
 	    //////// SUBMIT NOT SUCCESS///////////
@@ -47028,13 +47027,11 @@
 
 			if (that.props.infoOrder.counter === 1) {
 				var index = 1; //since logging in won't push to history
-			}
-			// else if(that.props.infoOrder.counter ===4){
-			// 	var index = 4; //for going back into the form for a new source
-			// }
-			else {
-					var index = that.props.params.counter;console.log('index taken from url');
-				} //this should be the default method so that clicking the back button renders the right page
+			} else if (that.props.infoOrder.counter === 1001) {
+				var index = 1001; //for going back into the form for a new source
+			} else {
+				var index = that.props.params.counter;console.log('index taken from url');
+			} //this should be the default method so that clicking the back button renders the right page
 
 			console.log('index is ' + index);
 			var singleQuestion = questions[index];
@@ -47205,11 +47202,11 @@
 				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
 					'div',
-					{ className: props.user.sources ? 'options' : 'hidden' },
+					{ className: props.user.numSources ? 'options' : 'hidden' },
 					React.createElement(
 						'h4',
 						null,
-						'Submit form for water source #'
+						'This is for water source number: '
 					),
 					React.createElement(
 						FormControl,
