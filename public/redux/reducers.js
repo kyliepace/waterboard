@@ -130,7 +130,7 @@ var infoOrderReducer= function(state, action) {
 /////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
         var counter = state.counter;
-        var question = state.questions[counter]; //which question?
+        var question = state.questions[action.counter]; //which question?
         var answer = question.selection[action.answerIndex]; //which answer?
         
          //change the answer value

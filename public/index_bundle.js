@@ -28669,7 +28669,7 @@
 	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
 	    if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
 	        var counter = state.counter;
-	        var question = state.questions[counter]; //which question?
+	        var question = state.questions[action.counter]; //which question?
 	        var answer = question.selection[action.answerIndex]; //which answer?
 	        
 	         //change the answer value
@@ -28916,12 +28916,13 @@
 
 	//////  if question.dropdown or question.selection, then choose option instead of changing input
 	var CHOOSE_OPTION = 'CHOOSE_OPTION';
-	var chooseOption = function(e){
+	var chooseOption = function(e, counter){
 		console.log('choose option ');
 		var index = e.target.id;
 		
 		return{
 			type: CHOOSE_OPTION,
+			counter: counter,
 			answerIndex: index //which option of the selection array
 		}
 	}
@@ -47003,7 +47004,10 @@
 			}
 		},
 		handleClick: function (e) {
-			this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
+			//decide what value the index should be
+			var index = this.props.params.counter;
+
+			this.props.dispatch(actions.chooseOption(e, index)); ///send the action e - which button has been clicked - and index - where in the question array to look
 		},
 		handleChange: function (e) {
 			this.props.dispatch(actions.changeInput(e));

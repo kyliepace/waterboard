@@ -25,10 +25,13 @@ var InfoOrder = React.createClass({
 		}
 	},
 	handleClick: function(e){
-		this.props.dispatch(actions.chooseOption(e)); //send the glyphicon's html and key value to the action
+		//decide what value the index should be
+		var index = this.props.params.counter; 
+		
+		this.props.dispatch(actions.chooseOption(e, index)); ///send the action e - which button has been clicked - and index - where in the question array to look
 	},
 	handleChange: function(e){
-		this.props.dispatch(actions.changeInput(e));
+		this.props.dispatch(actions.changeInput(e)); 
 	},
 	onSubmit: function(e){
 		e.preventDefault();

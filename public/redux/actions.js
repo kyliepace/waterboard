@@ -86,12 +86,13 @@ exports.changeSource = changeSource;
 
 //////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
-var chooseOption = function(e){
+var chooseOption = function(e, counter){
 	console.log('choose option ');
 	var index = e.target.id;
 	
 	return{
 		type: CHOOSE_OPTION,
+		counter: counter,
 		answerIndex: index //which option of the selection array
 	}
 }
