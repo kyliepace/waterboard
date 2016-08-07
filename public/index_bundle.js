@@ -28548,7 +28548,7 @@
 	};
 
 	var infoOrderReducer= function(state, action) {
-	    state = state || JSON.parse(localStorage.getItem('infoOrder'));
+	    state = state || initialRepositoryState.infoOrder;
 	    //////////////// ON LOAD ////////////////////////////////////////
 	    if(action.type === actions.ON_LOAD){
 	        console.log('reducer: on load');
@@ -28568,7 +28568,7 @@
 	                
 	            }
 	            var newAnswers = Object.assign({}, infoOrder.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
-	            var newState =  Object.assign({}, infoOrder, {answers: newAnswers});
+	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: infoOrder.questions, counter: 0});
 	            console.log(newState);
 	            
 	        } 
@@ -28762,7 +28762,7 @@
 	        }
 
 	        //if state.mult === true, take back to login screen.
-	        else if(state.multParcels === true){
+	        else if(numSources <= reportedSources && state.multParcels === true){
 	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
 	            //var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
 	            location.reload(true);
