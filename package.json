@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "engines":{
+  "engines": {
     "node": "4.4.4"
   },
   "scripts": {
@@ -29,6 +29,7 @@
   "author": "Kylie Pace",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.14.0",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.0",
     "react-bootstrap": "^0.30.2",
