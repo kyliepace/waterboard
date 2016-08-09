@@ -15,7 +15,7 @@ var InfoOrderFaq = React.createClass({
 		var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
 		console.log('next will be '+next); 
 		this.props.history.push('/infoOrderFAQ/'+next); //push browser history
-		this.props.dispatch(actions.submitAnswer(index));
+		this.props.actions.submitAnswer(index);
 	},
 
 	render: function(props){
@@ -52,14 +52,5 @@ var InfoOrderFaq = React.createClass({
 	}	
 });
 
-// var mapStateToProps = function(state, props) {
-//     return {
-//         infoOrderFAQ: state.infoOrderFAQ
-//     };
-// };
-
-// var Container = connect(mapStateToProps)(InfoOrderFaq);
-
-// module.exports = Container;
 	
 module.exports = InfoOrderFaq;

@@ -30291,7 +30291,7 @@
 	        console.log(this.props);
 	        var that = this;
 
-	        var childrenWithProps = React.Children.map(this.props.children, child => Reacct.cloneElement(child, {
+	        var childrenWithProps = React.Children.map(this.props.children, child => React.cloneElement(child, {
 	            actions: that.props.actions,
 	            infoOrder: that.props.infoOrder
 	        }));

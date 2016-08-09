@@ -26,11 +26,11 @@ var InfoOrder = React.createClass({
 	},
 	handleClick: function(e){
 		var index = this.props.params.counter; //decide what value the index should be
-		this.props.dispatch(actions.chooseOption(e, index)); ///send the action e - which button has been clicked - and index - where in the question array to look
+		this.props.actions.chooseOption(e, index); ///send the action e - which button has been clicked - and index - where in the question array to look
 	},
 	handleChange: function(e){
 		var index = this.props.params.counter; //decide what value the index should be
-		this.props.dispatch(actions.changeInput(e, index)); 
+		this.props.actions.changeInput(e, index); 
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -38,34 +38,33 @@ var InfoOrder = React.createClass({
 		if(parseInt(this.props.infoOrder.counter)===0){ //if this is the log-in page being submitted, talk to server
 			//dispatch logIn function with idCode and password from state
 			console.log('submit called from log in');
-			that.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
+			that.props.actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]);
 		}
 		else if(parseInt(this.props.infoOrder.counter)===1){
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
-			this.props.dispatch(actions.submitAnswer(1));
+			this.props.actions.submitAnswer(1);
 		}
 		else{
 			var index = this.props.params.counter; //decide what value the index should be
 			console.log('next will be '+ this.props.infoOrder.next);
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
-			this.props.dispatch(actions.submitAnswer(index));
+			this.props.actions.submitAnswer(index);
 		}
 
 	},
 	sendData: function(){
 		console.log('sending data');
 		var that = this;
-		this.props.dispatch(actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers));
+		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
 		this.props.history.push('/infoOrder/0');
 	},
 	changeSource: function(e){
 		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
-		this.props.dispatch(actions.changeSource(e));
+		this.props.actions.changeSource(e);
 	},
 	render: function(props){
 		console.log(this.props);
-		var that = this;
-		console.log(that.props.infoOrder); 
+		var that = this; 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 
 		if(that.props.infoOrder.counter === 1){
@@ -128,13 +127,4 @@ var InfoOrder = React.createClass({
 	}
 });
 
-// var mapStateToProps = function(state, props) {
-//     return {
-//         infoOrder: state.infoOrder
-//     };
-// };
-
-// var Container = connect(mapStateToProps)(InfoOrder);
-
-// module.exports = Container;
 module.exports = InfoOrder;

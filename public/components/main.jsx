@@ -29,7 +29,9 @@ var Main = React.createClass({
 var mapStateToProps = function(state, props) {
     return {
         infoOrder: state.infoOrder,
-        infoOrderFAQ: state.infoOrderFAQ
+        infoOrderFAQ: state.infoOrderFAQ,
+        waterRights: state.waterRights,
+        waterRightsFAQ: state.waterRightsFAQ
     };
 };
 var mapDispatchToProps = function(dispatch){

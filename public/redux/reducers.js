@@ -1,14 +1,14 @@
 var actions = require('./actions.js');
 var infoOrder = require('./infoOrderState.js');
-var infoOrderFAQ = require('./infoOrderFAQ.js');
-var waterRights = require('./waterRights.js');
-var waterRightsFAQ = require('./waterRightsFAQ.js');
+var infoOrderFAQ = require('./infoOrderFAQState.js');
+var waterRights = require('./waterRightsState.js');
+var waterRightsFAQ = require('./waterRightsFAQState.js');
 
 var initialRepositoryState = {
     infoOrder: infoOrder,
     waterRights: waterRights,
     infoOrderFaq: infoOrderFAQ,
-    waterRightsFaq: ""
+    waterRightsFaq: waterRightsFAQ
 };
 
 var infoOrderReducer= function(state, action) {
@@ -300,8 +300,8 @@ var combineReducers = require('redux').combineReducers;
 var reducer = combineReducers({
     infoOrder: infoOrderReducer,
     waterRights: waterRightsReducer,
-    infoOrderFaq: infoOrderFaqReducer,
-    waterRightsFaq: waterRightsFaqReducer
+    infoOrderFAQ: infoOrderFaqReducer,
+    waterRightsFAQ: waterRightsFaqReducer
 });
 
 exports.reducer = reducer;
