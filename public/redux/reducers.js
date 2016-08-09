@@ -248,8 +248,6 @@ var infoOrderReducer= function(state, action) {
     if(action.type === actions.SUBMIT_NOT_SUCCESS){
 
     }
-
-
     return state;
 };
 
@@ -259,14 +257,6 @@ var infoOrderFaqReducer= function(state, action) {
     state = state || infoOrderFAQ;
     ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
-        // var counter = action.counter;
-        // var question = state.questions[counter]; //which question?
-        // var next
-        // var counter = state.next; //the value of next becomes the new counter index
-        
-        // var newState = Object.assign({}, state, {counter: counter}); //update state with new counter
-        // console.log('new state'); console.log(newState);
-        //localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
         return state;
     }  
     return state;
@@ -276,8 +266,7 @@ var waterRightsReducer= function(state, action) {
     state = state || waterRights;
     if (action.type === actions.SUBMIT_ANSWER) {
         return state;
-    }
-   
+    } 
     return state;
 };
 
@@ -286,7 +275,6 @@ var waterRightsFaqReducer= function(state, action) {
     if (action.type === actions.SUBMIT_ANSWER) {
         return state;
     }
-   
     return state;
 };
 

@@ -5,7 +5,7 @@ var data = [
 		idCode: 1,
 		password: 1,
 		answers: '', 
-		multParcels: true, 
+		multParcels: false, 
 		sources: 0,
 		reportedSources: 0
 	},

@@ -28890,12 +28890,6 @@
 	var waterRights = __webpack_require__(275);
 	var waterRightsFAQ = __webpack_require__(276);
 
-	var initialRepositoryState = {
-	    infoOrder: infoOrder,
-	    waterRights: waterRights,
-	    infoOrderFaq: infoOrderFAQ,
-	    waterRightsFaq: waterRightsFAQ
-	};
 
 	var infoOrderReducer= function(state, action) {
 	    state = state || infoOrder;
@@ -29140,8 +29134,6 @@
 	    if(action.type === actions.SUBMIT_NOT_SUCCESS){
 
 	    }
-
-
 	    return state;
 	};
 
@@ -29151,34 +29143,24 @@
 	    state = state || infoOrderFAQ;
 	    ////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
-	        // var counter = action.counter;
-	        // var question = state.questions[counter]; //which question?
-	        // var next
-	        // var counter = state.next; //the value of next becomes the new counter index
-	        
-	        // var newState = Object.assign({}, state, {counter: counter}); //update state with new counter
-	        // console.log('new state'); console.log(newState);
-	        //localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
 	        return state;
 	    }  
 	    return state;
 	};
 
 	var waterRightsReducer= function(state, action) {
-	    state = state || initialRepositoryState;
+	    state = state || waterRights;
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        return state;
-	    }
-	   
+	    } 
 	    return state;
 	};
 
 	var waterRightsFaqReducer= function(state, action) {
-	    state = state || initialRepositoryState;
+	    state = state || waterRightsFAQ;
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        return state;
 	    }
-	   
 	    return state;
 	};
 
@@ -29910,12 +29892,13 @@
 	           	{	number: 5,
 	                line: 'You reported that this property is served by groundwater. \
 	                Please describe the details of your well.',
-	                input: [
+	                labels: [
 	                	'Please find the coordinates of the well\'s location',
 	                	'In what year was the well dug?',
 	                	'How many feet deep is the well?',
 	                	'Who owned the property when the well was dug?'
 	                ], 
+	                input: ['##.#####, -###.#####','YYYY', 'feet', 'name'],
 	                disabled: true,
 	                validate: ['number', 'number', 'number', 'string'],
 	                error: ["","","",""],
@@ -29943,10 +29926,11 @@
 	            {	number: 7,
 	                line: 'You reported that the water supplier is an individual. \
 	                Please describe as much as you know.',
-	                input: [
+	                labels: [
 	                	'What is the individual water supplier\'s name?',
 	                	'What is the Accessor\'s Parcel Number of the parcel that supplies your water?',
 	                ],
+	                input: ['name', 'APN/ID Code'],
 	                disabled: true,
 	                validate: ['string', 'number'],
 	                error: [],
@@ -29958,7 +29942,7 @@
 	                
 	            {	number: 8,
 	                line: 'Because surface water requires a water right, let\'s figure out if you already \
-		                have a water right or if you need to apply for one. Have you already \
+		                have a water right. Have you already \
 		                applied for or claimed a water right?',
 	              
 	                selection: ['Yes', 'No'],
@@ -30028,7 +30012,7 @@
 	            },
 	            {	
 	            	line: 'We\'re almost done! Let\'s figure out your water use',
-	            	input: ['total use January 2015 (gallons)', 
+	            	labels: ['total use January 2015 (gallons)', 
 	            		'total use May 2015 (gallons)', 
 	            		'total use June 2015 (gallons)', 
 	            		'total use July 2015 (gallons)', 
@@ -30037,6 +30021,7 @@
 	            		'total use October 2015 (gallons)', 
 	            		'total use November 2015 (gallons)', 
 	            	],
+	                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
 	                disabled: true,
 	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	                error: [],
@@ -30079,7 +30064,7 @@
 	            	line: 'Please enter the number of people who were living on the property for each \
 	            	of the indicated months',
 	            	disabled: true,
-	            	input: ['January 2015', 
+	            	labels: ['January 2015', 
 	            		'May 2015', 
 	            		'June 2015', 
 	            		'July 2015', 
@@ -30088,6 +30073,7 @@
 	            		'October 2015', 
 	            		'November 2015'
 	            	],
+	                input: ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	                disabled: true,
 	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	                error: [],
@@ -30156,11 +30142,10 @@
 				changeCounter: [1000,100]
 			},
 			{	number: 5,
-				line: 'The authority for this Info Order was generated by the ongoing drought in parts of California. \
-				Specifically, Governor Brown\'s Executive Order B-29-15 signed April 1, 2015 directs the State Water Board to collect \
-				information from water users',
-				selection: ['I need to complete the form', 'Can I do this on a paper form?'],
-				changeCounter: [100,6]
+				line: 'Governor Brown\'s Executive Order B-29-15 (aka the Drought Order) directs the State Water Board to collect \
+				information from water users.',
+				selection: ['But why?', 'Can I do this on a paper form?'],
+				changeCounter: [8,6]
 			},
 			{	number: 6,
 				line: 'Paper forms for non-surface diverters are available for people who do not have \
@@ -30174,6 +30159,12 @@
 				to learn more about online reporting for water rights.',
 				selection: ['Take me there', 'Fine I\'ll do the online form'],
 				changeCounter: [2000, 100]
+			},
+			{	number: 8,
+				line: 'In other words, the fish were dying in streams last summer and we don\'t have enough info about water use \
+				to save them',
+				selection: ['Fine, I\'ll do the form', 'Does the Info Order apply to me?'],
+				changeCounter: [100, 1]
 			},
 		]
 	};
@@ -49394,6 +49385,11 @@
 			//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
 			this.props.actions.changeSource(e);
 		},
+		getValidationState: function () {
+			if (that.props.infoOrder.questions[that.props.params.counter].disabled === true) {
+				return 'error';
+			}
+		},
 		render: function (props) {
 			console.log(this.props);
 			var that = this;
@@ -49426,7 +49422,7 @@
 			} else {
 				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, user: that.props.infoOrder,
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
-					changeSource: that.changeSource });
+					changeSource: that.changeSource, getValidationState: that.getValidationState });
 			}
 			return React.createElement(
 				'section',
@@ -49505,6 +49501,11 @@
 					'div',
 					null,
 					React.createElement(
+						ControlLabel,
+						{ className: props.question.labels ? '' : 'hidden' },
+						props.question.labels[n]
+					),
+					React.createElement(
 						ButtonToolbar,
 						{ className: 'flex' },
 						React.createElement(FormControl, { placeholder: props.answer[n] ? props.answer[n] : props.question.input[n], name: n, className: 'input', type: 'text', onChange: props.handleChange }),
@@ -49554,7 +49555,7 @@
 			{ onSubmit: props.onSubmit },
 			React.createElement(
 				FormGroup,
-				{ className: props.question.input ? "" : "hidden" },
+				{ className: props.question.input ? "" : "hidden", validationState: props.getValidationState },
 				React.createElement(
 					'h3',
 					null,

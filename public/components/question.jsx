@@ -28,6 +28,7 @@ var Question = function(props){
 		for (var n=0; n<props.question.input.length; n++){
 			inputs.push(
 				<div>
+					<ControlLabel className={props.question.labels? '':'hidden'}>{props.question.labels[n]}</ControlLabel>
 					<ButtonToolbar className='flex'>
 						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} name={n} className='input' type='text' onChange={props.handleChange}/>
 						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
@@ -57,7 +58,7 @@ var Question = function(props){
 	
 	return(
 	<form onSubmit={props.onSubmit}>
-		<FormGroup className={props.question.input ? "":"hidden"}> 
+		<FormGroup className={props.question.input ? "":"hidden"} validationState={props.getValidationState}> 
 			<h3>{props.question.line}</h3>
 			<h3 className={props.question.link ? "":"hidden"}><a target='_blank' href={props.question.link}>Please use this mapping tool 
 			to find the well coordinates if unknown</a></h3>

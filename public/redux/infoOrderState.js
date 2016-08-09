@@ -55,12 +55,13 @@ var infoOrderState = {
            	{	number: 5,
                 line: 'You reported that this property is served by groundwater. \
                 Please describe the details of your well.',
-                input: [
+                labels: [
                 	'Please find the coordinates of the well\'s location',
                 	'In what year was the well dug?',
                 	'How many feet deep is the well?',
                 	'Who owned the property when the well was dug?'
                 ], 
+                input: ['##.#####, -###.#####','YYYY', 'feet', 'name'],
                 disabled: true,
                 validate: ['number', 'number', 'number', 'string'],
                 error: ["","","",""],
@@ -88,10 +89,11 @@ var infoOrderState = {
             {	number: 7,
                 line: 'You reported that the water supplier is an individual. \
                 Please describe as much as you know.',
-                input: [
+                labels: [
                 	'What is the individual water supplier\'s name?',
                 	'What is the Accessor\'s Parcel Number of the parcel that supplies your water?',
                 ],
+                input: ['name', 'APN/ID Code'],
                 disabled: true,
                 validate: ['string', 'number'],
                 error: [],
@@ -103,7 +105,7 @@ var infoOrderState = {
                 
             {	number: 8,
                 line: 'Because surface water requires a water right, let\'s figure out if you already \
-	                have a water right or if you need to apply for one. Have you already \
+	                have a water right. Have you already \
 	                applied for or claimed a water right?',
               
                 selection: ['Yes', 'No'],
@@ -173,7 +175,7 @@ var infoOrderState = {
             },
             {	
             	line: 'We\'re almost done! Let\'s figure out your water use',
-            	input: ['total use January 2015 (gallons)', 
+            	labels: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
             		'total use June 2015 (gallons)', 
             		'total use July 2015 (gallons)', 
@@ -182,6 +184,7 @@ var infoOrderState = {
             		'total use October 2015 (gallons)', 
             		'total use November 2015 (gallons)', 
             	],
+                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
                 disabled: true,
                 validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                 error: [],
@@ -224,7 +227,7 @@ var infoOrderState = {
             	line: 'Please enter the number of people who were living on the property for each \
             	of the indicated months',
             	disabled: true,
-            	input: ['January 2015', 
+            	labels: ['January 2015', 
             		'May 2015', 
             		'June 2015', 
             		'July 2015', 
@@ -233,6 +236,7 @@ var infoOrderState = {
             		'October 2015', 
             		'November 2015'
             	],
+                input: ['number', 'number', 'number', 'number', 'number', 'number', 'number'],
                 disabled: true,
                 validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                 error: [],
