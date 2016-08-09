@@ -4,12 +4,6 @@ var infoOrderFAQ = require('./infoOrderFAQState.js');
 var waterRights = require('./waterRightsState.js');
 var waterRightsFAQ = require('./waterRightsFAQState.js');
 
-var initialRepositoryState = {
-    infoOrder: infoOrder,
-    waterRights: waterRights,
-    infoOrderFaq: infoOrderFAQ,
-    waterRightsFaq: waterRightsFAQ
-};
 
 var infoOrderReducer= function(state, action) {
     state = state || infoOrder;
@@ -279,7 +273,7 @@ var infoOrderFaqReducer= function(state, action) {
 };
 
 var waterRightsReducer= function(state, action) {
-    state = state || initialRepositoryState;
+    state = state || waterRights;
     if (action.type === actions.SUBMIT_ANSWER) {
         return state;
     }
@@ -288,7 +282,7 @@ var waterRightsReducer= function(state, action) {
 };
 
 var waterRightsFaqReducer= function(state, action) {
-    state = state || initialRepositoryState;
+    state = state || waterRightsFAQ;
     if (action.type === actions.SUBMIT_ANSWER) {
         return state;
     }

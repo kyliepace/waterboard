@@ -10,7 +10,8 @@ var InfoOrderFaq = React.createClass({
 		e.preventDefault();
 		var that = this;
 		var index = this.props.params.counter; //decide what value the index should be
-		
+		console.log('index from params is '+index);
+		console.log(e.target.id);
 		//calculate where the page should go next
 		var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
 		console.log('next will be '+next); 

@@ -13,7 +13,10 @@ var Main = React.createClass({
     	var childrenWithProps = React.Children.map(this.props.children, 
     		(child) => React.cloneElement(child, {
     			actions: that.props.actions,
-    			infoOrder: that.props.infoOrder
+    			infoOrder: that.props.infoOrder,
+    			infoOrderFAQ: that.props.infoOrderFAQ,
+    			waterRights: that.props.waterRights,
+    			waterRightsFAQ: that.props.waterRightsFAQ
     		})
     	);
     	return(

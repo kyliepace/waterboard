@@ -46,13 +46,6 @@ var WaterRightsFaq = React.createClass({
 		);
 	}
 });
-var mapStateToProps = function(state, props) {
-    return {
-        waterRightsFAQ: state.waterRightsFAQ
-    };
-};
 
-var Container = connect(mapStateToProps)(WaterRightsFaq);
-module.exports = Container;
 	
-//module.exports = WaterRightsFaq;
+module.exports = WaterRightsFaq;

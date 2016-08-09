@@ -11,8 +11,8 @@ var FAQ = function(props){
 	if(!props.question.email){
 		for (var i=0; i<props.question.selection.length; i++){
 			options.push(
-				<Button className={'option'} type='submit' id={i} onClick={props.handleClick}>
-					<h3 id={i} onClick={props.handleClick}>{props.question.selection[i]}</h3>
+				<Button className={'option'} type='button' id={i} onClick={props.onClick}>
+					<h3 id={i} onClick={props.onClick}>{props.question.selection[i]}</h3>
 				</Button>
 			)
 		}
@@ -25,8 +25,8 @@ var FAQ = function(props){
 			</Button>
 		);
 		options.push(
-			<Button className={'option'} type='submit' id={1} onClick={props.handleClick}>
-				<h3 id={1} onClick={props.handleClick}>{props.question.selection[1]}</h3>
+			<Button className={'option'} type='button' id={1} onClick={props.onClick}>
+				<h3 id={1} onClick={props.onClick}>{props.question.selection[1]}</h3>
 			</Button>
 		);
 	}
