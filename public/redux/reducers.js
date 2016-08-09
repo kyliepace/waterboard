@@ -1,10 +1,11 @@
 var actions = require('./actions.js');
 var infoOrder = require('./infoOrderState.js');
+var infoOrderFAQ = require('./infoOrderFAQ.js');
 
 var initialRepositoryState = {
     infoOrder: infoOrder,
     waterRights: "",
-    infoOrderFaq: "",
+    infoOrderFaq: infoOrderFAQ,
     waterRightsFaq: ""
 };
 
@@ -260,7 +261,7 @@ var infoOrderReducer= function(state, action) {
 
 
 var infoOrderFaqReducer= function(state, action) {
-    state = state || initialRepositoryState;
+    state = state || infoOrderFAQ;
     if (action.type === actions.SUBMIT_ANSWER) {
         return state;
     }

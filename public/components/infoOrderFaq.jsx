@@ -1,23 +1,42 @@
 var React = require('react');
 var Col = require('react-bootstrap').Col;
 var Button = require('react-bootstrap').Button;
+var connect = require('react-redux').connect;
+var FAQ = require('./faq.jsx');
 
-var InfoOrderFaq = function(props){
-	return(
-	    <section>
+var InfoOrderFaq = React.createClass({
 
-	    	<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
-	    		<h4>What is the Info Order?</h4>
-	    	</Col>
-	    	
-    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-    			<Selection line={'The Info Order is...'} option1={'ok but'} option2={'or what about'}/>
-    		</Col>
+	render: function(props){
+		var index = props.infoOrderFAQ.counter;
+		var question = props.infoOrderFAQ.questions[index];
 
-    		
-	    </section>
-	);
+		var show= (
+			<FAQ /> 
+		);
+
+		return(
+		    <section>
+
+		    	{show}
+
+	    		
+		    </section>
+		);
+
+	}
+
+	
 };
+
+var mapStateToProps = function(state, props) {
+    return {
+        infoOrderFAQ: state.infoOrderFAQ
+    };
+};
+
+var Container = connect(mapStateToProps)(infoOrderFAQ);
+
+module.exports = Container;
 	
 
 module.exports = InfoOrderFaq;

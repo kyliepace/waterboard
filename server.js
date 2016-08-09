@@ -72,5 +72,5 @@ app.put('/submit', function(req, res){
 	
 	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
-
-app.listen(8080);
+var port = (process.env.PORT || 8080);
+app.listen(port);
