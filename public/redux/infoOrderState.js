@@ -3,9 +3,11 @@ var infoOrderState = {
 	questions: [
              {	
                 line: 'Please log in',
-                input: ['APN/ID Code', 'Password'],
+                labels: ['APN/ID Code', 'Password'],
+                input: ['#', '#'],
                 disabled: true,
                 validate: ['number', 'number'],
+                length: [1,1],
                 error: [],
                 popover: ['1', '1'],
                 changeCounter: [1]
@@ -63,6 +65,7 @@ var infoOrderState = {
                 ], 
                 input: ['##.#####, -###.#####','YYYY', 'feet', 'name'],
                 disabled: true,
+                length: [8, 10, 4],
                 validate: ['number', 'number', 'number', 'string'],
                 error: ["","","",""],
                 popover: [
@@ -120,6 +123,7 @@ var infoOrderState = {
             {	number: 9,
                 line: 'You have already reported your use! Awesome! What\'s your application number?',
                 input: ['App Id'],
+                length: [6],
                 disabled: true,
                 validate: ['string'],
                 error: [],

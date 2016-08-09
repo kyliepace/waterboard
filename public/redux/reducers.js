@@ -71,13 +71,15 @@ var infoOrderReducer= function(state, action) {
         var index = action.index; //which of the input bars is being changed
         var answer = action.answer; //save the input value
         // validate text input
-        console.log('type of answer '+typeof(answer) + 'must be '+question.validate[index]);
+        console.log('type of answer '+typeof(answer) + 'must be '+question.validate[index]+' and must be '+question.length[index]+' long');
         
         var error = [];
         question.error.forEach(function(message){
             error.push(message); //copy error array
         });
-        if(typeof(answer)===question.validate[index]){
+        if(typeof(answer)===question.validate[index] && answer.length === question.length[index]){
+            var disabled = false;
+            var validationState = 'success';
              //update the answers object
              var newAnswerArray = [];
              for(var i=0; i<question.input.length; i++){
@@ -98,16 +100,11 @@ var infoOrderReducer= function(state, action) {
             var next = question.changeCounter[0] + counter; //set new next value
             //turn off the disabled value and clear any error message
             error[index]="";
-            var newQuestion = Object.assign({}, question, { error: error, disabled: false}); //update the question state
-            var before = state.questions.slice(0, counter);
-            var after = state.questions.slice(counter+1);
-            var newQuestions = before.concat(newQuestion, after);        
             
-            //update the state
-            var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
-            return newState; 
         }
         else{ //if the input isn't the correct typeof
+            var disabled = true;
+            var validationState = 'error';
             if(question.validate[index]==='string'){
                 error[index]=('this shouldn\'t be a number');
             }
@@ -117,14 +114,17 @@ var infoOrderReducer= function(state, action) {
             else{
                 error[index]=('hmmm, something\'s not right here');
             }
-            var newQuestion = Object.assign({}, question, {error: error, disabled: true});
-            var before = state.questions.slice(0, counter);
-            var after = state.questions.slice(counter+1);
-            var newQuestions = before.concat(newQuestion, after);        
-            //update the state
-            var newState = Object.assign({}, state, {questions: newQuestions}); //update only the questions
-            return newState; 
+            var newAnswersForState = Object.assign({}, state.answers); //new answers will be the same as old answers
         }
+
+        var newQuestion = Object.assign({}, question, { error: error, disabled: disabled, validationState: validationState}); //update the question state
+        var before = state.questions.slice(0, counter);
+        var after = state.questions.slice(counter+1);
+        var newQuestions = before.concat(newQuestion, after);        
+        
+        //update the state
+        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+        return newState; 
                  
     }
 

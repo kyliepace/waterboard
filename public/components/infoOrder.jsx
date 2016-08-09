@@ -62,11 +62,7 @@ var InfoOrder = React.createClass({
 		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
 		this.props.actions.changeSource(e);
 	},
-	getValidationState: function(){
-		if (that.props.infoOrder.questions[that.props.params.counter].disabled === true){
-			return 'error';
-		}
-	},
+	
 	render: function(props){
 		console.log(this.props);
 		var that = this; 
@@ -114,7 +110,7 @@ var InfoOrder = React.createClass({
 			var show = (
 				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} user={that.props.infoOrder}
     			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}
-    			changeSource={that.changeSource} getValidationState={that.getValidationState}/>
+    			changeSource={that.changeSource}/>
 			);
 		}
 		return(

@@ -58,7 +58,7 @@ var Question = function(props){
 	
 	return(
 	<form onSubmit={props.onSubmit}>
-		<FormGroup className={props.question.input ? "":"hidden"} validationState={props.getValidationState}> 
+		<FormGroup className={props.question.input ? "":"hidden"} validationState={props.question.validationState}> 
 			<h3>{props.question.line}</h3>
 			<h3 className={props.question.link ? "":"hidden"}><a target='_blank' href={props.question.link}>Please use this mapping tool 
 			to find the well coordinates if unknown</a></h3>
