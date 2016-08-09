@@ -6,14 +6,41 @@ var FAQ = require('./faq.jsx');
 
 var InfoOrderFaq = React.createClass({
 
+	onSubmit: function(e){
+		e.preventDefault();
+		var that = this;
+		var index = this.props.params.counter; //decide what value the index should be
+		
+		//calculate where the page should go next
+		var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
+		console.log('next will be '+next); 
+		this.props.history.push('/infoOrderFAQ/'+next); //push browser history
+		this.props.dispatch(actions.submitAnswer(index));
+	},
+
 	render: function(props){
-		var index = props.infoOrderFAQ.counter;
-		var question = props.infoOrderFAQ.questions[index];
+		var that = this;
+		var index = that.props.params.counter;
+		console.log(that.props); //infoOrderFAQ is undefined
+		var question = that.props.infoOrderFAQ.questions[index];
 
-		var show= (
-			<FAQ /> 
-		);
-
+		if(index >= 100 && index<1000){
+			//go to infoOrder login
+			that.props.history.push('/infoOrder/0');
+		}
+		else if(index>= 1000 && index < 2000){
+			//go back to home menu
+			that.props.history.push('/');
+		}
+		else if(index >= 2000){
+			//go to water rights FAQ
+			that.props.history.push('/waterRightsFAQ/0');
+		}
+		else{
+			var show= (
+				<FAQ question = {question} onSubmit = {that.onSubmit} onClick={that.onSubmit}/> 
+			);
+		}
 		return(
 		    <section>
 
@@ -22,21 +49,17 @@ var InfoOrderFaq = React.createClass({
 	    		
 		    </section>
 		);
+	}	
+});
 
-	}
+// var mapStateToProps = function(state, props) {
+//     return {
+//         infoOrderFAQ: state.infoOrderFAQ
+//     };
+// };
 
+// var Container = connect(mapStateToProps)(InfoOrderFaq);
+
+// module.exports = Container;
 	
-};
-
-var mapStateToProps = function(state, props) {
-    return {
-        infoOrderFAQ: state.infoOrderFAQ
-    };
-};
-
-var Container = connect(mapStateToProps)(infoOrderFAQ);
-
-module.exports = Container;
-	
-
 module.exports = InfoOrderFaq;

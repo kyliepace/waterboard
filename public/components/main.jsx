@@ -1,17 +1,44 @@
 var React = require('react');
 var Header = require('./header.jsx');
 var Footer = require('./footer.jsx');
+var connect = require('react-redux').connect;
+var bindActionCreators = require('redux').bindActionCreators;
+var actionCreators = require('../redux/actions.js');
 
 var Main = React.createClass({
-    render: function(){
+    render: function(props){
+    	console.log(this.props);
+    	var that = this;
+
+    	var childrenWithProps = React.Children.map(this.props.children, 
+    		(child) => React.cloneElement(child, {
+    			actions: that.props.actions,
+    			infoOrder: that.props.infoOrder
+    		})
+    	);
     	return(
     		<div className='main'>
     			<Header />
-    			{this.props.children}
+    			{childrenWithProps}
     			<Footer />
     		</div>
     	);
     }
 });
 
-module.exports = Main;
+var mapStateToProps = function(state, props) {
+    return {
+        infoOrder: state.infoOrder,
+        infoOrderFAQ: state.infoOrderFAQ
+    };
+};
+var mapDispatchToProps = function(dispatch){
+	return{
+		actions: bindActionCreators(actionCreators, dispatch)
+	}
+}
+
+var Container = connect(mapStateToProps, mapDispatchToProps)(Main);
+
+module.exports = Container;
+//module.exports = Main;

@@ -19,9 +19,10 @@ var InfoOrder = React.createClass({
 			disabled: false
 		};
 	},
-	componentWillMount: function(){
+	componentWillMount: function(props){
 		var index = this.props.params.counter;
-		this.props.dispatch(actions.onLoad(index)); //dispatch the reducer to set up the answer objects
+		console.log(this.props);
+		this.props.actions.onLoad(index); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
 		var index = this.props.params.counter; //decide what value the index should be
@@ -37,7 +38,7 @@ var InfoOrder = React.createClass({
 		if(parseInt(this.props.infoOrder.counter)===0){ //if this is the log-in page being submitted, talk to server
 			//dispatch logIn function with idCode and password from state
 			console.log('submit called from log in');
-			this.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
+			that.props.dispatch(actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]));
 		}
 		else if(parseInt(this.props.infoOrder.counter)===1){
 			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
@@ -62,6 +63,7 @@ var InfoOrder = React.createClass({
 		this.props.dispatch(actions.changeSource(e));
 	},
 	render: function(props){
+		console.log(this.props);
 		var that = this;
 		console.log(that.props.infoOrder); 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
@@ -126,12 +128,13 @@ var InfoOrder = React.createClass({
 	}
 });
 
-var mapStateToProps = function(state, props) {
-    return {
-        infoOrder: state.infoOrder
-    };
-};
+// var mapStateToProps = function(state, props) {
+//     return {
+//         infoOrder: state.infoOrder
+//     };
+// };
 
-var Container = connect(mapStateToProps)(InfoOrder);
+// var Container = connect(mapStateToProps)(InfoOrder);
 
-module.exports = Container;
+// module.exports = Container;
+module.exports = InfoOrder;

@@ -1,22 +1,58 @@
 var React = require('react');
 var Col = require('react-bootstrap').Col;
 var Button = require('react-bootstrap').Button;
+var connect = require('react-redux').connect;
+var FAQ = require('./faq.jsx');
 
-var WaterRightsFaq = function(props){
-	return(
-	    <section>
-	    	<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
-	    		<h4>What is a water right and do I need one?</h4>
-	    	</Col>
-	    	
-    		<Col xs={10} xsOffset={1} md={6} mdOffset={3}>
-    			<Selection line={'A water right is required before you can use water from streams, and most springs, in California.'} option1={'ok but'} option2={'or what about'}/>
-    		</Col>
+var WaterRightsFaq = React.createClass({
 
-    		
-	    </section>
-	);
+	onSubmit: function(e){
+		e.preventDefault();
+		var that = this;
+		var index = this.props.params.counter; //decide what value the index should be
+		
+		//calculate where the page should go next
+		var next = that.props.waterRightsFAQ.questions[index].changeCounter[e.target.id];
+		console.log('next will be '+next); 
+		this.props.history.push('/waterRightsFAQ/'+next); //push browser history
+		//this.props.dispatch(actions.submitAnswer(index));
+	},
+
+	render: function(props){
+		var that = this;
+		var index = that.props.params.counter;
+		console.log(that.props);
+		var question = that.props.waterRightsFAQ.questions[index];
+
+		if(index >= 100 && index<1000){
+			// go to waterRights login
+			that.props.history.push('/waterRights/0');
+		}
+		else if(index>= 1000){
+			//go back to menu
+			that.props.history.push('/');
+		}
+		
+		else{
+			var show= (
+				<FAQ question = {question} onSubmit = {that.onSubmit} onClick={that.onSubmit}/> 
+			);
+		}
+
+		return(
+		    <section>
+		    	{show}
+		    </section>
+		);
+	}
+});
+var mapStateToProps = function(state, props) {
+    return {
+        waterRightsFAQ: state.waterRightsFAQ
+    };
 };
-	
 
-module.exports = WaterRightsFaq;
+var Container = connect(mapStateToProps)(WaterRightsFaq);
+module.exports = Container;
+	
+//module.exports = WaterRightsFaq;

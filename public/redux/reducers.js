@@ -1,10 +1,12 @@
 var actions = require('./actions.js');
 var infoOrder = require('./infoOrderState.js');
 var infoOrderFAQ = require('./infoOrderFAQ.js');
+var waterRights = require('./waterRights.js');
+var waterRightsFAQ = require('./waterRightsFAQ.js');
 
 var initialRepositoryState = {
     infoOrder: infoOrder,
-    waterRights: "",
+    waterRights: waterRights,
     infoOrderFaq: infoOrderFAQ,
     waterRightsFaq: ""
 };
@@ -259,13 +261,20 @@ var infoOrderReducer= function(state, action) {
 
 
 
-
 var infoOrderFaqReducer= function(state, action) {
     state = state || infoOrderFAQ;
+    ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
+        // var counter = action.counter;
+        // var question = state.questions[counter]; //which question?
+        // var next
+        // var counter = state.next; //the value of next becomes the new counter index
+        
+        // var newState = Object.assign({}, state, {counter: counter}); //update state with new counter
+        // console.log('new state'); console.log(newState);
+        //localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
         return state;
-    }
-   
+    }  
     return state;
 };
 

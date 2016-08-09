@@ -15,7 +15,7 @@ var Menu = function(props){
 	    			</Button></Link>
 	    		</Col>	    		
 	    		<Col className='menu' xs={10} md={4} xsOffset={1} mdOffset={2}>
-	    			<Button type='button' className='button'><Link to='/waterRights'>
+	    			<Button type='button' className='button'><Link to='/waterRights/0'>
 	    				<h2>Claim or Apply for<br/> Water Right</h2>
 	    			</Link></Button>
 	    		</Col>
@@ -23,12 +23,12 @@ var Menu = function(props){
 
 	    	<Row>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
-	    			<Button type='button' className='button'><Link to='/infoOrderFaq'>
+	    			<Button type='button' className='button'><Link to='/infoOrderFaq/0'>
 	    				<h3>What is this Info Order <br/>all about?</h3>
 	    			</Link></Button>
 	    		</Col>
 	    		<Col className='menu' xs={10} md={10} xsOffset={1} mdOffset={1}>
-	    			<Button type='button' className='button'><Link to='/waterRightsFaq'>
+	    			<Button type='button' className='button'><Link to='/waterRightsFaq/0'>
 	    				<h3>What is a water right <br/>and do I need one?</h3>
 	    			</Link></Button>
 	    		</Col>

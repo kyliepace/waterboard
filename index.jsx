@@ -23,9 +23,9 @@ var routes = (
 
 	      	<Route path='/infoOrder/:counter' component={InfoOrder}/>
 
-	      	<Route path='/waterRights' component={WaterRights}/>
-	      	<Route path='/infoOrderFaq' component={InfoOrderFaq}/>
-	      	<Route path='/waterRightsFaq' component={WaterRightsFaq}/>
+	      	<Route path='/waterRights/:counter' component={WaterRights}/>
+	      	<Route path='/infoOrderFaq/:counter' component={InfoOrderFaq}/>
+	      	<Route path='/waterRightsFaq/:counter' component={WaterRightsFaq}/>
 	    </Route>    
 	  </Router>
 	</Provider>
