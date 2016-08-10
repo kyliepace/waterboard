@@ -205,6 +205,9 @@ var infoOrderReducer= function(state, action) {
             var newSourceCounter = state.sourceCounter +1;
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
+            //change questions[1].next to 4 so that re-logging in will skip the question about the number of sources?
+
+
             var newState = Object.assign({}, state, {numSources:numSources, reportedSources: reportedSources, 
                 sourceCounter: newSourceCounter, questions: infoOrder.questions}) ;
                 //questions should be re-set so that multiple choice questions don't appear re-selected

@@ -47734,14 +47734,14 @@
 	        console.log('url counter is at '+ action.counter);
 
 	        //if already in local storage, use that
-	        //if url is infoOrder/0 then we're at the login screen 
-	        if(localStorage.getItem('infoOrder') && action.counter>0 && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
+	        //if counter > 0 then we're not at the login screen and do want
+	        if(localStorage.getItem('infoOrder') && action.counter>0){
 	            var storage = JSON.parse(localStorage.getItem('infoOrder')); 
 	            // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
 	            console.log('from storage', storage); 
 	            var newState = Object.assign({}, state, storage); //copy state and update with stored values    
 	        }
-	        else{
+	        else{ //otherwise we are at the login screen and don't want the local storage, if it's even there
 	            console.log('reset state');
 	            //set up first answer object with one array for each question
 	            var answerObject = {}; //this will be the answer object for the first water source
@@ -47926,6 +47926,9 @@
 	            var newSourceCounter = state.sourceCounter +1;
 	            console.log(newSourceCounter);
 	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
+	            //change questions[1].next to 4 so that re-logging in will skip the question about the number of sources?
+
+
 	            var newState = Object.assign({}, state, {numSources:numSources, reportedSources: reportedSources, 
 	                sourceCounter: newSourceCounter, questions: infoOrder.questions}) ;
 	                //questions should be re-set so that multiple choice questions don't appear re-selected
@@ -47944,7 +47947,8 @@
 	        }
 
 	        else{
-	            var newState = Object.assign({}, state, {complete: true});
+	            var newState = Object.assign({}, state, {complete: true}); //indicate that they are all done?
+	            //need to get to the Final component
 	            return newState;
 	        }
 	        
@@ -49380,7 +49384,7 @@
 			console.log('sending data');
 			var that = this;
 			this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
-			//this.props.history.push('/infoOrder/1'); //return to user screen
+			this.props.history.push('/infoOrder/1'); //return to user screen with option to print out data or sign in to different parcel
 		},
 		changeSource: function (e) {
 			//dispatch an action that changes the infoOrder.sourceCounter to e.target.value

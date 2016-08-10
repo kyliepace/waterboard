@@ -47,7 +47,7 @@ var InfoOrder = React.createClass({
 		console.log('sending data');
 		var that = this;
 		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
-		//this.props.history.push('/infoOrder/1'); //return to user screen
+		this.props.history.push('/infoOrder/1'); //return to user screen with option to print out data or sign in to different parcel
 	},
 	changeSource: function(e){
 		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
