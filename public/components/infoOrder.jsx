@@ -63,6 +63,11 @@ var InfoOrder = React.createClass({
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
+		// if(that.props.infoOrder.complete){ //show final view if user is complete
+		// 	var show=(
+		// 		<Final onClick = {that.print}/>
+		// 	);
+		// }
 		if(parseInt(index) === 0){
 			console.log('index equal to 0, show login');
 			var show = (
@@ -71,7 +76,7 @@ var InfoOrder = React.createClass({
 		}
 		else if(parseInt(index) === 1){
 			var show=(
-				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print}/>
+				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print} question={singleQuestion}/>
 			);
 		}
 		else if(index>=100 && index<1000){
@@ -79,11 +84,7 @@ var InfoOrder = React.createClass({
 				<Confirm sendData={that.sendData} />
 			);
 		}
-		else if(index>=1000){
-			var show=(
-				<Final onClick = {that.print}/>
-			);
-		}
+		
 		else{
 			var show = (
 				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} user={that.props.infoOrder}

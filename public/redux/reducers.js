@@ -206,10 +206,12 @@ var infoOrderReducer= function(state, action) {
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
             //change questions[1].next to 4 so that re-logging in will skip the question about the number of sources?
-
-
+            var newQuestion = Object.assign({}, state.questions[1], {next: 4});
+            //update question array
+            var after = infoOrder.questions.slice(2);
+            var newQuestions = infoOrder.questions.slice(0, 1).concat(newQuestion, after); 
             var newState = Object.assign({}, state, {numSources:numSources, reportedSources: reportedSources, 
-                sourceCounter: newSourceCounter, questions: infoOrder.questions}) ;
+                sourceCounter: newSourceCounter, questions: newQuestions}) ;
                 //questions should be re-set so that multiple choice questions don't appear re-selected
             //update local storage
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
@@ -222,20 +224,19 @@ var infoOrderReducer= function(state, action) {
             var newState = Object.assign({}, state, {numSources: null, reportedSources: null });
             //reset local storage 
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-            //location.reload(true); //is this still necessary?
+           
         }
 
         else{
             var newState = Object.assign({}, state, {complete: true}); //indicate that they are all done?
             //need to get to the Final component
-            return newState;
-        }
-        
+            return newState; //do not update localStorage
+        }      
     }
 
     //////// SUBMIT NOT SUCCESS///////////
     if(action.type === actions.SUBMIT_NOT_SUCCESS){
-
+        return state;
     }
     return state;
 };

@@ -6,7 +6,7 @@
   "engines": {
     "node": "4.4.4"
   },
-  "repository":"github.com/kyliepace/waterboard",
+  "repository": "github.com/kyliepace/waterboard",
   "scripts": {
     "less": "lessc public/css/style.less public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -30,7 +30,8 @@
   "author": "Kylie Pace",
   "license": "ISC",
   "dependencies": {
-    "express": "*",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.0",
     "react-bootstrap": "^0.30.2",
@@ -45,7 +46,6 @@
     "babel-loader": "^6.2.4",
     "babel-preset-es2016": "^6.11.3",
     "babel-preset-react": "^6.11.1",
-    "body-parser": "^1.15.2",
     "html-webpack-plugin": "^2.22.0",
     "less": "^2.7.1",
     "webpack": "^1.13.1"

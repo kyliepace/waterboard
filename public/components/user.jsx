@@ -1,7 +1,8 @@
 React = require('react');
 var Row = require('react-bootstrap').Row;
 var FormGroup = require('react-bootstrap').FormGroup;
-
+var router = require('react-router');
+var Link = router.Link;
 var Button = require('react-bootstrap').Button;
 
 
@@ -20,14 +21,14 @@ var User = function(props){
 			Please note that you must log in and complete the form for each parcel.</h3>
 		</div>
 
-		<div className={ props.user.sources ? '': 'hidden'}>
+		<div className={ props.user.numSources ? '': 'hidden'}>
 			<h3 >You have indicated that this parcel is served by {props.user.sources} water sources. <br/>
 			You have submitted information for {props.user.reportedSources} water sources.</h3>
 		</div>
 	
-		<Button className={props.user.sources ? '':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
+		<Button className={props.user.numSources ? '':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
 
-		<Button className='button'  id='submitButton' type='submit'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
+		<Link to={'/infoOrder/'+ props.question.next}><Button className='button'  id='submitButton' type='button'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button></Link>
 		
 	</form>
 	);		
