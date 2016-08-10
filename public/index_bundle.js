@@ -48705,7 +48705,7 @@
 	         
 	            },
 	            {	number: 4,
-	                changeSourceCounter: true,
+	                //changeSourceCounter: true,
 	                line: 'Let\s take this one water source at a time. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
 	                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
@@ -49413,6 +49413,7 @@
 				console.log('index equal to 0, show login');
 				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
 			} else if (parseInt(index) === 1) {
+
 				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit, onClick: that.print, question: singleQuestion });
 			} else if (index >= 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });

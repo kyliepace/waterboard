@@ -75,6 +75,7 @@ var InfoOrder = React.createClass({
 			);
 		}
 		else if(parseInt(index) === 1){
+			
 			var show=(
 				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print} question={singleQuestion}/>
 			);

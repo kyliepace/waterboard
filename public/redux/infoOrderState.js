@@ -42,7 +42,7 @@ var infoOrderState = {
          
             },
             {	number: 4,
-                changeSourceCounter: true,
+                //changeSourceCounter: true,
                 line: 'Let\s take this one water source at a time. Is it groundwater (i.e. from a well), \
                 a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
                 selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
