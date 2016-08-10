@@ -1,17 +1,17 @@
 {
   "name": "waterboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "Thinkful final project",
   "main": "server.js",
   "engines": {
     "node": "4.4.4"
   },
+  "repository":"github.com/kyliepace/waterboard",
   "scripts": {
     "less": "lessc public/css/style.less public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack && npm run less && node server.js",
-    "start": "node server.js",
-    "postinstall": "npm install --dev"
+    "start": "node server.js"
   },
   "keywords": [
     "React",
