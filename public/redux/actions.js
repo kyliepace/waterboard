@@ -140,7 +140,7 @@ exports.submitAnswer = submitAnswer;
 ////////// SUBMIT WATER SOURCE ////////////////////////////
 var submitSource = function(idCode, answers){
 	return function(dispatch){
-		var url='/submit';
+		var url='/infoOrder/submit';
 		var data= JSON.stringify({idCode: idCode, answers: answers});
 		var params={
 			headers: {'Content-Type': 'application/json'},
@@ -173,6 +173,43 @@ var submitSource = function(idCode, answers){
 	}
 };
 exports.submitSource = submitSource;
+
+//// SUBMIT WATER RIGHT //////////
+var submitRight = function(answers){
+	return function(dispatch){
+		var url='/waterRight/submit';
+		var data= JSON.stringify({answers: answers});
+		var params={
+			headers: {'Content-Type': 'application/json'},
+			method: 'PUT',
+			body: data
+		};
+		return fetch(url, params).then(function(res){
+			if(res.state<200 || res.status >= 300){
+				var error = new Error(res.statusText)
+				console.log(error);
+				error.res = res
+				throw error;
+			}
+			return res;
+		})
+		.then(function(res){
+			return res.json();
+		})
+		.then(function(data){
+			return dispatch(
+				submitSuccess(data)
+			);
+		})
+		.catch(function(error){
+			console.log(error);
+			return dispatch(
+				submitNotSuccess(error)
+			);
+		});
+	}
+};
+exports.submitRight = submitRight;
 
 ////////// SUBMIT SUCCESS////////////////////
 var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
