@@ -13,14 +13,14 @@ var infoOrderReducer= function(state, action) {
         console.log('url counter is at '+ action.counter);
 
         //if already in local storage, use that
-        //if url is infoOrder/0 then we're at the login screen 
-        if(localStorage.getItem('infoOrder') && action.counter>0 && JSON.parse(localStorage.getItem('infoOrder')).counter>0){
+        //if counter > 0 then we're not at the login screen and do want
+        if(localStorage.getItem('infoOrder') && action.counter>0){
             var storage = JSON.parse(localStorage.getItem('infoOrder')); 
             // we want to keep the localStorage counter value in cases when the page is refreshed, but not when the user is logging in again
             console.log('from storage', storage); 
             var newState = Object.assign({}, state, storage); //copy state and update with stored values    
         }
-        else{
+        else{ //otherwise we are at the login screen and don't want the local storage, if it's even there
             console.log('reset state');
             //set up first answer object with one array for each question
             var answerObject = {}; //this will be the answer object for the first water source
@@ -29,7 +29,7 @@ var infoOrderReducer= function(state, action) {
                 
             }
             var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
-            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions, counter: 0});
+            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
             console.log(newState);        
         } 
         return newState;
@@ -51,7 +51,7 @@ var infoOrderReducer= function(state, action) {
             var answers = state.answers;
         }
         
-        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, counter: counter, next: 2, clicks: clicks, numSources: data.numSources, multParcels: data.multParcels, reportedSources: data.reportedSources})
+        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, numSources: data.numSources, multParcels: data.multParcels, reportedSources: data.reportedSources})
         return newState;
     }
     /////////// CHANGE SOURCE COUNTER//////////////////////////
@@ -64,79 +64,75 @@ var infoOrderReducer= function(state, action) {
 
     //////////// CHANGE INPUT /////////////////////////////////////////////////
     if (action.type === actions.CHANGE_INPUT){
-        //change the infoOrder.questions[counter].id.value to the e.target.value
-        var counter = parseInt(action.counter);
+        //change the infoOrder.questions[index].id.value to the e.target.value
+        var index = parseInt(action.index); //question index
         var sourceCounter = state.sourceCounter;
-        var question = state.questions[counter];
-        var index = action.index; //which of the input bars is being changed
+        var question = state.questions[index];
+        var answerIndex = parseInt(action.answerIndex); //which of the input bars is being changed
         var answer = action.answer; //save the input value
         // validate text input
-        console.log('type of answer '+typeof(answer) + 'must be '+question.validate[index]+' and must be '+question.length[index]+' long');
+        console.log('type of answer '+typeof(answer) + 'must be '+question.validate[answerIndex]);
         
         var error = [];
         question.error.forEach(function(message){
             error.push(message); //copy error array
         });
-        if(typeof(answer)===question.validate[index] && answer.length === question.length[index]){
+
+        if(typeof(answer)===question.validate[answerIndex]){
             var disabled = false;
             var validationState = 'success';
              //update the answers object
              var newAnswerArray = [];
              for(var i=0; i<question.input.length; i++){
-                if(state.answers[sourceCounter][counter][i]){
-                    newAnswerArray.push(state.answers[sourceCounter][counter][i]); //copy the state.answer value
+                if(state.answers[sourceCounter][index][i]){
+                    newAnswerArray.push(state.answers[sourceCounter][index][i]); //copy the state.answer value
                 }
                 else{
                     newAnswerArray.push(""); //if nothing has been saved there yet, push a blank placeholder
                 }
              }
-            newAnswerArray[index] = answer;
+            newAnswerArray[answerIndex] = answer;
             console.log('updating water source answer');
             console.log(newAnswerArray);
-            var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[counter]: newAnswerArray});
+            var newAnswersForSource = Object.assign({}, state.answers[sourceCounter], {[index]: newAnswerArray});
             console.log(newAnswersForSource);
             var newAnswersForState = Object.assign({}, state.answers, {[sourceCounter]:newAnswersForSource});
             
-            var next = question.changeCounter[0] + counter; //set new next value
-            //turn off the disabled value and clear any error message
-            error[index]="";
+            //clear any error message
+            error[answerIndex]="";
             
         }
         else{ //if the input isn't the correct typeof
             var disabled = true;
             var validationState = 'error';
-            if(question.validate[index]==='string'){
-                error[index]=('this shouldn\'t be a number');
+            if(question.validate[answerIndex]==='string'){
+                error[answerIndex]=('this shouldn\'t be a number');
             }
-            else if(question.validate[index]==='number'){
-                error[index]=('please enter a number');
+            else if(question.validate[answerIndex]==='number'){
+                error[answerIndex]=('please enter a number');
             }
             else{
-                error[index]=('hmmm, something\'s not right here');
+                error[answerIndex]=('hmmm, something\'s not right here');
             }
             var newAnswersForState = Object.assign({}, state.answers); //new answers will be the same as old answers
         }
 
         var newQuestion = Object.assign({}, question, { error: error, disabled: disabled, validationState: validationState}); //update the question state
-        var before = state.questions.slice(0, counter);
-        var after = state.questions.slice(counter+1);
+        var before = state.questions.slice(0, index);
+        var after = state.questions.slice(index+1);
         var newQuestions = before.concat(newQuestion, after);        
         
         //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
         return newState; 
                  
     }
 
 /////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
     if (action.type === actions.CHOOSE_OPTION){ //only for multiple-choice questions
-        var counter = parseInt(action.counter);
-        var question = state.questions[counter]; //which question?
+        var index = parseInt(action.index);
+        var question = state.questions[index]; //which question?
         var answer = question.selection[action.answerIndex]; //which answer?
-        
-         //change the answer value
-        var answerIndex = action.answerIndex; //which element in the selected array has been clicked?
-        console.log('answer:'+ answerIndex);
         
         //updated the selected array so that the button has selected=true
         var newArray = [];
@@ -144,13 +140,13 @@ var infoOrderReducer= function(state, action) {
             question.selected.forEach(function(select){
                 newArray.push(select);
             }); //copy the question.selected array
-            newArray[answerIndex]=!question.selected[answerIndex]; //toggle
+            newArray[action.answerIndex]=!question.selected[action.answerIndex]; //toggle
         }
         else{
             question.selected.forEach(function(){
                 newArray.push(false);
             }); //fill newArray with false
-            newArray[answerIndex] = true; //make the selected one true
+            newArray[action.answerIndex] = true; //make the selected one true
         }
         console.log(newArray);
 
@@ -166,24 +162,23 @@ var infoOrderReducer= function(state, action) {
         };
 
         //increase question.next        
-        var next = question.changeCounter[answerIndex]+counter; //add a specified number to the counter to calculate the next index
-      
-        console.log('next index: '+next);
+        var next = question.changeCounter[action.answerIndex]; //add a specified number to the counter to calculate the next index
+        console.log('next question: '+next);
         //update the question with new answer index and un-disable next arrow
-        var newQuestion = Object.assign({}, question, {answerIndex: answerIndex, selected: newArray, disabled: false});
+        var newQuestion = Object.assign({}, question, {answerIndex: action.answerIndex, selected: newArray, disabled: false, next: next});
         //create new question array
-        var after = state.questions.slice(counter+1);
-        var newQuestions = state.questions.slice(0, counter).concat(newQuestion, after); 
+        var after = state.questions.slice(index+1);
+        var newQuestions = state.questions.slice(0, index).concat(newQuestion, after); 
         
         //update the state.answers array
         // var newAnswerArray = state.answers[state.sourceCounter][counter].concat(newAnswerArray);
-        var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[counter]: newAnswerArray}); //update the question object within the water source answers object within the answers object
+        var newAnswerForSource = Object.assign({}, state.answers[state.sourceCounter], {[index]: newAnswerArray}); //update the question object within the water source answers object within the answers object
         var newAnswersForState = Object.assign({}, state.answers, {[state.sourceCounter]: newAnswerForSource}); //update the water source answers object within the answers object
         console.log('new answers for state');
         console.log(newAnswersForState);
 
         //update the state
-        var newState = Object.assign({}, state, {questions: newQuestions, counter: counter, next: next, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
         console.log('new state:')
         console.log(newState);
         return newState;
@@ -191,17 +186,7 @@ var infoOrderReducer= function(state, action) {
     
 ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
-        var counter = action.counter;
-        var question = state.questions[counter]; //which question?
-  
-        var counter = state.next; //the value of next becomes the new counter index
-        var clicks = state.clicks;
-        clicks ++;
-        
-        var newState = Object.assign({}, state, {counter: counter, clicks: clicks}); //update state with new counter
-        console.log('new state'); console.log(newState);
-        localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-        return newState;
+        return state;
     }
 
     /////////////// SUBMIT SUCCESS//////////////
@@ -220,9 +205,9 @@ var infoOrderReducer= function(state, action) {
             var newSourceCounter = state.sourceCounter +1;
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
-            var newState = Object.assign({}, state, {counter: 1, numSources:numSources, reportedSources: reportedSources, 
-                sourceCounter: newSourceCounter, clicks: 3, next: 4, questions: infoOrder.questions}) 
-                //next should be 4 at the point we're re-entering the form. questions should be re-set so that multiple choice questions don't appear re-selected
+            var newState = Object.assign({}, state, {numSources:numSources, reportedSources: reportedSources, 
+                sourceCounter: newSourceCounter, questions: infoOrder.questions}) ;
+                //questions should be re-set so that multiple choice questions don't appear re-selected
             //update local storage
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
             return newState;
@@ -231,14 +216,15 @@ var infoOrderReducer= function(state, action) {
         //if state.mult === true, take back to login screen.
         else if(numSources <= reportedSources && state.multParcels === true){
             alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-            var newState = Object.assign({}, state, {counter: 0, numSources: null, reportedSources: null });
+            var newState = Object.assign({}, state, {numSources: null, reportedSources: null });
             //reset local storage 
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-            location.reload(true); //is this still necessary?
+            //location.reload(true); //is this still necessary?
         }
 
         else{
-            var newState = Object.assign({}, state, {counter: 1001});
+            var newState = Object.assign({}, state, {complete: true}); //indicate that they are all done?
+            //need to get to the Final component
             return newState;
         }
         

@@ -23,7 +23,7 @@ app.post('/logIn', function(req, res){
 				owner: data[i].owner, 
 				address: data[i].address, 
 				answers: data[i].answers,
-				sources: data[i].sources, 
+				numSources: data[i].numSources, 
 				multParcels: data[i].multParcels,
 				reportedSources: data[i].reportedSources	
 			};
@@ -58,12 +58,12 @@ app.put('/submit', function(req, res){
 		if(data[i].idCode === idCode){
 			data[i].answers = answers; //set equal to client's state
 			if(answers[0][3]){
-				data[i].sources = answers[0][3]; //set equal to the reported number of sources
+				data[i].numSources = answers[0][3]; //set equal to the reported number of sources
 			}
 			else{
-				data[i].sources = 0; //if this answer space is falsey, there must be 0 sources
+				data[i].numSources = 0; //if this answer space is falsey, there must be 0 sources
 			}
-			var numSources = data[i].sources;
+			var numSources = data[i].numSources;
 			data[i].reportedSources = reportedSources; //set equal to newly calculated number of reported sources
 		}
 	}

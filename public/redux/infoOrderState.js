@@ -1,7 +1,6 @@
 var infoOrderState = {
-    next: 1,
 	questions: [
-             {	
+             {	number: 0,
                 line: 'Please log in',
                 labels: ['APN/ID Code', 'Password'],
                 input: ['#', '#'],
@@ -10,27 +9,27 @@ var infoOrderState = {
                 length: [1,1],
                 error: [],
                 popover: ['1', '1'],
-                changeCounter: [1]
+                next: 1
              	
              }, 
-             {  
+             {  number: 1,
                 //the log-in page will be shown when counter === 1
                 selected: [false], 
                 disabled: true,
-                changeCounter: [1]
+                next: 2
                 
              },
-             {	
+             {	number: 2,
                 line: 'Is this parcel connected to a water source?',
                 disabled: true,
                 popover: 'Examples of water sources include water utilities, a river or\
                 	stream, wells, springs, or even a neighbor\'s pond. Rain is not considered a water source for the purposes of this form.',
                 selection: ['Yes', 'No'],
                 selected: [false, false],
-                changeCounter: [1, 100]
+                changeCounter: [3, 100]
              
             },
-            {	
+            {	number: 3,
                 line: 'How many sources supply water to this parcel?',
                 input: ['Number'],
                 disabled: true,
@@ -39,7 +38,7 @@ var infoOrderState = {
                 popover: ['Examples of water sources include water companies, rivers or streams, \
                 	wells, springs, ponds...'
                	],
-                changeCounter: [1]
+                next: 4
          
             },
             {	number: 4,
@@ -52,7 +51,7 @@ var infoOrderState = {
                 popover: 'Select the type of water source from the drop-down list. A spring \
 	                is usually either a surface diversion or a well, depending on whether the \
 	                water comes all the way to the surface',
-                changeCounter: [1, 2, 4]
+                changeCounter: [5, 6, 8, 6]
             },
            	{	number: 5,
                 line: 'You reported that this property is served by groundwater. \
@@ -75,7 +74,7 @@ var infoOrderState = {
 	                'Even just a last name will help us locate the record, if one exists.'
                 ],
                 link: "http://www.mapcoordinates.net/en",
-                changeCounter: [8] //go to water use
+                next: 13//go to water use
                
            },
               
@@ -86,7 +85,7 @@ var infoOrderState = {
                	selected: [false, false],
                 disabled: true,
                 popover: 'Select the name of your water supplier. If your water comes from another property that you own, select self. If your water comes from someone else\'s property, select neighbor',
-                changeCounter: [100,100,1,1] //go to confirmation or continue to more supplier info
+                changeCounter: [100,100,7,7] //go to confirmation or continue to more supplier info
             }
             ,
             {	number: 7,
@@ -103,7 +102,7 @@ var infoOrderState = {
                 popover: ['If you don\'t know some details, that\'s ok.',
                 	'The APN is also the 12-digit ID Code used to log into this form'
                 ],
-                changeCounter: [6] //go to water use
+                next: 13 //go to water use
              },
                 
             {	number: 8,
@@ -116,12 +115,12 @@ var infoOrderState = {
                 disabled: true,
                 popover: 'If you have a water right, you should have an application number \
                 	that you use to report your water use annually',
-                changeCounter: [1,2]
+                changeCounter: [9,10]
             },
                
            
             {	number: 9,
-                line: 'You have already reported your use! Awesome! What\'s your application number?',
+                line: 'What\'s your application number?',
                 input: ['App Id'],
                 length: [6],
                 disabled: true,
@@ -130,7 +129,7 @@ var infoOrderState = {
                 popover: ['The application number usually starts with a letter and looks like \
                 	A111111 or S111111, for example'
                 ],
-                changeCounter: [7] //go to confirmation
+                next: 100 //go to confirmation
             },
             {	number: 10,
                 line: 'No worries if you haven\'t been through this yet. Is your parcel adjacent \
@@ -139,7 +138,7 @@ var infoOrderState = {
                 selected: [false, false],
                 disabled: true,
                 popover: 'Adjacent as in the property touches the stream.',
-                changeCounter: [1,2]
+                changeCounter: [11,12]
             },
             {	number: 11,
                 line: 'It looks like you have a riparian water right. To claim this right, you need \
@@ -154,7 +153,7 @@ var infoOrderState = {
 	                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
 	                does not flow off the property, even in the winter, even if you were diverting none of it.'
 	            ],
-                changeCounter: [2, 2] //confirm and go to water rights, go back to new source, or go to water use
+                changeCounter: [100, 100] //confirm and go to water rights, go back to new source, or go to water use
             },
             {	number: 12,
                 line: 'If you\'re using water from a stream that doesn\'t touch your property, \
@@ -169,15 +168,15 @@ var infoOrderState = {
             },
             {	number: 13, 
             	line: 'How is water from this source used on the property?',
-            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Swimming'],
+            	selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Beer Brewing'],
             	mult: true,
                 selected: [false, false, false, false, false],
             	disabled: true,
             	popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
             		Agricultural use applies if you sell any food products raised on your property',
-            	changeCounter: [2, 1, 1, 1, 1]
+            	changeCounter: [15, 14, 14, 14, 14]
             },
-            {	
+            {	number: 14,
             	line: 'We\'re almost done! Let\'s figure out your water use',
             	labels: ['total use January 2015 (gallons)', 
             		'total use May 2015 (gallons)', 
@@ -215,17 +214,17 @@ var infoOrderState = {
             	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
             	are useful tools.'
             	],
-            	changeCounter: [100]
+            	next: 100
 
             },
             {	number: 15,
-            	line: 'If this water source\'s only use is domestic use, we can estimate the total use by the number of people who \
+            	line: 'We can estimate the total use by the number of people who \
             	reside on the property',
             	disabled: true,
             	popover: 'Domestic use means the water is only used for normal life needs: e.g. drinking, showering, a personal garden',
             	selection: ['Sounds great!', 'That\'s ok, I can estimate the usage another way'],
             	selected: [false, false],
-            	changeCounter: [1,2]
+            	changeCounter: [16,14]
             },
             {	number: 16,
             	line: 'Please enter the number of people who were living on the property for each \
@@ -253,11 +252,9 @@ var infoOrderState = {
             	'Hope that wasn\'t so bad',
             	'Learn how much water you use each month!'
             	],
-            	changeCounter: [100]
+            	next: 100
             }
         ],
-		counter: 0, //count the question index
-		clicks: 0,
 		sourceCounter: 0, //count which water source being answered for
 		answers:{ 
 			0:{

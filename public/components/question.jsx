@@ -22,13 +22,20 @@ var Question = function(props){
 			)
 		}
 	}
+	//create an array of the input labels, if that question should have them
+	var labels = [];
+	if(props.question.labels){
+		for(var k=0; k<props.question.input.length; k++){
+			labels.push(props.question.labels[k]);
+		}
+	}
 	//if the question has a form text input, create a row for each input and popover
 	if(props.question.input){
 		var inputs = [];
 		for (var n=0; n<props.question.input.length; n++){
 			inputs.push(
 				<div>
-					<ControlLabel className={props.question.labels? '':'hidden'}>{props.question.labels[n]}</ControlLabel>
+					<ControlLabel className={props.question.labels? '':'hidden'}>{labels[n]}</ControlLabel>
 					<ButtonToolbar className='flex'>
 						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} name={n} className='input' type='text' onChange={props.handleChange}/>
 						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
@@ -55,6 +62,7 @@ var Question = function(props){
 			)
 		}
 	}
+
 	
 	return(
 	<form onSubmit={props.onSubmit}>

@@ -87,14 +87,13 @@ exports.changeSource = changeSource;
 
 //////  if question.dropdown or question.selection, then choose option instead of changing input
 var CHOOSE_OPTION = 'CHOOSE_OPTION';
-var chooseOption = function(e, counter){
+var chooseOption = function(e, index){
 	console.log('choose option ');
-	var index = e.target.id;
 	
 	return{
 		type: CHOOSE_OPTION,
-		counter: counter,
-		answerIndex: index //which option of the selection array
+		index: index, 
+		answerIndex: e.target.id
 	}
 }
 exports.CHOOSE_OPTION = CHOOSE_OPTION;
@@ -102,7 +101,7 @@ exports.chooseOption = chooseOption;
 
 //////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
-var changeInput = function(e, counter){
+var changeInput = function(e, index){
 	console.log(e.target.name);
 	if(e.target.value===""){
 		var answer = "";
@@ -115,12 +114,12 @@ var changeInput = function(e, counter){
 		var answer = parseInt(e.target.value);
 		console.log('input is numeric' + answer); 
 	}
-	console.log('counter is '+ counter);
+	console.log('index is '+ index);
 	return{
 		type: CHANGE_INPUT, 
-		index: e.target.name,
+		answerIndex: e.target.name,
 		answer: answer,
-		counter: counter
+		index: index
 	}
 };
 exports.CHANGE_INPUT = CHANGE_INPUT;
@@ -128,11 +127,10 @@ exports.changeInput = changeInput;
 
 ////// when next arrow is clicked ///////////////
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
-var submitAnswer = function(counter) {
+var submitAnswer = function() {
 	console.log('action: submitAnswer');
     return {
-        type: SUBMIT_ANSWER, 
-        counter: counter
+        type: SUBMIT_ANSWER
     }
 };
 exports.SUBMIT_ANSWER = SUBMIT_ANSWER;

@@ -7,7 +7,6 @@ var actionCreators = require('../redux/actions.js');
 
 var Main = React.createClass({
     render: function(props){
-    	console.log(this.props);
     	var that = this;
 
     	var childrenWithProps = React.Children.map(this.props.children, 

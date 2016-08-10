@@ -35,51 +35,31 @@ var InfoOrder = React.createClass({
 	onSubmit: function(e){
 		e.preventDefault();
 		var that = this;
-		if(parseInt(this.props.infoOrder.counter)===0){ //if this is the log-in page being submitted, talk to server
-			//dispatch logIn function with idCode and password from state
-			console.log('submit called from log in');
+		var index = this.props.params.counter; //decide what value the index should be
+		if(parseInt(index) ===0){
 			that.props.actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]);
 		}
-		else if(parseInt(this.props.infoOrder.counter)===1){
-			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
-			this.props.actions.submitAnswer(1);
-		}
-		else{
-			var index = this.props.params.counter; //decide what value the index should be
-			console.log('next will be '+ this.props.infoOrder.next);
-			this.props.history.push('/infoOrder/'+that.props.infoOrder.next);
-			this.props.actions.submitAnswer(index);
-		}
-
+		console.log('next will be '+ this.props.infoOrder.questions[that.props.params.counter].next);
+		this.props.history.push('/infoOrder/'+that.props.infoOrder.questions[that.props.params.counter].next);
+		this.props.actions.submitAnswer(index);
 	},
 	sendData: function(){
 		console.log('sending data');
 		var that = this;
 		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
-		this.props.history.push('/infoOrder/0');
+		//this.props.history.push('/infoOrder/1'); //return to user screen
 	},
 	changeSource: function(e){
 		//dispatch an action that changes the infoOrder.sourceCounter to e.target.value
 		this.props.actions.changeSource(e);
 	},
-	
+	print: function(){
+		this.props.history.push('/print'); //show Print component
+	},
 	render: function(props){
-		console.log(this.props);
 		var that = this; 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
-
-		if(that.props.infoOrder.counter === 1){
-			var index= 1; //since logging in won't push to history
-			console.log('index set equal to 1');
-		}
-		else if(that.props.infoOrder.counter ===1001){
-			var index = 1001; //for going back into the form for a new source
-		}
-		else{
-			var index = that.props.params.counter;  console.log('index taken from url');
-		}//this should be the default method so that clicking the back button renders the right page
-		
-		console.log('index is '+index);
+		var index = that.props.params.counter;  
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 
@@ -89,21 +69,19 @@ var InfoOrder = React.createClass({
 				<LogIn question={singleQuestion} handleChange={that.handleChange} onSubmit={that.onSubmit}/>
 			);
 		}
-		else if(index === 1){
-			console.log('show user screen');
+		else if(parseInt(index) === 1){
 			var show=(
-				<User user={that.props.infoOrder} onSubmit={that.onSubmit}/>
+				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print}/>
 			);
-			console.log(show);
 		}
-		else if(index>100 && index<1000){
+		else if(index>=100 && index<1000){
 			var show = (
 				<Confirm sendData={that.sendData} />
 			);
 		}
-		else if(index>1000){
+		else if(index>=1000){
 			var show=(
-				<Final />
+				<Final onClick = {that.print}/>
 			);
 		}
 		else{

@@ -6,7 +6,7 @@ var Router = router.Router;
 var Route = router.Route;
 var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
-
+var Print = require('./public/components/print.jsx');
 var store = require('./public/redux/store.js');
 var Main = require('./public/components/main.jsx');
 var Menu = require('./public/components/menu.jsx');
@@ -20,12 +20,11 @@ var routes = (
 	  <Router history={hashHistory} onUpdate={()=> window.scrollTo(0,0)}>
 	    <Route path='/' component={Main}>
 	      	<IndexRoute component={Menu}/>
-
 	      	<Route path='/infoOrder/:counter' component={InfoOrder}/>
-
 	      	<Route path='/waterRights/:counter' component={WaterRights}/>
 	      	<Route path='/infoOrderFaq/:counter' component={InfoOrderFaq}/>
 	      	<Route path='/waterRightsFaq/:counter' component={WaterRightsFaq}/>
+	      	<Route path='/print' components={Print}/>
 	    </Route>    
 	  </Router>
 	</Provider>

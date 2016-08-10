@@ -6,7 +6,7 @@ var data = [
 		password: 1,
 		answers: '', 
 		multParcels: false, 
-		sources: 0,
+		numSources: 0,
 		reportedSources: 0
 	},
 	{ //this is parcel #2
