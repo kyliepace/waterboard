@@ -30,7 +30,7 @@ var WaterRights = React.createClass({
 	sendData: function(){
 		console.log('sending data');
 		var that = this;
-		this.props.actions.submitSource(that.props.waterRights.answers[0][0][0], that.props.infoOrder.answers);
+		this.props.actions.submitRight(that.props.waterRights.answers);
 		this.props.history.push('/'); //return to main menu 
 	},
 	print: function(){
