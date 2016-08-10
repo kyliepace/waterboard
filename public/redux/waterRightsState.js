@@ -194,15 +194,44 @@ var waterRightsState = {
             	next: 13
     },
     {	number: 13, 
-      line: 'How is water from this source used on the property?',
+      line: 'How will this water be used?',
       selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Beer Brewing'],
       selected: [false, false, false, false, false],
       disabled: true,
       popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
             	Agricultural use applies if you sell any food products raised on your property',
-      changeCounter: [14, 15, 16, 17, 17]
+      changeCounter: [14, 15, 16, 100, 100]
     },
-  
+    { number: 14,
+      line: 'Please describe the domestic usage',
+      labels: ['number of people served', 'area of irrigated personal garden and lawn (square feet)'],
+      input: ['number', 'square feet'],
+      disabled: true,
+      popover: ['How many people are living on the property using this water for domestic needs?', 'What is the surface area of all the lawns and gardens receiving this water?'],
+      next: 100
+    },
+    { number: 15,
+      line: 'Please describe the agricultural usage',
+      labels: ['crop', 'acres', 'method of irrigation', 'water use (gallons/year'],
+      input: ['crop', 'acres', 'method', 'gallons/year'],
+      validation: ['string', 'number', 'string', 'number'],
+      error: [],
+      disabled: true,
+      popover: ['What crop are you irrigating?', 'How many acres are being irrigated?', 'What method of irrigation will be used?', 
+      'What is the total estimated water use (in gallons per year) for this crop?'],
+      next: 100
+    },
+    { number: 16,
+      line: "Please describe the stockwatering demands",
+      labels: ['Kind of stock', 'Number of stock'],
+      input: ['', 'number'],
+      validation: ['string', 'number'],
+      error: [],
+      disabled: true,
+      popover: ['What kind of animal will be using this water?', 'How many animals will be using this water?'],
+      next: 100 //go to confirmation
+    }
+    
   ],
 };
 
