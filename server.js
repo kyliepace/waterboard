@@ -5,10 +5,10 @@ require('isomorphic-fetch');
 var data = require('./data.js');
 
 var app = express();
-var isProduction = process.env.NODE_ENV === 'production';
-var port = isProduction ? process.env.PORT : 8080;
 
-app.use('/', express.static('public'));
+var port =  process.env.PORT || 8080;
+
+app.use('/', express.static(__dirname + '/public'));
 app.use(bodyParser());
 
 
