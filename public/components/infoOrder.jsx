@@ -61,6 +61,7 @@ var InfoOrder = React.createClass({
 		this.props.actions.submitAnswer(index);
 	},
 	render: function(props){
+		document.body.style.cursor='default'; //return cursor to default
 		var that = this; 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 		var index = that.props.params.counter;  
