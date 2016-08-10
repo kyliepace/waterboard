@@ -62,7 +62,7 @@ var InfoOrder = React.createClass({
 		var index = that.props.params.counter;  
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
-
+		console.log('completing form for source number '+that.props.infoOrder.sourceCounter);
 		// if(that.props.infoOrder.complete){ //show final view if user is complete
 		// 	var show=(
 		// 		<Final onClick = {that.print}/>
@@ -92,6 +92,7 @@ var InfoOrder = React.createClass({
     			changeSource={that.changeSource}/>
 			);
 		}
+		console.log(show);
 		return(
 		    <section>
 		    	{show}
@@ -100,7 +101,7 @@ var InfoOrder = React.createClass({
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>
 		    		<h4 className ={this.props.infoOrder.address ? '':'hidden'}>{this.props.infoOrder.address}</h4>
-		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{parseInt(this.props.infoOrder.sourceCounter) +1} of {this.props.infoOrder.numSources} water sources</h4>
+		    		<h4 className={this.props.infoOrder.numSources ? '':'hidden'}>{parseInt(this.props.infoOrder.reportedSources) } of {this.props.infoOrder.numSources} water sources</h4>
 		    	</Col>
 		    </section>
 		)

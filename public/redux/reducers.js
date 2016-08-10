@@ -30,7 +30,9 @@ var infoOrderReducer= function(state, action) {
             }
             var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
             var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
-            console.log(newState);        
+            console.log(newState);  
+            //clear localStorage
+            localStorage.clear();      
         } 
         return newState;
     }
@@ -186,7 +188,9 @@ var infoOrderReducer= function(state, action) {
     
 ////////////// SUBMIT ANSWER /////////////////////////////////////////////
     if (action.type === actions.SUBMIT_ANSWER) {
-        return state;
+        console.log('reducer: submit answer');
+        console.log(state);
+        return Object.assign({}, state);
     }
 
     /////////////// SUBMIT SUCCESS//////////////
@@ -206,7 +210,7 @@ var infoOrderReducer= function(state, action) {
             console.log(newSourceCounter);
             alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
             //change questions[1].next to 4 so that re-logging in will skip the question about the number of sources?
-            var newQuestion = Object.assign({}, state.questions[1], {next: 4});
+            var newQuestion = Object.assign({}, infoOrder.questions[1], {next: 4});
             //update question array
             var after = infoOrder.questions.slice(2);
             var newQuestions = infoOrder.questions.slice(0, 1).concat(newQuestion, after); 

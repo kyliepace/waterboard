@@ -47750,7 +47750,9 @@
 	            }
 	            var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
 	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
-	            console.log(newState);        
+	            console.log(newState);  
+	            //clear localStorage
+	            localStorage.clear();      
 	        } 
 	        return newState;
 	    }
@@ -47906,7 +47908,9 @@
 	    
 	////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
-	        return state;
+	        console.log('reducer: submit answer');
+	        console.log(state);
+	        return Object.assign({}, state);
 	    }
 
 	    /////////////// SUBMIT SUCCESS//////////////
@@ -47926,7 +47930,7 @@
 	            console.log(newSourceCounter);
 	            alert('This source is submitted! It looks like you have at least one more source to report for this property. Let\'s report it now.');
 	            //change questions[1].next to 4 so that re-logging in will skip the question about the number of sources?
-	            var newQuestion = Object.assign({}, state.questions[1], {next: 4});
+	            var newQuestion = Object.assign({}, infoOrder.questions[1], {next: 4});
 	            //update question array
 	            var after = infoOrder.questions.slice(2);
 	            var newQuestions = infoOrder.questions.slice(0, 1).concat(newQuestion, after); 
@@ -49399,7 +49403,7 @@
 			var index = that.props.params.counter;
 			var singleQuestion = questions[index];
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
-
+			console.log('completing form for source number ' + that.props.infoOrder.sourceCounter);
 			// if(that.props.infoOrder.complete){ //show final view if user is complete
 			// 	var show=(
 			// 		<Final onClick = {that.print}/>
@@ -49417,6 +49421,7 @@
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
 					changeSource: that.changeSource });
 			}
+			console.log(show);
 			return React.createElement(
 				'section',
 				null,
@@ -49442,7 +49447,7 @@
 					React.createElement(
 						'h4',
 						{ className: this.props.infoOrder.numSources ? '' : 'hidden' },
-						parseInt(this.props.infoOrder.sourceCounter) + 1,
+						parseInt(this.props.infoOrder.reportedSources),
 						' of ',
 						this.props.infoOrder.numSources,
 						' water sources'
@@ -49540,11 +49545,11 @@
 		if (dropdown) {
 			//only do this for the water source question
 			var dropdowns = [];
-			for (var n = props.user.numSources[0]; n > 0; n++) {
+			for (var p = props.user.numSources[0]; p > 0; p++) {
 				dropdowns.push(React.createElement(
 					'option',
-					{ value: n - 1, id: n - 1 },
-					n
+					{ value: p - 1, id: p - 1 },
+					p
 				) //give a dropdown option up to the number of sources
 				);
 			}
@@ -49660,7 +49665,7 @@
 						{ className: 'option', type: 'button', onClick: props.sendData },
 						React.createElement(
 							'h3',
-							{ onClick: props.sendData },
+							null,
 							'Yes. Submit info for this water source'
 						)
 					)
@@ -49777,6 +49782,7 @@
 	var Button = __webpack_require__(268).Button;
 
 	var User = function (props) {
+		console.log('on user page. next will be ' + props.question.next);
 		return React.createElement(
 			'form',
 			{ onSubmit: props.onSubmit },
@@ -49814,7 +49820,7 @@
 					'h3',
 					null,
 					'You have indicated that this parcel is served by ',
-					props.user.sources,
+					props.user.numSources,
 					' water sources. ',
 					React.createElement('br', null),
 					'You have submitted information for ',
@@ -49824,18 +49830,14 @@
 			),
 			React.createElement(
 				Button,
-				{ className: props.user.numSources ? '' : 'hidden', type: 'button', onClick: props.onClick },
+				{ className: props.user.numSources ? 'button' : 'hidden', type: 'button', onClick: props.onClick },
 				'Print Record'
 			),
 			React.createElement(
-				Link,
-				{ to: '/infoOrder/' + props.question.next },
-				React.createElement(
-					Button,
-					{ className: 'button', id: 'submitButton', type: 'button' },
-					'Continue to Form',
-					React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-				)
+				Button,
+				{ className: 'button', onClick: props.onSubmit, id: 'submitButton', type: 'button' },
+				'Continue to Form',
+				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
 			)
 		);
 	};

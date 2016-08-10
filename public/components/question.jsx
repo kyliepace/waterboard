@@ -56,9 +56,9 @@ var Question = function(props){
 	//if this question should let the user change which water source they are reporting
 	if(dropdown){ //only do this for the water source question
 		var dropdowns = [];
-		for (var n=props.user.numSources[0]; n>0; n++){ 
+		for (var p=props.user.numSources[0]; p>0; p++){ 
 			dropdowns.push(
-				<option value={n-1} id={n-1}>{n}</option> //give a dropdown option up to the number of sources
+				<option value={p-1} id={p-1}>{p}</option> //give a dropdown option up to the number of sources
 			)
 		}
 	}

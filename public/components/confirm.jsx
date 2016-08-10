@@ -19,7 +19,7 @@ var Confirm = function(props){
 
 			<Row className='options'>
 				<Button className={'option'} type='button' onClick={props.sendData}>
-					<h3 onClick={props.sendData}>Yes. Submit info for this water source</h3>
+					<h3>Yes. Submit info for this water source</h3>
 				</Button>		
 			</Row>
 		</FormGroup>

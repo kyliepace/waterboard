@@ -7,6 +7,7 @@ var Button = require('react-bootstrap').Button;
 
 
 var User = function(props){
+	console.log('on user page. next will be '+props.question.next);
 	return(
 	<form onSubmit={props.onSubmit}>
 		
@@ -22,13 +23,13 @@ var User = function(props){
 		</div>
 
 		<div className={ props.user.numSources ? '': 'hidden'}>
-			<h3 >You have indicated that this parcel is served by {props.user.sources} water sources. <br/>
+			<h3 >You have indicated that this parcel is served by {props.user.numSources} water sources. <br/>
 			You have submitted information for {props.user.reportedSources} water sources.</h3>
 		</div>
 	
-		<Button className={props.user.numSources ? '':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
+		<Button className={props.user.numSources ? 'button':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
 
-		<Link to={'/infoOrder/'+ props.question.next}><Button className='button'  id='submitButton' type='button'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button></Link>
+		<Button className='button' onClick={props.onSubmit} id='submitButton' type='button'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		
 	</form>
 	);		
