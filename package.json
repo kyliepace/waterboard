@@ -10,7 +10,8 @@
     "less": "lessc public/css/style.less public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack && npm run less && node server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "npm install --dev"
   },
   "keywords": [
     "React",
