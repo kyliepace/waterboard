@@ -16,7 +16,7 @@ var infoOrderState = {
              {  number: 1,
                 //the log-in page will be shown when counter === 1
                 selected: [false], 
-                disabled: true,
+                disabled: false,
                 next: 2
                 
              },
