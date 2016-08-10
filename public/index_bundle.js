@@ -47945,15 +47945,15 @@
 	        //if state.mult === true, take back to login screen.
 	        else if(numSources <= reportedSources && state.multParcels === true){
 	            alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-	            var newState = Object.assign({}, state, {numSources: null, reportedSources: null });
+	            var newState = Object.assign({}, state, {numSources: numSources, reportedSources: reportedSources, moreParcels: true });
 	            //reset local storage 
 	            localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-	           
 	        }
 
 	        else{
-	            var newState = Object.assign({}, state, {complete: true}); //indicate that they are all done?
+	            var newState = Object.assign({}, state, {complete: true, moreParcels: false, moreSources: false, numSources: numSources, reportedSources: reportedSources}); //indicate that they are all done?
 	            //need to get to the Final component
+	            console.log(newState);
 	            return newState; //do not update localStorage
 	        }      
 	    }
@@ -48662,6 +48662,7 @@
 /***/ function(module, exports) {
 
 	var infoOrderState = {
+	    moreSources: true,
 		questions: [
 	             {	number: 0,
 	                line: 'Please log in',
@@ -48705,7 +48706,7 @@
 	         
 	            },
 	            {	number: 4,
-	                changeSourceCounter: true,
+	                //changeSourceCounter: true,
 	                line: 'Let\s take this one water source at a time. Is it groundwater (i.e. from a well), \
 	                a water supplier (e.g. you pay a water company), or surface water (i.e. from a river or stream)?',
 	                selection: ["Groundwater", "Water Supplier", "Surface Water", "Contract"],
@@ -49397,6 +49398,10 @@
 		print: function () {
 			this.props.history.push('/print'); //show Print component
 		},
+		toLogIn: function () {
+			this.props.history.push('/infoOrder/0');
+			this.props.actions.submitAnswer(index);
+		},
 		render: function (props) {
 			var that = this;
 			var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
@@ -49413,7 +49418,8 @@
 				console.log('index equal to 0, show login');
 				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
 			} else if (parseInt(index) === 1) {
-				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit, onClick: that.print, question: singleQuestion });
+				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit, onClick: that.print, question: singleQuestion,
+					toLogIn: that.toLogIn });
 			} else if (index >= 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {
@@ -49537,12 +49543,13 @@
 			}
 		}
 
-		if (props.question.changeSourceCounter && props.user.numSources) {
+		if (props.question.changeSourceCounter === true && props.user.numSources >= 2) {
 			var dropdown = true;
+			console.log(dropdown);
 		}
 
 		//if this question should let the user change which water source they are reporting
-		if (dropdown) {
+		if (dropdown === true) {
 			//only do this for the water source question
 			var dropdowns = [];
 			for (var p = props.user.numSources[0]; p > 0; p++) {
@@ -49582,7 +49589,7 @@
 				{ className: props.question.selection ? 'selector' : 'hidden' },
 				React.createElement(
 					'div',
-					{ className: dropdown ? 'options' : 'hidden' },
+					{ className: props.question.changeSourceCounter ? 'options' : 'hidden' },
 					React.createElement(
 						'h4',
 						null,
@@ -49590,7 +49597,7 @@
 					),
 					React.createElement(
 						FormControl,
-						{ componentClass: 'select', onChange: props.changeSource, placeholder: '', className: props.question.changeSourceCounter ? 'dropdown' : 'hidden' },
+						{ componentClass: 'select', onChange: props.changeSource, placeholder: '', className: 'dropdown' },
 						dropdowns
 					)
 				),
@@ -49780,6 +49787,7 @@
 	var router = __webpack_require__(204);
 	var Link = router.Link;
 	var Button = __webpack_require__(268).Button;
+	var Final = __webpack_require__(540);
 
 	var User = function (props) {
 		console.log('on user page. next will be ' + props.question.next);
@@ -49829,15 +49837,25 @@
 				)
 			),
 			React.createElement(
+				'div',
+				{ className: props.user.complete ? 'final' : 'hidden' },
+				React.createElement(Final, null)
+			),
+			React.createElement(
 				Button,
 				{ className: props.user.numSources ? 'button' : 'hidden', type: 'button', onClick: props.onClick },
 				'Print Record'
 			),
 			React.createElement(
 				Button,
-				{ className: 'button', onClick: props.onSubmit, id: 'submitButton', type: 'button' },
+				{ className: props.user.moreSources ? 'button' : 'hidden', onClick: props.onSubmit, id: 'submitButton', type: 'button' },
 				'Continue to Form',
 				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
+			),
+			React.createElement(
+				Button,
+				{ className: props.user.moreParcels ? 'button' : 'hidden', onClick: props.toLogIn, type: 'button' },
+				'Log Another Parcel'
 			)
 		);
 	};
@@ -49849,7 +49867,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	React = __webpack_require__(2);
-	var Button = __webpack_require__(268).Button;
 
 	var Final = function (props) {
 		return React.createElement(
@@ -49862,11 +49879,6 @@
 					'h1',
 					null,
 					'All Done!'
-				),
-				React.createElement(
-					Button,
-					{ type: 'button', onClick: props.onClick },
-					'Print Record'
 				)
 			)
 		);

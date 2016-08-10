@@ -8,7 +8,7 @@ var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
 var LogIn = require('./logIn.jsx');
 var User = require('./user.jsx');
-var Final = require('./final.jsx');
+
 
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
@@ -56,6 +56,10 @@ var InfoOrder = React.createClass({
 	print: function(){
 		this.props.history.push('/print'); //show Print component
 	},
+	toLogIn: function(){
+		this.props.history.push('/infoOrder/0');
+		this.props.actions.submitAnswer(index);
+	},
 	render: function(props){
 		var that = this; 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
@@ -63,11 +67,7 @@ var InfoOrder = React.createClass({
 		var singleQuestion = questions[index];
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 		console.log('completing form for source number '+that.props.infoOrder.sourceCounter);
-		// if(that.props.infoOrder.complete){ //show final view if user is complete
-		// 	var show=(
-		// 		<Final onClick = {that.print}/>
-		// 	);
-		// }
+		
 		if(parseInt(index) === 0){
 			console.log('index equal to 0, show login');
 			var show = (
@@ -76,7 +76,8 @@ var InfoOrder = React.createClass({
 		}
 		else if(parseInt(index) === 1){
 			var show=(
-				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print} question={singleQuestion}/>
+				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print} question={singleQuestion}
+				toLogIn={that.toLogIn}/>
 			);
 		}
 		else if(index>=100 && index<1000){

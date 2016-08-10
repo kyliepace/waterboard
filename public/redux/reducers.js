@@ -225,15 +225,15 @@ var infoOrderReducer= function(state, action) {
         //if state.mult === true, take back to login screen.
         else if(numSources <= reportedSources && state.multParcels === true){
             alert('It looks like you\'re done with this parcel, but our records indicate that you own more parcels subject to the Info Order. Please log in with your next APN/ID Code.');
-            var newState = Object.assign({}, state, {numSources: null, reportedSources: null });
+            var newState = Object.assign({}, state, {numSources: numSources, reportedSources: reportedSources, moreParcels: true });
             //reset local storage 
             localStorage.setItem('infoOrder', JSON.stringify(newState)); //save state to localStorage
-           
         }
 
         else{
-            var newState = Object.assign({}, state, {complete: true}); //indicate that they are all done?
+            var newState = Object.assign({}, state, {complete: true, moreParcels: false, moreSources: false, numSources: numSources, reportedSources: reportedSources}); //indicate that they are all done?
             //need to get to the Final component
+            console.log(newState);
             return newState; //do not update localStorage
         }      
     }
