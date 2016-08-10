@@ -13,7 +13,7 @@ var port =  process.env.PORT || 8080;
 app.use('/', express.static(__dirname + '/public'));
 app.use(bodyParser());
 
-
+///////////////////// HANDLE REQUESTS TO SERVER //////////////////////////
 app.post('/logIn', function(req, res){
 	//client is sending idCode and password
 	var idCode = req.body.idCode;
@@ -35,7 +35,6 @@ app.post('/logIn', function(req, res){
 		else{
 			res.status(404).json('incorrect login').end();
 		}
-
 	}	
 });
 
@@ -52,7 +51,6 @@ app.put('/infoOrder/submit', function(req, res){
 		}
 	}
 	console.log('reported sources: '+reportedSources)
-
 	//find number of indicated sources
 	for(var i=0; i<infoOrderData.length; i++){
 		if(infoOrderData[i].idCode === idCode){
@@ -65,10 +63,12 @@ app.put('/infoOrder/submit', function(req, res){
 			}
 			var numSources = infoOrderData[i].numSources;
 			infoOrderData[i].reportedSources = reportedSources; //set equal to newly calculated number of reported sources
+		
+			var doc = createPDF(infoOrderData[i]); //create pdf
 		}
 	}
 	console.log('numSources: '+numSources);
-	var doc = createPDF(infoOrderData);
+	
 	//send back doc
 	res.status(200).json({numSources: numSources, reportedSources: reportedSources}); 
 });
@@ -76,7 +76,8 @@ app.put('/infoOrder/submit', function(req, res){
 app.put('/waterRights/submit', function(req, res){
 	var answers = req.body.answers;
 	//push answers to waterRightData object
-	var doc = createPDF(waterRightData);
+	//get index of where in the waterRightData the new answers have been stored
+	var doc = createPDF(waterRightData[index]);
 	//send back doc
 	res.status(200); 
 });
@@ -86,13 +87,28 @@ var createPDF = function(dataObject){
 	var doc = new PDFDocument;
 	doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
 	doc.font('Helvetica');
-	
-	var page = ; //create a page with 1 source's questions and corresponding answers
-	
-	doc.text(page); 
-	//for each reportedSource after the 1st, add a page
-	doc.addPage();
-	
+	var pages = [];
+	dataObject.answers.forEach(function(answerSet){
+		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
+	});
+	var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
+		for(var i=0; i<dataObject.questions.length; i++){
+			var question = dataObject.questions[i].line;
+			var answer = answerSet[i];
+		}
+		console.log(question);
+		console.log(answer); 
+		return (question, answer);
+	}; 
+	doc.text(pages[0]); 
+	if(dataObject.reportedSources>1){ //for each reportedSource after the 1st, add a page
+		var k=1;
+		while(k<dataObject.reportedSources){
+			doc.addPage();
+			doc.text(pages[k]);
+			k++;
+		}
+	}
 	doc.end();
 }
 
