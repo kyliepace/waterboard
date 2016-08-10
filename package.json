@@ -30,7 +30,7 @@
   "author": "Kylie Pace",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0",
+    "express": "*",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.3.0",
     "react-bootstrap": "^0.30.2",
