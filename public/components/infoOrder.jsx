@@ -3,7 +3,6 @@ var Row = require('react-bootstrap').Row;
 var Col = require('react-bootstrap').Col;
 var Question = require('./question.jsx');
 var Button = require('react-bootstrap').Button;
-var connect = require('react-redux').connect;
 var actions=require('../redux/actions.js');
 var Confirm = require('./confirm.jsx');
 var LogIn = require('./logIn.jsx');
@@ -46,7 +45,7 @@ var InfoOrder = React.createClass({
 	sendData: function(){
 		console.log('sending data');
 		var that = this;
-		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
+		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers, that.props.infoOrder.questions);
 		this.props.history.push('/infoOrder/1'); //return to user screen with option to print out data or sign in to different parcel
 	},
 	changeSource: function(e){
@@ -66,6 +65,7 @@ var InfoOrder = React.createClass({
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 		var index = that.props.params.counter;  
 		var singleQuestion = questions[index];
+		console.log(singleQuestion);
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 		console.log('completing form for source number '+that.props.infoOrder.sourceCounter);
 		
@@ -89,7 +89,7 @@ var InfoOrder = React.createClass({
 		
 		else{
 			var show = (
-				<Question onSubmit={that.onSubmit} onClick={that.prevQuestion} user={that.props.infoOrder}
+				<Question onSubmit={that.onSubmit} user={that.props.infoOrder}
     			answer = {answer} question={singleQuestion} handleClick={that.handleClick} handleChange={that.handleChange}
     			changeSource={that.changeSource}/>
 			);

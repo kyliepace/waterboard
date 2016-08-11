@@ -9,6 +9,7 @@ var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 var Popover = require('react-bootstrap').Popover;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var FieldGroup = require('react-bootstrap').FieldGroup;
 
 var Question = function(props){
 	//if the question is multiple choice, create a box for each option
@@ -38,7 +39,7 @@ var Question = function(props){
 					<ControlLabel className={props.question.labels? '':'hidden'}>{labels[n]}</ControlLabel>
 					<ButtonToolbar className='flex'>
 						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} name={n} className='input' type='text' onChange={props.handleChange}/>
-						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
+						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover className={props.question.popover ? '': 'hidden'} id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
 							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 						</OverlayTrigger>
 					</ButtonToolbar>

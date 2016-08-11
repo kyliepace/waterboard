@@ -16,7 +16,7 @@ var InfoOrderFaq = React.createClass({
 		var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
 		console.log('next will be '+next); 
 		this.props.history.push('/infoOrderFAQ/'+next); //push browser history
-		this.props.actions.submitAnswer(index);
+		this.props.actions.submitInfoOrderFaq();
 	},
 
 	render: function(props){

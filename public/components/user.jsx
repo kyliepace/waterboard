@@ -30,7 +30,7 @@ var User = function(props){
 		<div className={props.user.complete? 'final': 'hidden'}>
 			<Final />
 		</div>
-		<Button className={props.user.numSources ? 'button':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
+		
 
 		<Button className={props.user.moreSources? 'button': 'hidden'} onClick={props.onSubmit} id='submitButton' type='button'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		<Button className={props.user.moreParcels? 'button':'hidden'} onClick={props.toLogIn} type='button'>Log Another Parcel</Button>
@@ -39,3 +39,5 @@ var User = function(props){
 };
 
 module.exports = User;
+
+//<Button className={props.user.numSources ? 'button':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>

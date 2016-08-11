@@ -18,7 +18,7 @@ var Confirm = function(props){
 			<h2>I confirm that the information I've entered is true to the best of my knowledge</h2>
 
 			<Row className='options'>
-				<Button className={'option'} type='button' onClick={document.body.style.cursor='wait'; props.sendData}>
+				<Button className={'option'} type='button' onClick={props.sendData}>
 					<h3>Yes. Submit info for this water source</h3>
 				</Button>		
 			</Row>

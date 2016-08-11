@@ -2,10 +2,10 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 require('isomorphic-fetch');
-var PDFDocument = require 'pdfkit'; //added pdfkit
+var PDFDocument = require('pdfkit'); //added pdfkit
 var fs = require('fs'); //added fs
 var infoOrderData = require('./data.js');
-var waterRightdata = require('./waterRightdata.js');
+var waterRightsdata = require('./waterRightsdata.js');
 var app = express();
 
 var port =  process.env.PORT || 8080;
@@ -42,17 +42,17 @@ app.put('/infoOrder/submit', function(req, res){
 	//client is sending idCode and answers
 	var idCode = req.body.idCode;
 	var answers = req.body.answers;
+	var questions = req.body.questions;
 	//check how many sources have been reported
 	var reportedSources = 0;
-	for (var j=0; j<5; j++){
+	for (var j=0; j<5; j++){ //find number of indicated sources
 		if(answers[j][4].length>1){ //this is the array of answers to the question 'what is the water source'
 			var reportedSources = reportedSources + 1; 
-			console.log(reportedSources);
 		}
 	}
 	console.log('reported sources: '+reportedSources)
-	//find number of indicated sources
-	for(var i=0; i<infoOrderData.length; i++){
+	
+	for(var i=0; i<infoOrderData.length; i++){ //update server database
 		if(infoOrderData[i].idCode === idCode){
 			infoOrderData[i].answers = answers; //set equal to client's state
 			if(answers[0][3]){
@@ -63,47 +63,93 @@ app.put('/infoOrder/submit', function(req, res){
 			}
 			var numSources = infoOrderData[i].numSources;
 			infoOrderData[i].reportedSources = reportedSources; //set equal to newly calculated number of reported sources
-		
-			var doc = createPDF(infoOrderData[i]); //create pdf
+			
+			var sources = []; //this will be an array. each element is a set of answers.
+			for (var j=0; j<reportedSources; j++){
+				sources.push(infoOrderData[i].answers[j]);
+			}
+			//send back pdf
+
+			//var doc = createPDF(questions, sources); //create pdf from array of each water source
+			var doc = new PDFDocument;
+			doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
+			//doc.pipe(res);
+			doc.font('Helvetica');
+			var question = questions[0].line;
+			var answer = answers[0];
+			// var questions = questions;
+			// var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
+			// 	for(var i=0; i<questions.length; i++){
+					// var question = questions[0].line;
+			 	// 	var answer = answers[0];
+			// 	}
+			// 	return ([question, answer]);
+			// }; 
+
+			// var pages = [];
+			// sources.forEach(function(answerSet){
+			// 	pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
+			// });
+			// console.log(pages[0]);
+			//doc.text(pages[0]); 
+			// if(sources.length>1){ //for each reportedSource after the 1st, add a page
+			// 	var k=1;
+			// 	while(k<sources.length){
+			// 		doc.addPage();
+			// 		doc.text(pages[k]);
+			// 		k++;
+			// 	}
+			// }
+			doc.text(question, answer);
+			doc.end();
 		}
 	}
 	console.log('numSources: '+numSources);
-	
+
 	//send back doc
-	res.status(200).json({numSources: numSources, reportedSources: reportedSources}); 
+	//stream.pipe(res);
+	//res.download(doc);
+	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
 
 app.put('/waterRights/submit', function(req, res){
 	var answers = req.body.answers;
+	var questions = req.body.questions;
 	//push answers to waterRightData object
 	//get index of where in the waterRightData the new answers have been stored
-	var doc = createPDF(waterRightData[index]);
+	var sources = [];
+	sources.push(answers); //there will be only one element
+	createPDF(questions, sources);
 	//send back doc
 	res.status(200); 
 });
 
 //create pdf
-var createPDF = function(dataObject){
+var createPDF = function(questions, sources){
 	var doc = new PDFDocument;
-	doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
+	//doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
+	//doc.pipe(res);
 	doc.font('Helvetica');
-	var pages = [];
-	dataObject.answers.forEach(function(answerSet){
-		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
-	});
+	var questions = questions;
 	var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
-		for(var i=0; i<dataObject.questions.length; i++){
-			var question = dataObject.questions[i].line;
+		for(var i=0; i<questions.length; i++){
+			var question = questions[i].line;
 			var answer = answerSet[i];
 		}
 		console.log(question);
 		console.log(answer); 
-		return (question, answer);
+		return ([question, answer]);
 	}; 
+
+	var pages = [];
+	sources.forEach(function(answerSet){
+		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
+	});
+	console.log(pages[0]);
 	doc.text(pages[0]); 
-	if(dataObject.reportedSources>1){ //for each reportedSource after the 1st, add a page
+	if(sources.length>1){ //for each reportedSource after the 1st, add a page
 		var k=1;
-		while(k<dataObject.reportedSources){
+		while(k<sources.length){
 			doc.addPage();
 			doc.text(pages[k]);
 			k++;

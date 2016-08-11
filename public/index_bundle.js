@@ -47751,8 +47751,7 @@
 	            var newAnswers = Object.assign({}, state.answers, {0: answerObject, 1: answerObject, 2: answerObject, 3:answerObject, 4: answerObject});
 	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
 	            console.log(newState);  
-	            //clear localStorage
-	            localStorage.clear();      
+	            localStorage.setItem('infoOrder', newState);   //update localStorage   
 	        } 
 	        return newState;
 	    }
@@ -47761,19 +47760,14 @@
 	    if(action.type === actions.LOG_IN_SUCCESS){
 	        console.log('reducer: log in success');
 	        var data = action.data;
-	        //update state to include data.owner, data.address, data.answers as well as updated counters
-	        var counter = state.next; //the value of next becomes the new counter index
-	        var clicks = state.clicks + 1;
-
-	        //update the state answers if they have already been saved to server
-	        if(data.answers){ 
+	        if(data.answers){ //update the state answers if they have already been saved to server
 	            var answers = data.answers;
 	        }
 	        else{
 	            var answers = state.answers;
 	        }
-	        
 	        var newState = Object.assign({}, state, {answers: answers, owner: data.owner, address: data.address, numSources: data.numSources, multParcels: data.multParcels, reportedSources: data.reportedSources})
+	        localStorage.setItem('infoOrder', newState); //update local storage
 	        return newState;
 	    }
 	    /////////// CHANGE SOURCE COUNTER//////////////////////////
@@ -47781,6 +47775,7 @@
 	        console.log('reducer: change source counter');
 	        var newSourceCounter = action.index;
 	        var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
+	        localStorage.setItem('infoOrder', newState);
 	        return newState;
 	    }
 
@@ -47909,8 +47904,9 @@
 	////////////// SUBMIT ANSWER /////////////////////////////////////////////
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        console.log('reducer: submit answer');
-	        console.log(state);
-	        return Object.assign({}, state);
+	        var newState = Object.assign({}, state);
+	        localStorage.setItem('infoOrder', newState); //update local storage
+	        return newState;
 	    }
 
 	    /////////////// SUBMIT SUCCESS//////////////
@@ -47921,7 +47917,6 @@
 	        console.log(action.data.numSources); //check number of reported water sources
 	        var numSources = action.data.numSources;
 	        var reportedSources = action.data.reportedSources; 
-
 	        //if more water sources reported than submitted, sourceCounter ++ and counter to 1. 
 	        //alert that we are taking them to report for an additional source
 	        //send back to user overview page and then from there, to water source question (4)
@@ -47970,7 +47965,7 @@
 	var infoOrderFaqReducer= function(state, action) {
 	    state = state || infoOrderFAQ;
 	    ////////////// SUBMIT ANSWER /////////////////////////////////////////////
-	    if (action.type === actions.SUBMIT_ANSWER) {
+	    if (action.type === actions.SUBMIT_INFO_ORDER_FAQ) {
 	        return state;
 	    }  
 	    return state;
@@ -47978,15 +47973,140 @@
 
 	var waterRightsReducer= function(state, action) {
 	    state = state || waterRights;
-	    if (action.type === actions.SUBMIT_ANSWER) {
-	        return state;
+	     //////////////// ON LOAD ////////////////////////////////////////
+	    if(action.type === actions.ON_LOAD_WR){
+	        console.log('reducer: on load');    
+	        console.log('url counter is at '+ action.counter);
+	        //if already in local storage, use that
+	        if(localStorage.getItem('waterRights') && action.counter > 0){
+	            var storage = JSON.parse(localStorage.getItem('waterRights')); 
+	            console.log('from storage', storage); 
+	            var newState = Object.assign({}, state, storage); //copy state and update with stored values    
+	        }
+	        else{ //otherwise we need to set up answers object
+	            console.log('reset state and set waterRights in localStorage');
+	            //set up first answer object with one array for each question
+	            var answerObject = {}; //this will be the answer object for the first water source
+	            for (var i = 0; i<state.questions.length; i++){
+	                answerObject[i] = []; //assign a new key:value pair to the object for each question
+	            }
+	            var newAnswers = Object.assign({}, state.answers, {0: answerObject});
+	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
+	            localStorage.setItem('waterRights', newState); //set localStorage
+	            console.log(newState);  
+	        } 
+	        return newState;
+	    }
+	    
+	     //////////// CHANGE INPUT /////////////////////////////////////////////////
+	    if (action.type === actions.CHANGE_INPUT_WR){
+	        var index = parseInt(action.index); //question index
+	        var question = state.questions[index];
+	        var answerIndex = parseInt(action.answerIndex); //which of the input bars is being changed
+	        var answer = action.answer; //save the input value
+	        // validate text input
+	        console.log('type of answer '+typeof(answer) + 'must be '+question.validate[answerIndex]);
+	        var error = [];
+	        question.error.forEach(function(message){
+	            error.push(message); //copy error array
+	        });
+	        if(typeof(answer)===question.validate[answerIndex]){
+	            var disabled = false;
+	            var validationState = 'success';
+	             //update the answers object
+	             var newAnswerArray = [];
+	             for(var i=0; i<question.input.length; i++){
+	                if(state.answers[0][index][i]){
+	                    newAnswerArray.push(state.answers[0][index][i]); //copy the state.answer value
+	                }
+	                else{
+	                    newAnswerArray.push(""); //if nothing has been saved there yet, push a blank placeholder
+	                }
+	             }
+	            newAnswerArray[answerIndex] = answer;
+	            console.log('updating water source answer');
+	            var newAnswersForSource = Object.assign({}, state.answers[0], {[index]: newAnswerArray});
+	            var newAnswersForState = Object.assign({}, state.answers, {[0]:newAnswersForSource});
+	            //clear any error message
+	            error[answerIndex]="";
+	        }
+	        else{ //if the input isn't the correct typeof
+	            var disabled = true;
+	            var validationState = 'error';
+	            if(question.validate[answerIndex]==='string'){
+	                error[answerIndex]=('this shouldn\'t be a number');
+	            }
+	            else if(question.validate[answerIndex]==='number'){
+	                error[answerIndex]=('please enter a number');
+	            }
+	            else{
+	                error[answerIndex]=('hmmm, something\'s not right here');
+	            }
+	            var newAnswersForState = Object.assign({}, state.answers); //new answers will be the same as old answers
+	        }
+	        var newQuestion = Object.assign({}, question, { error: error, disabled: disabled, validationState: validationState}); //update the question state
+	        var before = state.questions.slice(0, index);
+	        var after = state.questions.slice(index+1);
+	        var newQuestions = before.concat(newQuestion, after);        
+	        //update the state
+	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+	        return newState; 
+	    }
+	/////////////// CHOOSE FROM SELECTION ARRAY ////////////////////////////////////////////////
+	    if (action.type === actions.CHOOSE_OPTION_WR){ //only for multiple-choice questions
+	        var index = parseInt(action.index);
+	        var question = state.questions[index]; //which question?
+	        var answer = question.selection[action.answerIndex]; //which answer?
+	        //updated the selected array so that the button has selected=true
+	        var newArray = [];
+	        question.selected.forEach(function(){
+	            newArray.push(false);
+	        }); //fill newArray with false
+	        newArray[action.answerIndex] = true; //make the selected one true
+	        console.log(newArray);
+	        //update the answer array
+	        var newAnswerArray = [];
+	        for(var i=0; i<newArray.length; i++){
+	            if(newArray[i]===true){
+	                newAnswerArray.push(question.selection[i]); //push that value into the array
+	            }
+	            else{
+	                newAnswerArray.push(""); //push a blank placeholder
+	            }
+	        };
+	        //increase question.next        
+	        var next = question.changeCounter[action.answerIndex]; //add a specified number to the counter to calculate the next index
+	        console.log('next question: '+next);
+	        //update the question with new answer index and un-disable next arrow
+	        var newQuestion = Object.assign({}, question, {answerIndex: action.answerIndex, selected: newArray, disabled: false, next: next});
+	        //create new question array
+	        var after = state.questions.slice(index+1);
+	        var newQuestions = state.questions.slice(0, index).concat(newQuestion, after); 
+	        //update the state.answers array
+	        // var newAnswerArray = state.answers[state.sourceCounter][counter].concat(newAnswerArray);
+	        var newAnswerForSource = Object.assign({}, state.answers[0], {[index]: newAnswerArray}); //update the question object within the water source answers object within the answers object
+	        var newAnswersForState = Object.assign({}, state.answers, {[0]: newAnswerForSource}); //update the water source answers object within the answers object
+	        console.log('new answers for state');
+	        console.log(newAnswersForState);
+	        //update the state
+	        var newState = Object.assign({}, state, {questions: newQuestions, answers: newAnswersForState}); //if I don't include counter here, it doesn't get copied
+	        console.log('new state:')
+	        console.log(newState);
+	        return newState;
+	    }
+	    ////////////// SUBMIT ANSWER /////////////////////////////////////////////
+	    if (action.type === actions.SUBMIT_ANSWER_WR) {
+	        console.log('reducer: submit answer');
+	        var newState = Object.assign({}, state);
+	        localStorage.setItem('waterRights', newState);//set localStorage
+	        return newState;
 	    } 
 	    return state;
 	};
 
 	var waterRightsFaqReducer= function(state, action) {
 	    state = state || waterRightsFAQ;
-	    if (action.type === actions.SUBMIT_ANSWER) {
+	    if (action.type === actions.SUBMIT_WR_FAQ) {
 	        return state;
 	    }
 	    return state;
@@ -48001,6 +48121,7 @@
 	});
 
 	exports.reducer = reducer;
+
 
 /***/ },
 /* 524 */
@@ -48018,6 +48139,17 @@
 	};
 	exports.ON_LOAD = ON_LOAD;
 	exports.onLoad = onLoad;
+
+	var ON_LOAD_WR= 'ON_LOAD_WR';
+	var onLoadWr = function(counter) {
+		console.log('action: onLoad');
+	    return {
+	        type: ON_LOAD_WR, 
+	        counter: counter
+	    }
+	};
+	exports.ON_LOAD_WR = ON_LOAD_WR;
+	exports.onLoadWr = onLoadWr;
 
 	//////// LOG IN ////////////////
 	var logIn = function(idCode, password){
@@ -48107,6 +48239,18 @@
 	exports.CHOOSE_OPTION = CHOOSE_OPTION;
 	exports.chooseOption = chooseOption;
 
+	var CHOOSE_OPTION_WR = 'CHOOSE_OPTION_WR';
+	var chooseOptionWr = function(e, index){
+		console.log('choose option ');
+		return{
+			type: CHOOSE_OPTION_WR,
+			index: index, 
+			answerIndex: e.target.id
+		}
+	}
+	exports.CHOOSE_OPTION_WR = CHOOSE_OPTION_WR;
+	exports.chooseOptionWr = chooseOptionWr;
+
 	//////////  if question.input, then update the state when form is changed////////////////////
 	var CHANGE_INPUT = 'CHANGE_INPUT';
 	var changeInput = function(e, index){
@@ -48133,6 +48277,31 @@
 	exports.CHANGE_INPUT = CHANGE_INPUT;
 	exports.changeInput = changeInput;
 
+	var CHANGE_INPUT_WR = 'CHANGE_INPUT_WR';
+	var changeInputWr = function(e, index){
+		console.log(e.target.name);
+		if(e.target.value===""){
+			var answer = "";
+		}
+		else if(isNaN(e.target.value)){ //for letters
+			var answer = e.target.value;
+			console.log('input is not numeric '+answer);
+		}
+		else{
+			var answer = parseInt(e.target.value);
+			console.log('input is numeric' + answer); 
+		}
+		console.log('index is '+ index);
+		return{
+			type: CHANGE_INPUT_WR, 
+			answerIndex: e.target.name,
+			answer: answer,
+			index: index
+		}
+	};
+	exports.CHANGE_INPUT_WR = CHANGE_INPUT_WR;
+	exports.changeInputWr = changeInputWr;
+
 	////// when next arrow is clicked ///////////////
 	var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
 	var submitAnswer = function() {
@@ -48144,12 +48313,32 @@
 	exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 	exports.submitAnswer = submitAnswer;
 
+	var SUBMIT_ANSWER_WR= 'SUBMIT_ANSWER_WR';
+	var submitAnswerWr = function() {
+		console.log('action: submitAnswer');
+	    return {
+	        type: SUBMIT_ANSWER_WR
+	    }
+	};
+	exports.SUBMIT_ANSWER_WR = SUBMIT_ANSWER_WR;
+	exports.submitAnswerWr = submitAnswerWr;
+
+	var SUBMIT_INFO_ORDER_FAQ= 'SUBMIT_INFO_ORDER_FAQ';
+	var submitInfoOrderFaq = function() {
+		console.log('action: submitAnswer');
+	    return {
+	        type: SUBMIT_INFO_ORDER_FAQ
+	    }
+	};
+	exports.SUBMIT_INFO_ORDER_FAQ = SUBMIT_INFO_ORDER_FAQ
+	exports.submitInfoOrderFaq = submitInfoOrderFaq;
+
 
 	////////// SUBMIT WATER SOURCE ////////////////////////////
-	var submitSource = function(idCode, answers){
+	var submitSource = function(idCode, answers, questions){
 		return function(dispatch){
-			var url='/submit';
-			var data= JSON.stringify({idCode: idCode, answers: answers});
+			var url='/infoOrder/submit';
+			var data= JSON.stringify({idCode: idCode, answers: answers, questions: questions});
 			var params={
 				headers: {'Content-Type': 'application/json'},
 				method: 'PUT',
@@ -48181,6 +48370,43 @@
 		}
 	};
 	exports.submitSource = submitSource;
+
+	//// SUBMIT WATER RIGHT //////////
+	var submitRight = function(answers, questions){
+		return function(dispatch){
+			var url='/waterRight/submit';
+			var data= JSON.stringify({answers: answers, questions: questions});
+			var params={
+				headers: {'Content-Type': 'application/json'},
+				method: 'PUT',
+				body: data
+			};
+			return fetch(url, params).then(function(res){
+				if(res.state<200 || res.status >= 300){
+					var error = new Error(res.statusText)
+					console.log(error);
+					error.res = res
+					throw error;
+				}
+				return res;
+			})
+			.then(function(res){
+				return res.json();
+			})
+			.then(function(data){
+				return dispatch(
+					submitSuccess(data)
+				);
+			})
+			.catch(function(error){
+				console.log(error);
+				return dispatch(
+					submitNotSuccess(error)
+				);
+			});
+		}
+	};
+	exports.submitRight = submitRight;
 
 	////////// SUBMIT SUCCESS////////////////////
 	var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';
@@ -48679,7 +48905,7 @@
 	             {  number: 1,
 	                //the log-in page will be shown when counter === 1
 	                selected: [false], 
-	                disabled: true,
+	                disabled: false,
 	                next: 2
 	                
 	             },
@@ -48929,6 +49155,7 @@
 
 	module.exports = infoOrderState;
 
+
 /***/ },
 /* 528 */
 /***/ function(module, exports) {
@@ -49003,7 +49230,262 @@
 /* 529 */
 /***/ function(module, exports) {
 
-	
+	var waterRights= {
+	  questions: [
+	   { number: 0,
+	      labels: ['name of primary owner', 'phone number', 'email address'],
+	      input: ['name', '###-###-####', 'email'],
+	      error: [],
+	      validate: ['string', 'number', 'string'],
+	      popover: ['Who is responsible for this?', 'What is their phone number?', 'What is their email address?'],
+	      next: 1
+	    },
+	    { number: 1,
+	      line: 'What is the address of the property where the diversion is located?',
+	      labels: ['Street', 'Street 2','City', 'County', 'Zip'],
+	      input: ['', 'optional', 'city', 'county', 'zip'],
+	      disabled: true,
+	      error: [],
+	      popover: ['Give the number and street name', 'optional', 'city', 'county', 'zip'],
+	      next: 2
+	    },
+	    { number: 2,
+	      selection: ['Apply for an appropriative right', 'Claim a riparian right'],
+	      selected: [false, false],
+	      disabled: true,
+	      popover: 'If you are using water from a stream that touches your property, you are probably claiming a riparian right.',
+	      changeCounter: [3, 9] //continue with appropriative questions or skip to water use 
+	    },
+	    
+	    { number: 3,
+	      line: 'Does your project include storage of water in a pond?',
+	      selection: ['yes', 'no'],
+	      selected: [false, false],
+	      disabled: true,
+	      popover: ['yes', 'no'],
+	      changeCounter: [4,5]
+	    },
+	    { number: 4,
+	      line: 'Is this pond on-stream?',
+	      popover: 'Is the stream dammed or altered such that the stored water is part of the stream?',
+	      selection: ['yes', 'no'],
+	      selected: [false, false],
+	      disabled: true,
+	      changeCounter: [5, 5]
+	    },
+	    { number: 5,
+	      line: 'Provide a detailed description of the project.',
+	      popover: ' including but not limited to method of water diversion, type of construction activity, area to be graded or excavated, \
+	      and a general overview of how you will operate the project.',
+	      attachDoc: true,
+	      disabled: false,
+	      next: 6
+	    },
+	    { number: 6,
+	      line: 'What is the timeline of this project\'s construction?',
+	      labels: ['Year to begin construction', 'Year to complete construction'],
+	      inputs: ['YYYY', 'YYYY'],
+	      popover: ['In what year will the construction begin? Enter past year if already begun.', 'In what year is construction expected to be complete?'],
+	      disabled: true,
+	       error: [],
+	      next: 7
+	    },
+	    { number: 7,
+	      line: 'When will you begin and stop diverting water each year?',
+	      labels: ['Beginning date', 'Ending date'],
+	      inputs: ['MM/DD', 'MM/DD'],
+	       error: [],
+	      popover: ['Enter the month and day you expect to begin diverting water each year from this project',
+	        'Enter the month and day you expect to cease diverting water each year from this project'],
+	      next: 8
+	    },
+	    { number: 8,
+	      line: 'Attach a topographic or aerial map that shows the point of diversion and the place of use for this project\'s water',
+	      attachDoc: true,
+	      disabled: false,
+	      popover: 'yes, you have to do this',
+	      next: 10
+	    },
+	    { number: 9,
+	      line: 'Does your project include storage of water in a pond?',
+	      selection: ['yes', 'no'],
+	      selected: [false, false],
+	      disabled: true,
+	      changeCounter: [400,12] //if includes storage, alert that the riparian right does not apply and redirect them to /waterRights/0
+	    },
+	    {	number: 10,
+	    	line: 'How much water will you divert and immediately use?',
+	    	labels: ['total use January (gallons)', 
+	    		'direct use May (gallons)', 
+	    		'direct use June (gallons)', 
+	    		'direct use July (gallons)', 
+	    		'direct use August (gallons)',
+	    		'direct use September (gallons)',  
+	    		'direct use October (gallons)', 
+	    		'direct use November (gallons)', 
+	    	],
+	        input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
+	        disabled: true,
+	        validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+	        error: [],
+	    	popover: ['Tally the number of gallons of water diverted and immediately used in January. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in May.',
+	    	'Tally the number of gallons of water diverted and immediately used in June. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in July. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in August. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in September. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in October. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.',
+	    	'Tally the number of gallons of water diverted and immediately used in November. You may \
+	    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	    	are useful tools.'
+	    	],
+	       error: [],
+	    	next: 11
+	    },
+	    { number: 11,
+	            	line: 'How much water will you divert into storage?',
+	            	labels: ['diversion to storage January (gallons)', 
+	            		'diversion to storage May (gallons)', 
+	            		'diversion to storage June (gallons)', 
+	            		'diversion to storage July (gallons)', 
+	            		'diversion to storage August (gallons)',
+	            		'diversion to storage September (gallons)',  
+	            		'diversion to storage October (gallons)', 
+	            		'diversion to storage November (gallons)', 
+	            	],
+	                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
+	                disabled: true,
+	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+	                error: [],
+	            	popover: ['Tally the number of gallons of water diverted into storage in January. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in May.',
+	            	'Tally the number of gallons of water diverted into storage in June. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in July5. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in August. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in September. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in October. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted into storage in November. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.'
+	            	],
+	       error: [],
+	      next: 13
+	    },
+	    //use for riparian claim
+	    {	number: 12,
+	            	line: 'How much riparian water do you expect to use in each month?',
+	            	labels: ['total use January (gallons)', 
+	            		'direct use May (gallons)', 
+	            		'direct use June (gallons)', 
+	            		'direct use July (gallons)', 
+	            		'direct use August (gallons)',
+	            		'direct use September (gallons)',  
+	            		'direct use October (gallons)', 
+	            		'direct use November (gallons)', 
+	            	],
+	                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
+	                disabled: true,
+	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+	                error: [],
+	            	popover: ['Tally the number of gallons of water diverted and immediately used in January. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in May.',
+	            	'Tally the number of gallons of water diverted and immediately used in June. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in July. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in August. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in September. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in October. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.',
+	            	'Tally the number of gallons of water diverted and immediately used in November. You may \
+	            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
+	            	are useful tools.'
+	            	],
+	       error: [],
+	    	next: 13
+	    },
+	    {	number: 13, 
+	      line: 'How will this water be used?',
+	      selection: ['Domestic', 'Agriculture', 'Stockwatering', 'Wildlife & Fish Preservation', 'Beer Brewing'],
+	      selected: [false, false, false, false, false],
+	      disabled: true,
+	      popover: 'Domestic use means the water use is used for the home - drinking, bathing, personal gardening, etc. \
+	            	Agricultural use applies if you sell any food products raised on your property',
+	      changeCounter: [14, 15, 16, 100, 100]
+	    },
+	    { number: 14,
+	      line: 'Please describe the domestic usage',
+	      labels: ['number of people served', 'area of irrigated personal garden and lawn (square feet)'],
+	      input: ['number', 'square feet'],
+	       error: [],
+	      disabled: true,
+	      popover: ['How many people are living on the property using this water for domestic needs?', 'What is the surface area of all the lawns and gardens receiving this water?'],
+	      next: 100
+	    },
+	    { number: 15,
+	      line: 'Please describe the agricultural usage',
+	      labels: ['crop', 'acres', 'method of irrigation', 'water use (gallons/year'],
+	      input: ['crop', 'acres', 'method', 'gallons/year'],
+	      validation: ['string', 'number', 'string', 'number'],
+	      error: [],
+	      disabled: true,
+	      popover: ['What crop are you irrigating?', 'How many acres are being irrigated?', 'What method of irrigation will be used?', 
+	      'What is the total estimated water use (in gallons per year) for this crop?'],
+	      next: 100
+	    },
+	    { number: 16,
+	      line: "Please describe the stockwatering demands",
+	      labels: ['Kind of stock', 'Number of stock'],
+	      input: ['', 'number'],
+	      validation: ['string', 'number'],
+	      error: [],
+	      disabled: true,
+	      popover: ['What kind of animal will be using this water?', 'How many animals will be using this water?'],
+	      next: 100 //go to confirmation
+	    }   
+	  ],
+	  answers:{ 
+	      0:{
+	        0: []
+	      }
+	    } 
+	};
+
+	module.exports = waterRights;
+
 
 /***/ },
 /* 530 */
@@ -49143,7 +49625,6 @@
 	var Container = connect(mapStateToProps, mapDispatchToProps)(Main);
 
 	module.exports = Container;
-	//module.exports = Main;
 
 /***/ },
 /* 532 */
@@ -49343,12 +49824,10 @@
 	var Col = __webpack_require__(268).Col;
 	var Question = __webpack_require__(536);
 	var Button = __webpack_require__(268).Button;
-	var connect = __webpack_require__(176).connect;
 	var actions = __webpack_require__(524);
 	var Confirm = __webpack_require__(537);
 	var LogIn = __webpack_require__(538);
 	var User = __webpack_require__(539);
-	var Final = __webpack_require__(540);
 
 	var InfoOrder = React.createClass({
 		displayName: 'InfoOrder',
@@ -49388,7 +49867,7 @@
 		sendData: function () {
 			console.log('sending data');
 			var that = this;
-			this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers);
+			this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers, that.props.infoOrder.questions);
 			this.props.history.push('/infoOrder/1'); //return to user screen with option to print out data or sign in to different parcel
 		},
 		changeSource: function (e) {
@@ -49403,17 +49882,15 @@
 			this.props.actions.submitAnswer(index);
 		},
 		render: function (props) {
+			document.body.style.cursor = 'default'; //return cursor to default
 			var that = this;
 			var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 			var index = that.props.params.counter;
 			var singleQuestion = questions[index];
+			console.log(singleQuestion);
 			var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
 			console.log('completing form for source number ' + that.props.infoOrder.sourceCounter);
-			// if(that.props.infoOrder.complete){ //show final view if user is complete
-			// 	var show=(
-			// 		<Final onClick = {that.print}/>
-			// 	);
-			// }
+
 			if (parseInt(index) === 0) {
 				console.log('index equal to 0, show login');
 				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
@@ -49423,7 +49900,7 @@
 			} else if (index >= 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {
-				var show = React.createElement(Question, { onSubmit: that.onSubmit, onClick: that.prevQuestion, user: that.props.infoOrder,
+				var show = React.createElement(Question, { onSubmit: that.onSubmit, user: that.props.infoOrder,
 					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
 					changeSource: that.changeSource });
 			}
@@ -49480,6 +49957,7 @@
 	var Popover = __webpack_require__(268).Popover;
 	var Button = __webpack_require__(268).Button;
 	var ButtonToolbar = __webpack_require__(268).ButtonToolbar;
+	var FieldGroup = __webpack_require__(268).FieldGroup;
 
 	var Question = function (props) {
 		//if the question is multiple choice, create a box for each option
@@ -49524,7 +50002,7 @@
 							OverlayTrigger,
 							{ trigger: 'click', placement: 'top', overlay: React.createElement(
 									Popover,
-									{ id: 'popover-trigger-click' },
+									{ className: props.question.popover ? '' : 'hidden', id: 'popover-trigger-click' },
 									props.question.popover[n]
 								) },
 							React.createElement(
@@ -49843,11 +50321,6 @@
 			),
 			React.createElement(
 				Button,
-				{ className: props.user.numSources ? 'button' : 'hidden', type: 'button', onClick: props.onClick },
-				'Print Record'
-			),
-			React.createElement(
-				Button,
 				{ className: props.user.moreSources ? 'button' : 'hidden', onClick: props.onSubmit, id: 'submitButton', type: 'button' },
 				'Continue to Form',
 				React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
@@ -49861,6 +50334,8 @@
 	};
 
 	module.exports = User;
+
+	//<Button className={props.user.numSources ? 'button':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>
 
 /***/ },
 /* 540 */
@@ -49895,37 +50370,73 @@
 	var Col = __webpack_require__(268).Col;
 	var Question = __webpack_require__(536);
 	var Button = __webpack_require__(268).Button;
+	var Confirm = __webpack_require__(537);
 
-	var WaterRights = function (props) {
-				return React.createElement(
-							'section',
-							null,
-							React.createElement(
-										Col,
-										{ xs: 10, xsOffset: 1, md: 6, mdOffset: 3 },
-										React.createElement(
-													'form',
-													{ className: 'question' },
-													React.createElement(Question, { line: 'Application ID' }),
-													React.createElement(Question, { line: 'Password' }),
-													React.createElement(
-																Button,
-																{ type: 'submit' },
-																React.createElement('span', { className: 'glyphicon glyphicon-arrow-right', 'aria-hidden': 'true' })
-													)
-										)
-							),
-							React.createElement(
-										Col,
-										{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
-										React.createElement(
-													'h4',
-													null,
-													'Water Rights Reporting'
-										)
-							)
-				);
-	};
+	var WaterRights = React.createClass({
+		displayName: 'WaterRights',
+
+		componentWillMount: function (props) {
+			var index = this.props.params.counter;
+			this.props.actions.onLoadWr(index); //dispatch the reducer to set up the answer objects
+		},
+		handleClick: function (e) {
+			var index = this.props.params.counter; //decide what value the index should be
+			this.props.actions.chooseOptionWr(e, index); ///send the action e - which button has been clicked - and index - where in the question array to look
+		},
+		handleChange: function (e) {
+			//when input field changed
+			var index = this.props.params.counter; //decide what value the index should be
+			this.props.actions.changeInputWr(e, index);
+		},
+		onSubmit: function (e) {
+			e.preventDefault();
+			var that = this;
+			var index = this.props.params.counter; //decide what value the index should be
+			console.log('next will be ' + this.props.waterRights.questions[that.props.params.counter].next);
+			this.props.history.push('/waterRights/' + that.props.waterRights.questions[that.props.params.counter].next);
+			this.props.actions.submitAnswerWr(index);
+		},
+		sendData: function () {
+			console.log('sending data');
+			var that = this;
+			this.props.actions.submitRight(that.props.waterRights.answers, that.props.waterRights.questions);
+			this.props.history.push('/'); //return to main menu 
+		},
+		print: function () {
+			this.props.history.push('/print'); //show Print component
+		},
+		render: function (props) {
+			var that = this;
+			console.log(that.props.waterRights);
+			var questions = that.props.waterRights.questions; //this is getting the blank infoOrderState, not the state
+			var index = that.props.params.counter; //get index value from the url params
+			var singleQuestion = questions[index];
+			var answer = that.props.waterRights.answers[0][index]; //should be an array
+
+			if (index >= 100 && index < 1000) {
+				var show = React.createElement(Confirm, { sendData: that.sendData });
+			} else {
+				var show = React.createElement(Question, { onSubmit: that.onSubmit, user: that.props.waterRights,
+					answer: answer, question: singleQuestion, handleClick: that.handleClick, handleChange: that.handleChange,
+					changeSource: that.handleClick });
+			}
+
+			return React.createElement(
+				'section',
+				null,
+				show,
+				React.createElement(
+					Col,
+					{ xs: 8, xsOffset: 2, md: 6, mdOffset: 3 },
+					React.createElement(
+						'h4',
+						null,
+						'Water Rights Reporting'
+					)
+				)
+			);
+		}
+	});
 
 	module.exports = WaterRights;
 
@@ -50087,7 +50598,7 @@
 			var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
 			console.log('next will be ' + next);
 			this.props.history.push('/infoOrderFAQ/' + next); //push browser history
-			this.props.actions.submitAnswer(index);
+			this.props.actions.submitInfoOrderFaq();
 		},
 
 		render: function (props) {
