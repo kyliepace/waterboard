@@ -11,6 +11,17 @@ var onLoad = function(counter) {
 exports.ON_LOAD = ON_LOAD;
 exports.onLoad = onLoad;
 
+var ON_LOAD_WR= 'ON_LOAD_WR';
+var onLoadWr = function(counter) {
+	console.log('action: onLoad');
+    return {
+        type: ON_LOAD_WR, 
+        counter: counter
+    }
+};
+exports.ON_LOAD_WR = ON_LOAD_WR;
+exports.onLoadWr = onLoadWr;
+
 //////// LOG IN ////////////////
 var logIn = function(idCode, password){
 	return function(dispatch){
@@ -99,6 +110,18 @@ var chooseOption = function(e, index){
 exports.CHOOSE_OPTION = CHOOSE_OPTION;
 exports.chooseOption = chooseOption;
 
+var CHOOSE_OPTION_WR = 'CHOOSE_OPTION_WR';
+var chooseOptionWr = function(e, index){
+	console.log('choose option ');
+	return{
+		type: CHOOSE_OPTION_WR,
+		index: index, 
+		answerIndex: e.target.id
+	}
+}
+exports.CHOOSE_OPTION_WR = CHOOSE_OPTION_WR;
+exports.chooseOptionWr = chooseOptionWr;
+
 //////////  if question.input, then update the state when form is changed////////////////////
 var CHANGE_INPUT = 'CHANGE_INPUT';
 var changeInput = function(e, index){
@@ -125,6 +148,31 @@ var changeInput = function(e, index){
 exports.CHANGE_INPUT = CHANGE_INPUT;
 exports.changeInput = changeInput;
 
+var CHANGE_INPUT_WR = 'CHANGE_INPUT_WR';
+var changeInputWr = function(e, index){
+	console.log(e.target.name);
+	if(e.target.value===""){
+		var answer = "";
+	}
+	else if(isNaN(e.target.value)){ //for letters
+		var answer = e.target.value;
+		console.log('input is not numeric '+answer);
+	}
+	else{
+		var answer = parseInt(e.target.value);
+		console.log('input is numeric' + answer); 
+	}
+	console.log('index is '+ index);
+	return{
+		type: CHANGE_INPUT_WR, 
+		answerIndex: e.target.name,
+		answer: answer,
+		index: index
+	}
+};
+exports.CHANGE_INPUT_WR = CHANGE_INPUT_WR;
+exports.changeInputWr = changeInputWr;
+
 ////// when next arrow is clicked ///////////////
 var SUBMIT_ANSWER= 'SUBMIT_ANSWER';
 var submitAnswer = function() {
@@ -136,12 +184,32 @@ var submitAnswer = function() {
 exports.SUBMIT_ANSWER = SUBMIT_ANSWER;
 exports.submitAnswer = submitAnswer;
 
+var SUBMIT_ANSWER_WR= 'SUBMIT_ANSWER_WR';
+var submitAnswerWr = function() {
+	console.log('action: submitAnswer');
+    return {
+        type: SUBMIT_ANSWER_WR
+    }
+};
+exports.SUBMIT_ANSWER_WR = SUBMIT_ANSWER_WR;
+exports.submitAnswerWr = submitAnswerWr;
+
+var SUBMIT_INFO_ORDER_FAQ= 'SUBMIT_INFO_ORDER_FAQ';
+var submitInfoOrderFaq = function() {
+	console.log('action: submitAnswer');
+    return {
+        type: SUBMIT_INFO_ORDER_FAQ
+    }
+};
+exports.SUBMIT_INFO_ORDER_FAQ = SUBMIT_INFO_ORDER_FAQ
+exports.submitInfoOrderFaq = submitInfoOrderFaq;
+
 
 ////////// SUBMIT WATER SOURCE ////////////////////////////
-var submitSource = function(idCode, answers){
+var submitSource = function(idCode, answers, questions){
 	return function(dispatch){
-		var url='/submit';
-		var data= JSON.stringify({idCode: idCode, answers: answers});
+		var url='/infoOrder/submit';
+		var data= JSON.stringify({idCode: idCode, answers: answers, questions: questions});
 		var params={
 			headers: {'Content-Type': 'application/json'},
 			method: 'PUT',
@@ -173,6 +241,43 @@ var submitSource = function(idCode, answers){
 	}
 };
 exports.submitSource = submitSource;
+
+//// SUBMIT WATER RIGHT //////////
+var submitRight = function(answers, questions){
+	return function(dispatch){
+		var url='/waterRight/submit';
+		var data= JSON.stringify({answers: answers, questions: questions});
+		var params={
+			headers: {'Content-Type': 'application/json'},
+			method: 'PUT',
+			body: data
+		};
+		return fetch(url, params).then(function(res){
+			if(res.state<200 || res.status >= 300){
+				var error = new Error(res.statusText)
+				console.log(error);
+				error.res = res
+				throw error;
+			}
+			return res;
+		})
+		.then(function(res){
+			return res.json();
+		})
+		.then(function(data){
+			return dispatch(
+				submitSuccess(data)
+			);
+		})
+		.catch(function(error){
+			console.log(error);
+			return dispatch(
+				submitNotSuccess(error)
+			);
+		});
+	}
+};
+exports.submitRight = submitRight;
 
 ////////// SUBMIT SUCCESS////////////////////
 var SUBMIT_SUCCESS = 'SUBMIT_SUCCESS';

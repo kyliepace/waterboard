@@ -1,5 +1,5 @@
 React = require('react');
-var Button = require('react-bootstrap').Button;
+
 
 var Final = function(props){
 	return(
@@ -7,7 +7,7 @@ var Final = function(props){
 			<div>
 				<h1>All Done!</h1>
 
-				<Button type='button' onClick={props.onClick}>Print Record</Button>
+
 			</div>
 		</div>
 	);		

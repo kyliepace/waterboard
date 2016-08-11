@@ -45,4 +45,3 @@ var mapDispatchToProps = function(dispatch){
 var Container = connect(mapStateToProps, mapDispatchToProps)(Main);
 
 module.exports = Container;
-//module.exports = Main;

@@ -9,6 +9,7 @@ var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 var Popover = require('react-bootstrap').Popover;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var FieldGroup = require('react-bootstrap').FieldGroup;
 
 var Question = function(props){
 	//if the question is multiple choice, create a box for each option
@@ -38,7 +39,7 @@ var Question = function(props){
 					<ControlLabel className={props.question.labels? '':'hidden'}>{labels[n]}</ControlLabel>
 					<ButtonToolbar className='flex'>
 						<FormControl placeholder={props.answer[n] ? props.answer[n] : props.question.input[n]} name={n} className='input' type='text' onChange={props.handleChange}/>
-						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
+						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover className={props.question.popover ? '': 'hidden'} id='popover-trigger-click'>{props.question.popover[n]}</Popover>}>
 							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
 						</OverlayTrigger>
 					</ButtonToolbar>
@@ -48,13 +49,14 @@ var Question = function(props){
 		}	
 	}
 
-	if(props.question.changeSourceCounter && props.user.numSources){
+	if(props.question.changeSourceCounter===true && props.user.numSources>=2){
 		var dropdown = true;
+		console.log(dropdown);
 	}
 
 
 	//if this question should let the user change which water source they are reporting
-	if(dropdown){ //only do this for the water source question
+	if(dropdown === true){ //only do this for the water source question
 		var dropdowns = [];
 		for (var p=props.user.numSources[0]; p>0; p++){ 
 			dropdowns.push(
@@ -76,9 +78,9 @@ var Question = function(props){
 
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
 
-			<div className={dropdown ? 'options':'hidden'}>
+			<div className={props.question.changeSourceCounter ? 'options':'hidden'}>
 				<h4>This is for water source number: </h4>
-				<FormControl componentClass='select' onChange={props.changeSource} placeholder='' className={props.question.changeSourceCounter? 'dropdown': 'hidden'}>
+				<FormControl componentClass='select' onChange={props.changeSource} placeholder='' className={'dropdown'}>
 					{dropdowns}
 				</FormControl>
 			</div>
