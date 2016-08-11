@@ -25,6 +25,12 @@ header {
   background-color: #8A25E8;
   padding: 1rem 0;
 }
+header section {
+  display: flex;
+}
+header section div {
+  width: 50%;
+}
 header h3 {
   font-family: "Montserrat";
 }

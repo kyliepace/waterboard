@@ -41,6 +41,7 @@ var WaterRights = React.createClass({
 		console.log(that.props.waterRights);
 		var questions = that.props.waterRights.questions; //this is getting the blank infoOrderState, not the state
 		var index = that.props.params.counter;   //get index value from the url params
+		console.log(index);
 		var singleQuestion = questions[index];
 		var answer = that.props.waterRights.answers[0][index]; //should be an array
 		console.log(answer);

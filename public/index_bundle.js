@@ -49229,7 +49229,6 @@
 /***/ },
 /* 529 */
 /***/ function(module, exports) {
-
 	var waterRights= {
 	  questions: [
 	   { number: 0,
@@ -49243,7 +49242,8 @@
 	    { number: 1,
 	      line: 'What is the address of the property where the diversion is located?',
 	      labels: ['Street', 'Street 2','City', 'County', 'Zip'],
-	      input: ['', 'optional', 'city', 'county', 'zip'],
+	      input: ['street', 'optional', 'city', 'county', 'zip'],
+	      validate: ['string', 'string', 'string', 'string', 'number'],
 	      disabled: true,
 	      error: [],
 	      popover: ['Give the number and street name', 'optional', 'city', 'county', 'zip'],
@@ -49285,6 +49285,7 @@
 	      line: 'What is the timeline of this project\'s construction?',
 	      labels: ['Year to begin construction', 'Year to complete construction'],
 	      inputs: ['YYYY', 'YYYY'],
+	      validate: ['number', 'number'],
 	      popover: ['In what year will the construction begin? Enter past year if already begun.', 'In what year is construction expected to be complete?'],
 	      disabled: true,
 	       error: [],
@@ -49294,6 +49295,7 @@
 	      line: 'When will you begin and stop diverting water each year?',
 	      labels: ['Beginning date', 'Ending date'],
 	      inputs: ['MM/DD', 'MM/DD'],
+	      validate: ['string', 'string'],
 	       error: [],
 	      popover: ['Enter the month and day you expect to begin diverting water each year from this project',
 	        'Enter the month and day you expect to cease diverting water each year from this project'],
@@ -49324,6 +49326,7 @@
 	    		'direct use October (gallons)', 
 	    		'direct use November (gallons)', 
 	    	],
+	      validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	        input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
 	        disabled: true,
 	        validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
@@ -49365,6 +49368,7 @@
 	            		'diversion to storage October (gallons)', 
 	            		'diversion to storage November (gallons)', 
 	            	],
+	              validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
 	                disabled: true,
 	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
@@ -49407,6 +49411,7 @@
 	            		'direct use October (gallons)', 
 	            		'direct use November (gallons)', 
 	            	],
+	              validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
 	                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
 	                disabled: true,
 	                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
@@ -49450,6 +49455,7 @@
 	      line: 'Please describe the domestic usage',
 	      labels: ['number of people served', 'area of irrigated personal garden and lawn (square feet)'],
 	      input: ['number', 'square feet'],
+	      validate: ['number', 'number'],
 	       error: [],
 	      disabled: true,
 	      popover: ['How many people are living on the property using this water for domestic needs?', 'What is the surface area of all the lawns and gardens receiving this water?'],
@@ -49459,7 +49465,7 @@
 	      line: 'Please describe the agricultural usage',
 	      labels: ['crop', 'acres', 'method of irrigation', 'water use (gallons/year'],
 	      input: ['crop', 'acres', 'method', 'gallons/year'],
-	      validation: ['string', 'number', 'string', 'number'],
+	      validate: ['string', 'number', 'string', 'number'],
 	      error: [],
 	      disabled: true,
 	      popover: ['What crop are you irrigating?', 'How many acres are being irrigated?', 'What method of irrigation will be used?', 
@@ -49469,8 +49475,8 @@
 	    { number: 16,
 	      line: "Please describe the stockwatering demands",
 	      labels: ['Kind of stock', 'Number of stock'],
-	      input: ['', 'number'],
-	      validation: ['string', 'number'],
+	      input: ['animal', 'number'],
+	      validate: ['string', 'number'],
 	      error: [],
 	      disabled: true,
 	      popover: ['What kind of animal will be using this water?', 'How many animals will be using this water?'],
@@ -49485,6 +49491,7 @@
 	};
 
 	module.exports = waterRights;
+>>>>>>> endViews
 
 
 /***/ },
@@ -49639,26 +49646,26 @@
 	var Header = function (props) {
 		return React.createElement(
 			'header',
-			{ className: 'container' },
+			null,
 			React.createElement(
-				Row,
+				'section',
 				null,
 				React.createElement(
-					Col,
-					{ xs: 6, md: 5, mdOffset: 1 },
+					'div',
+					null,
 					React.createElement(
 						Link,
 						{ to: '/' },
 						React.createElement(
 							'h3',
-							null,
+							{ style: { 'text-align': 'left' } },
 							'State Water Resources Control Board'
 						)
 					)
 				),
 				React.createElement(
-					Col,
-					{ xs: 6, md: 5, mdOffset: 1, 'class': 'pull-right' },
+					'div',
+					null,
 					React.createElement(
 						'h3',
 						{ style: { 'text-align': 'right' } },
@@ -50412,9 +50419,10 @@
 			console.log(that.props.waterRights);
 			var questions = that.props.waterRights.questions; //this is getting the blank infoOrderState, not the state
 			var index = that.props.params.counter; //get index value from the url params
+			console.log(index);
 			var singleQuestion = questions[index];
 			var answer = that.props.waterRights.answers[0][index]; //should be an array
-
+			console.log(answer);
 			if (index >= 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {
