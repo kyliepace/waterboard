@@ -49491,7 +49491,7 @@
 	};
 
 	module.exports = waterRights;
->>>>>>> endViews
+
 
 
 /***/ },
