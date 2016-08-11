@@ -49646,26 +49646,26 @@
 	var Header = function (props) {
 		return React.createElement(
 			'header',
-			{ className: 'container' },
+			null,
 			React.createElement(
-				Row,
+				'section',
 				null,
 				React.createElement(
-					Col,
-					{ xs: 6, md: 5, mdOffset: 1 },
+					'div',
+					null,
 					React.createElement(
 						Link,
 						{ to: '/' },
 						React.createElement(
 							'h3',
-							null,
+							{ style: { 'text-align': 'left' } },
 							'State Water Resources Control Board'
 						)
 					)
 				),
 				React.createElement(
-					Col,
-					{ xs: 6, md: 5, mdOffset: 1, 'class': 'pull-right' },
+					'div',
+					null,
 					React.createElement(
 						'h3',
 						{ style: { 'text-align': 'right' } },

@@ -55,7 +55,7 @@ var infoOrderReducer= function(state, action) {
         console.log('reducer: change source counter');
         var newSourceCounter = action.index;
         var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
-        localStorage.setItem('infoOrder', newState);
+        localStorage.setItem('infoOrder', JSON.stringify(newState));
         return newState;
     }
 
@@ -185,7 +185,7 @@ var infoOrderReducer= function(state, action) {
     if (action.type === actions.SUBMIT_ANSWER) {
         console.log('reducer: submit answer');
         var newState = Object.assign({}, state);
-        localStorage.setItem('infoOrder', newState); //update local storage
+        localStorage.setItem('infoOrder', JSON.stringify(newState)); //update local storage
         return newState;
     }
 
@@ -272,7 +272,7 @@ var waterRightsReducer= function(state, action) {
             }
             var newAnswers = Object.assign({}, state.answers, {0: answerObject});
             var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
-            localStorage.setItem('waterRights', newState); //set localStorage
+            localStorage.setItem('waterRights', JSON.stringify(newState)); //set localStorage
             console.log(newState);  
         } 
         return newState;
@@ -378,7 +378,7 @@ var waterRightsReducer= function(state, action) {
     if (action.type === actions.SUBMIT_ANSWER_WR) {
         console.log('reducer: submit answer');
         var newState = Object.assign({}, state);
-        localStorage.setItem('waterRights', newState);//set localStorage
+        localStorage.setItem('waterRights', JSON.stringify(newState));//set localStorage
         return newState;
     } 
     return state;
