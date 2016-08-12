@@ -47775,7 +47775,7 @@
 	        console.log('reducer: change source counter');
 	        var newSourceCounter = action.index;
 	        var newState = Object.assign({}, state, {sourceCounter: newSourceCounter});
-	        localStorage.setItem('infoOrder', newState);
+	        localStorage.setItem('infoOrder', JSON.stringify(newState));
 	        return newState;
 	    }
 
@@ -47905,7 +47905,7 @@
 	    if (action.type === actions.SUBMIT_ANSWER) {
 	        console.log('reducer: submit answer');
 	        var newState = Object.assign({}, state);
-	        localStorage.setItem('infoOrder', newState); //update local storage
+	        localStorage.setItem('infoOrder', JSON.stringify(newState)); //update local storage
 	        return newState;
 	    }
 
@@ -47992,7 +47992,7 @@
 	            }
 	            var newAnswers = Object.assign({}, state.answers, {0: answerObject});
 	            var newState =  Object.assign({}, state, {answers: newAnswers, questions: state.questions});
-	            localStorage.setItem('waterRights', newState); //set localStorage
+	            localStorage.setItem('waterRights', JSON.stringify(newState)); //set localStorage
 	            console.log(newState);  
 	        } 
 	        return newState;
@@ -48098,7 +48098,7 @@
 	    if (action.type === actions.SUBMIT_ANSWER_WR) {
 	        console.log('reducer: submit answer');
 	        var newState = Object.assign({}, state);
-	        localStorage.setItem('waterRights', newState);//set localStorage
+	        localStorage.setItem('waterRights', JSON.stringify(newState));//set localStorage
 	        return newState;
 	    } 
 	    return state;
@@ -48341,7 +48341,7 @@
 			var data= JSON.stringify({idCode: idCode, answers: answers, questions: questions});
 			var params={
 				headers: {'Content-Type': 'application/json'},
-				method: 'PUT',
+				method: 'POST',
 				body: data
 			};
 			return fetch(url, params).then(function(res){
@@ -49229,6 +49229,7 @@
 /***/ },
 /* 529 */
 /***/ function(module, exports) {
+
 	var waterRights= {
 	  questions: [
 	   { number: 0,
@@ -49491,7 +49492,6 @@
 	};
 
 	module.exports = waterRights;
-
 
 
 /***/ },
@@ -49903,9 +49903,8 @@
 				var show = React.createElement(LogIn, { question: singleQuestion, handleChange: that.handleChange, onSubmit: that.onSubmit });
 			} else if (parseInt(index) === 1) {
 
-
-				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit, onClick: that.print, question: singleQuestion });
-
+				var show = React.createElement(User, { user: that.props.infoOrder, onSubmit: that.onSubmit, onClick: that.print, question: singleQuestion,
+					toLogIn: that.toLogIn });
 			} else if (index >= 100 && index < 1000) {
 				var show = React.createElement(Confirm, { sendData: that.sendData });
 			} else {

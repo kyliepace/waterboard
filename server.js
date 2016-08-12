@@ -32,13 +32,10 @@ app.post('/logIn', function(req, res){
 			console.log(savedData);
 			res.status(200).json(savedData).end(); //if the password matches, send back some data
 		}
-		else{
-			res.status(404).json('incorrect login').end();
-		}
 	}	
 });
 
-app.put('/infoOrder/submit', function(req, res){
+app.post('/infoOrder/submit', function(req, res){
 	//client is sending idCode and answers
 	var idCode = req.body.idCode;
 	var answers = req.body.answers;
@@ -69,68 +66,37 @@ app.put('/infoOrder/submit', function(req, res){
 				sources.push(infoOrderData[i].answers[j]);
 			}
 			//send back pdf
+			var doc = createPDF(questions, sources); //create pdf from array of each water source
+			doc.pipe(res);
 
-			//var doc = createPDF(questions, sources); //create pdf from array of each water source
-			var doc = new PDFDocument;
-			doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
-			//doc.pipe(res);
-			doc.font('Helvetica');
-			var question = questions[0].line;
-			var answer = answers[0];
-			// var questions = questions;
-			// var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
-			// 	for(var i=0; i<questions.length; i++){
-					// var question = questions[0].line;
-			 	// 	var answer = answers[0];
-			// 	}
-			// 	return ([question, answer]);
-			// }; 
-
-			// var pages = [];
-			// sources.forEach(function(answerSet){
-			// 	pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
-			// });
-			// console.log(pages[0]);
-			//doc.text(pages[0]); 
-			// if(sources.length>1){ //for each reportedSource after the 1st, add a page
-			// 	var k=1;
-			// 	while(k<sources.length){
-			// 		doc.addPage();
-			// 		doc.text(pages[k]);
-			// 		k++;
-			// 	}
-			// }
-			doc.text(question, answer);
-			doc.end();
+			//doc.end();
+			console.log('numSources: '+numSources);
+			res.status(200).json({numSources: numSources, reportedSources: reportedSources});
+		}
+		else{
+			res.status(404);
 		}
 	}
-	console.log('numSources: '+numSources);
-
-	//send back doc
-	//stream.pipe(res);
-	//res.download(doc);
-	res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 });
 
-app.put('/waterRights/submit', function(req, res){
+app.post('/waterRights/submit', function(req, res){
 	var answers = req.body.answers;
 	var questions = req.body.questions;
 	//push answers to waterRightData object
 	//get index of where in the waterRightData the new answers have been stored
 	var sources = [];
 	sources.push(answers); //there will be only one element
-	createPDF(questions, sources);
-	//send back doc
+	var doc = createPDF(questions, sources);
+	doc.pipe(res); //send back doc
 	res.status(200); 
 });
 
 //create pdf
 var createPDF = function(questions, sources){
 	var doc = new PDFDocument;
-	//doc.pipe(fs.createWriteStream('record.js')); //alternatively could doc.pipe res
-	//doc.pipe(res);
 	doc.font('Helvetica');
 	var questions = questions;
+	//define function that will be used later
 	var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
 		for(var i=0; i<questions.length; i++){
 			var question = questions[i].line;
@@ -138,13 +104,14 @@ var createPDF = function(questions, sources){
 		}
 		console.log(question);
 		console.log(answer); 
-		return ([question, answer]);
+		return ([question, answer]);	
 	}; 
-
+	
 	var pages = [];
 	sources.forEach(function(answerSet){
 		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
 	});
+
 	console.log(pages[0]);
 	doc.text(pages[0]); 
 	if(sources.length>1){ //for each reportedSource after the 1st, add a page
@@ -155,7 +122,7 @@ var createPDF = function(questions, sources){
 			k++;
 		}
 	}
-	doc.end();
+	return doc;
 }
 
 

@@ -27,6 +27,8 @@ header {
 }
 header section {
   display: flex;
+  margin: auto;
+  max-width: 1000px;
 }
 header section div {
   width: 50%;

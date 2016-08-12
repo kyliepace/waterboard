@@ -212,7 +212,7 @@ var submitSource = function(idCode, answers, questions){
 		var data= JSON.stringify({idCode: idCode, answers: answers, questions: questions});
 		var params={
 			headers: {'Content-Type': 'application/json'},
-			method: 'PUT',
+			method: 'POST',
 			body: data
 		};
 		return fetch(url, params).then(function(res){
@@ -249,7 +249,7 @@ var submitRight = function(answers, questions){
 		var data= JSON.stringify({answers: answers, questions: questions});
 		var params={
 			headers: {'Content-Type': 'application/json'},
-			method: 'PUT',
+			method: 'POST',
 			body: data
 		};
 		return fetch(url, params).then(function(res){
