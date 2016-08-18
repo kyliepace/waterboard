@@ -156,9 +156,22 @@ form .dropdown {
   height: 30rem;
   padding: 4rem;
 }
-footer {
+.contact {
   background-color: #8A25E8;
   text-align: center;
   line-height: 0.5rem;
   padding: 1rem;
+}
+/*footer*/
+footer {
+  background: #D7D7D7;
+  color: #0D2A40;
+  text-align: center;
+  margin: 0;
+  overflow: auto;
+}
+footer a {
+  font-size: 2em;
+  color: #0D2A40;
+  padding: 0 50px;
 }

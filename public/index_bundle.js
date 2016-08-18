@@ -30593,7 +30593,34 @@
 	            { className: 'main' },
 	            React.createElement(Header, null),
 	            childrenWithProps,
-	            React.createElement(Footer, null)
+	            React.createElement(Footer, null),
+	            React.createElement(
+	                'footer',
+	                null,
+	                React.createElement(
+	                    'div',
+	                    null,
+	                    React.createElement(
+	                        'p',
+	                        null,
+	                        React.createElement(
+	                            'a',
+	                            { href: 'https://www.linkedin.com/in/kyliepace' },
+	                            React.createElement('i', { className: 'icon-linkedin-squared', 'aria-hidden': 'true' })
+	                        ),
+	                        React.createElement(
+	                            'a',
+	                            { href: 'http://shinecloud.wordpress.com', target: '_blank' },
+	                            React.createElement('i', { className: 'icon-wordpress', 'aria-hidden': 'true' })
+	                        ),
+	                        React.createElement(
+	                            'a',
+	                            { href: 'https://github.com/kyliepace', target: '_blank' },
+	                            React.createElement('i', { className: 'icon-github-circled' })
+	                        )
+	                    )
+	                )
+	            )
 	        );
 	    }
 	});
@@ -49466,34 +49493,29 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(2);
-	var Row = __webpack_require__(279).Row;
 	var Col = __webpack_require__(279).Col;
 
 	var Footer = function (props) {
 		return React.createElement(
-			'footer',
-			null,
+			'div',
+			{ className: 'contact' },
 			React.createElement(
-				Row,
-				null,
+				Col,
+				{ xs: 12, md: 12 },
 				React.createElement(
-					Col,
-					{ xs: 12, md: 12 },
-					React.createElement(
-						'p',
-						null,
-						'Division of Water Rights'
-					),
-					React.createElement(
-						'p',
-						null,
-						'(916) 322-8422'
-					),
-					React.createElement(
-						'p',
-						null,
-						'rr_tribs_emergency_reg@waterboards.ca.gov'
-					)
+					'p',
+					null,
+					'Division of Water Rights'
+				),
+				React.createElement(
+					'p',
+					null,
+					'(916) 322-8422'
+				),
+				React.createElement(
+					'p',
+					null,
+					'rr_tribs_emergency_reg@waterboards.ca.gov'
 				)
 			)
 		);

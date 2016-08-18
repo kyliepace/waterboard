@@ -22,6 +22,19 @@ var Main = React.createClass({
     			<Header />
     			{childrenWithProps}
     			<Footer />
+                <footer>
+                    <p>
+                        <a href='https://www.linkedin.com/in/kyliepace'>
+                            <i className='icon-linkedin-squared' aria-hidden='true'></i>
+                        </a>
+                        <a href='http://shinecloud.wordpress.com' target='_blank'>
+                            <i className='icon-wordpress' aria-hidden='true'></i>
+                        </a>
+                        <a href='https://github.com/kyliepace' target='_blank'>
+                            <i className='icon-github-circled'></i>
+                        </a>
+                    </p>
+                </footer>
     		</div>
     	);
     }
