@@ -169,9 +169,13 @@ footer {
   text-align: center;
   margin: 0;
   overflow: auto;
+  padding: 1em;
 }
 footer a {
-  font-size: 2em;
+  font-size: 2.5em;
   color: #0D2A40;
   padding: 0 50px;
+}
+footer a:hover {
+  color: #0D2A40;
 }

@@ -30598,26 +30598,22 @@
 	                'footer',
 	                null,
 	                React.createElement(
-	                    'div',
+	                    'p',
 	                    null,
 	                    React.createElement(
-	                        'p',
-	                        null,
-	                        React.createElement(
-	                            'a',
-	                            { href: 'https://www.linkedin.com/in/kyliepace' },
-	                            React.createElement('i', { className: 'icon-linkedin-squared', 'aria-hidden': 'true' })
-	                        ),
-	                        React.createElement(
-	                            'a',
-	                            { href: 'http://shinecloud.wordpress.com', target: '_blank' },
-	                            React.createElement('i', { className: 'icon-wordpress', 'aria-hidden': 'true' })
-	                        ),
-	                        React.createElement(
-	                            'a',
-	                            { href: 'https://github.com/kyliepace', target: '_blank' },
-	                            React.createElement('i', { className: 'icon-github-circled' })
-	                        )
+	                        'a',
+	                        { href: 'https://www.linkedin.com/in/kyliepace' },
+	                        React.createElement('i', { className: 'icon-linkedin-squared', 'aria-hidden': 'true' })
+	                    ),
+	                    React.createElement(
+	                        'a',
+	                        { href: 'http://shinecloud.wordpress.com', target: '_blank' },
+	                        React.createElement('i', { className: 'icon-wordpress', 'aria-hidden': 'true' })
+	                    ),
+	                    React.createElement(
+	                        'a',
+	                        { href: 'https://github.com/kyliepace', target: '_blank' },
+	                        React.createElement('i', { className: 'icon-github-circled' })
 	                    )
 	                )
 	            )
