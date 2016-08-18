@@ -18,10 +18,12 @@ var Main = React.createClass({
     		})
     	);
     	return(
-    		<div className='main'>
-    			<Header />
-    			{childrenWithProps}
-    			<Footer />
+            <div>
+        		<div className='main'>
+        			<Header />
+        			{childrenWithProps}
+        			<Footer />
+        		</div>
                 <footer>
                     <p>
                         <a href='https://www.linkedin.com/in/kyliepace'>
@@ -35,7 +37,7 @@ var Main = React.createClass({
                         </a>
                     </p>
                 </footer>
-    		</div>
+            </div>
     	);
     }
 });

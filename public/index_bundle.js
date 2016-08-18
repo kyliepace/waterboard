@@ -30590,10 +30590,14 @@
 	        }));
 	        return React.createElement(
 	            'div',
-	            { className: 'main' },
-	            React.createElement(Header, null),
-	            childrenWithProps,
-	            React.createElement(Footer, null),
+	            null,
+	            React.createElement(
+	                'div',
+	                { className: 'main' },
+	                React.createElement(Header, null),
+	                childrenWithProps,
+	                React.createElement(Footer, null)
+	            ),
 	            React.createElement(
 	                'footer',
 	                null,
