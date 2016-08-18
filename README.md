@@ -20,6 +20,6 @@ Clearly indicates when form is completed
 
 Remaining bugs:
 
-- pdf creation
-- active button state
+- pdf creation doesn't show pdf
+- active button state remains onto next page
 - localStorage on refresh

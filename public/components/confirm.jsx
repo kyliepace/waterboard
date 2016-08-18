@@ -10,7 +10,6 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 var Confirm = function(props){
-	
 	return(
 	<form onSubmit={props.sendData}>
 		<FormGroup className={'selector'}>
@@ -23,10 +22,7 @@ var Confirm = function(props){
 				</Button>		
 			</Row>
 		</FormGroup>
-
-		
 	</form>
 	);		
 };
-
 module.exports = Confirm;

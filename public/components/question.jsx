@@ -51,9 +51,7 @@ var Question = function(props){
 
 	if(props.question.changeSourceCounter===true && props.user.numSources>=2){
 		var dropdown = true;
-		console.log(dropdown);
 	}
-
 
 	//if this question should let the user change which water source they are reporting
 	if(dropdown === true){ //only do this for the water source question
@@ -75,7 +73,6 @@ var Question = function(props){
 			{inputs}
 		</FormGroup>
 
-
 		<FormGroup className={props.question.selection ? 'selector': 'hidden'}>
 
 			<div className={props.question.changeSourceCounter ? 'options':'hidden'}>
@@ -95,9 +92,7 @@ var Question = function(props){
 			</Row>
 		</FormGroup>
 
-		
-		<Button className='button' id='submitButton' disabled={props.question.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-		
+		<Button className='button' id='submitButton' disabled={props.question.disabled} type='submit'>Next<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>	
 	</form>
 	);		
 };

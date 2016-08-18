@@ -1,12 +1,9 @@
 var React = require('react');
 var Row = require('react-bootstrap').Row;
 var FormGroup = require('react-bootstrap').FormGroup;
-
 var Button = require('react-bootstrap').Button;
 
-
 var FAQ = function(props){
-	//if none of the selections should generate an email
 	var options = [];
 	if(!props.question.email){
 		for (var i=0; i<props.question.selection.length; i++){
@@ -31,22 +28,16 @@ var FAQ = function(props){
 		);
 	}
 	
-	
 	return(
 	<form onSubmit={props.onSubmit}>
-		
 		<FormGroup className={'selector'}>
-
 			<h3>{props.question.line}</h3>
-
 			<h3 className={props.question.link ? "":"hidden"}><a target='_blank' href={props.question.link}>Please use this mapping tool 
 			to see if your property is within the affected watersheds.</a></h3>
-
 			<Row className='options'>
 				{options}
 			</Row>
 		</FormGroup>
-
 	</form>
 	);		
 };

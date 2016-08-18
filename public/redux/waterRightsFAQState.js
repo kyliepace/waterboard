@@ -1,6 +1,4 @@
 var waterRightsFAQ = {
-	//counter: 0,
-	//next: 1,
 	questions:[
 		{	number: 0,
 			line: 'A water right is needed for most surface diversions in California.',

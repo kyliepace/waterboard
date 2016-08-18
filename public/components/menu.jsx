@@ -1,8 +1,7 @@
 var React = require('react');
 var Row = require('react-bootstrap').Row;
 var Col = require('react-bootstrap').Col;
-var router = require('react-router');
-var Link = router.Link;
+var Link = require('react-router');.Link;
 var Button = require('react-bootstrap').Button;
 
 var Menu = function(props){
@@ -33,10 +32,8 @@ var Menu = function(props){
 	    			</Link></Button>
 	    		</Col>
 	    	</Row>
-
 	    </section>
 	)
 };
 	
-
 module.exports = Menu;

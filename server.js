@@ -1,15 +1,13 @@
 var express = require('express');
-var bodyParser = require('body-parser');
-var jsonParser = bodyParser.json();
+var jsonParser = require('body-parser').json();
 require('isomorphic-fetch');
-var PDFDocument = require('pdfkit'); //added pdfkit
-var fs = require('fs'); //added fs
+var PDFDocument = require('pdfkit'); 
+var fs = require('fs'); 
 var infoOrderData = require('./data.js');
-var waterRightsdata = require('./waterRightsdata.js');
+var waterRightsData = require('./waterRightsdata.js');
 var app = express();
 
 var port =  process.env.PORT || 8080;
-
 app.use('/', express.static(__dirname + '/public'));
 app.use(bodyParser());
 
@@ -18,7 +16,6 @@ app.post('/logIn', function(req, res){
 	//client is sending idCode and password
 	var idCode = req.body.idCode;
 	var password = req.body.password;
-	console.log(idCode);
 	for(var i=0; i<infoOrderData.length; i++){
 		if(infoOrderData[i].idCode === idCode && infoOrderData[i].password === password){
 			var savedData = {
@@ -29,7 +26,6 @@ app.post('/logIn', function(req, res){
 				multParcels: infoOrderData[i].multParcels,
 				reportedSources: infoOrderData[i].reportedSources	
 			};
-			console.log(savedData);
 			res.status(200).json(savedData).end(); //if the password matches, send back some data
 		}
 	}	
@@ -47,7 +43,6 @@ app.post('/infoOrder/submit', function(req, res){
 			var reportedSources = reportedSources + 1; 
 		}
 	}
-	console.log('reported sources: '+reportedSources)
 	
 	for(var i=0; i<infoOrderData.length; i++){ //update server database
 		if(infoOrderData[i].idCode === idCode){
@@ -68,9 +63,6 @@ app.post('/infoOrder/submit', function(req, res){
 			//send back pdf
 			var doc = createPDF(questions, sources); //create pdf from array of each water source
 			doc.pipe(res);
-
-			//doc.end();
-			console.log('numSources: '+numSources);
 			res.status(200).json({numSources: numSources, reportedSources: reportedSources});
 		}
 		else{
@@ -82,8 +74,7 @@ app.post('/infoOrder/submit', function(req, res){
 app.post('/waterRights/submit', function(req, res){
 	var answers = req.body.answers;
 	var questions = req.body.questions;
-	//push answers to waterRightData object
-	//get index of where in the waterRightData the new answers have been stored
+	waterRightsData.push({questions: questions, answers: answers, owner: answers[0][0][0]}); //push answers to waterRightData object
 	var sources = [];
 	sources.push(answers); //there will be only one element
 	var doc = createPDF(questions, sources);
@@ -102,8 +93,6 @@ var createPDF = function(questions, sources){
 			var question = questions[i].line;
 			var answer = answerSet[i];
 		}
-		console.log(question);
-		console.log(answer); 
 		return ([question, answer]);	
 	}; 
 	
@@ -111,8 +100,6 @@ var createPDF = function(questions, sources){
 	sources.forEach(function(answerSet){
 		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
 	});
-
-	console.log(pages[0]);
 	doc.text(pages[0]); 
 	if(sources.length>1){ //for each reportedSource after the 1st, add a page
 		var k=1;
@@ -124,7 +111,6 @@ var createPDF = function(questions, sources){
 	}
 	return doc;
 }
-
 
 var port = (process.env.PORT || 8080);
 app.listen(port);

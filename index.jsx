@@ -30,7 +30,6 @@ var routes = (
 	</Provider>
 );
 
-
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
         routes,

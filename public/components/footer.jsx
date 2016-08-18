@@ -16,5 +16,4 @@ var Footer = function(props){
 	)
 };
 	
-
 module.exports = Footer;

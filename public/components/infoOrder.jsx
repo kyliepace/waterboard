@@ -8,7 +8,6 @@ var Confirm = require('./confirm.jsx');
 var LogIn = require('./logIn.jsx');
 var User = require('./user.jsx');
 
-
 var InfoOrder = React.createClass({
 	getDefaultProps: function(){
 		return{
@@ -20,7 +19,6 @@ var InfoOrder = React.createClass({
 	},
 	componentWillMount: function(props){
 		var index = this.props.params.counter;
-		console.log(this.props);
 		this.props.actions.onLoad(index); //dispatch the reducer to set up the answer objects
 	},
 	handleClick: function(e){
@@ -38,12 +36,10 @@ var InfoOrder = React.createClass({
 		if(parseInt(index) ===0){
 			that.props.actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]);
 		}
-		console.log('next will be '+ this.props.infoOrder.questions[that.props.params.counter].next);
 		this.props.history.push('/infoOrder/'+that.props.infoOrder.questions[that.props.params.counter].next);
 		this.props.actions.submitAnswer(index);
 	},
 	sendData: function(){
-		console.log('sending data');
 		var that = this;
 		this.props.actions.submitSource(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers, that.props.infoOrder.questions);
 		this.props.history.push('/infoOrder/1'); //return to user screen with option to print out data or sign in to different parcel
@@ -65,12 +61,9 @@ var InfoOrder = React.createClass({
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 		var index = that.props.params.counter;  
 		var singleQuestion = questions[index];
-		console.log(singleQuestion);
 		var answer = that.props.infoOrder.answers[that.props.infoOrder.sourceCounter][index]; //should be an array
-		console.log('completing form for source number '+that.props.infoOrder.sourceCounter);
 		
 		if(parseInt(index) === 0){
-			console.log('index equal to 0, show login');
 			var show = (
 				<LogIn question={singleQuestion} handleChange={that.handleChange} onSubmit={that.onSubmit}/>
 			);
@@ -95,11 +88,9 @@ var InfoOrder = React.createClass({
     			changeSource={that.changeSource}/>
 			);
 		}
-		console.log(show);
 		return(
 		    <section>
 		    	{show}
-    			
 	    		<Col xs={8} xsOffset={2} md={6} mdOffset={3}>
 		    		<h4>Info Order Form</h4>
 		    		<h4 className={this.props.infoOrder.owner ? '':'hidden'}>{this.props.infoOrder.owner}</h4>

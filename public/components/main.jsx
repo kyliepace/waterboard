@@ -8,7 +8,6 @@ var actionCreators = require('../redux/actions.js');
 var Main = React.createClass({
     render: function(props){
     	var that = this;
-
     	var childrenWithProps = React.Children.map(this.props.children, 
     		(child) => React.cloneElement(child, {
     			actions: that.props.actions,

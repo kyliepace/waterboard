@@ -1,13 +1,11 @@
 React = require('react');
 var Row = require('react-bootstrap').Row;
 var FormGroup = require('react-bootstrap').FormGroup;
-var router = require('react-router');
-var Link = router.Link;
+var Link = require('react-router')Link;
 var Button = require('react-bootstrap').Button;
 var Final = require('./final.jsx');
 
 var User = function(props){
-	console.log('on user page. next will be '+props.question.next);
 	return(
 	<form onSubmit={props.onSubmit}>
 		
@@ -31,7 +29,6 @@ var User = function(props){
 			<Final />
 		</div>
 		
-
 		<Button className={props.user.moreSources? 'button': 'hidden'} onClick={props.onSubmit} id='submitButton' type='button'>Continue to Form<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 		<Button className={props.user.moreParcels? 'button':'hidden'} onClick={props.toLogIn} type='button'>Log Another Parcel</Button>
 	</form>
@@ -39,5 +36,3 @@ var User = function(props){
 };
 
 module.exports = User;
-
-//<Button className={props.user.numSources ? 'button':'hidden'} type='button' onClick={props.onClick}>Print Record</Button>

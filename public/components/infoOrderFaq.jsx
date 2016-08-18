@@ -5,31 +5,25 @@ var connect = require('react-redux').connect;
 var FAQ = require('./faq.jsx');
 
 var InfoOrderFaq = React.createClass({
-
 	onSubmit: function(e){
 		e.preventDefault();
 		var that = this;
 		var index = this.props.params.counter; //decide what value the index should be
-		console.log('index from params is '+index);
-		console.log(e.target.id);
 		//calculate where the page should go next
 		var next = that.props.infoOrderFAQ.questions[index].changeCounter[e.target.id];
-		console.log('next will be '+next); 
 		this.props.history.push('/infoOrderFAQ/'+next); //push browser history
 		this.props.actions.submitInfoOrderFaq();
 	},
-
 	render: function(props){
 		var that = this;
 		var index = that.props.params.counter;
-		console.log(that.props); //infoOrderFAQ is undefined
 		var question = that.props.infoOrderFAQ.questions[index];
 
-		if(index >= 100 && index<1000){
+		if(index >= 100 && index < 1000){
 			//go to infoOrder login
 			that.props.history.push('/infoOrder/0');
 		}
-		else if(index>= 1000 && index < 2000){
+		else if(index >= 1000 && index < 2000){
 			//go back to home menu
 			that.props.history.push('/');
 		}
@@ -44,14 +38,10 @@ var InfoOrderFaq = React.createClass({
 		}
 		return(
 		    <section>
-
 		    	{show}
-
-	    		
 		    </section>
 		);
 	}	
 });
 
-	
 module.exports = InfoOrderFaq;

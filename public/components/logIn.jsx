@@ -15,7 +15,6 @@ var LogIn = function(props){
 	<form onSubmit={props.onSubmit}>
 		<FormGroup> 
 			<h3>Please Log In</h3>
-			
 			<div>
 					<ButtonToolbar className='flex'>
 						<FormControl placeholder='APN/ID Code' name={0} className='input' type='text' onChange={props.handleChange}/>
@@ -35,11 +34,8 @@ var LogIn = function(props){
 					</ButtonToolbar>
 					<HelpBlock className={props.question.error[1]? '': 'hidden'}>{props.question.error[1]}</HelpBlock>
 				</div>
-		</FormGroup>
-
-	
+		</FormGroup>	
 		<Button className='button' id='submitButton' disabled={props.question.disabled} type='submit'>Log In<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
-		
 	</form>
 	);		
 };
