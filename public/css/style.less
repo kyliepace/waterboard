@@ -1,5 +1,6 @@
 @purple: #8A25E8;
-@border: 2px solid white;
+@color: lightgrey;
+@border: 2px solid lightgrey;
 @shadow: 1px 0px 20px white;
 @xs: ~'(max-width: 500px)';
 
@@ -18,7 +19,7 @@ a:hover{
 }
 .button{
 	border: 0px;
-	color: white;
+	color: lightgrey;
 	font-size: 3rem;
 	width: 100%;
 	height: 100%;
@@ -69,37 +70,38 @@ section{
 
 form{
 	border: @border;
+	color: @color;
 	max-width: 800px;
 	margin: 4rem auto 1rem auto;
-	padding: 5rem 0px 10px;
+	padding: 5rem 2rem 1rem;
 	text-align: center;
 	@media @xs{
 		margin: 2rem auto 1rem auto;
 		padding: 3rem 0px 10px;
 	}
 	a{
-		color: lightgrey;
+		color: @color;
 		text-decoration: underline;
 	}
-	.flex{
-		display: flex;
-  		align-items: center;
-  		justify-content: center;
-  		.input{
-			width: 60%;
-			text-align: right;
-			padding: 5px;
-			font-size: 2rem;
-			margin: 1rem 0px;
-			height: 5rem;
-		}
+	.input{
+		width: 60%;
+		text-align: right;
+		padding: 5px;
+		font-size: 2rem;
+		margin: 3rem auto;
+		height: 5rem;
 	}
 	.popoverButton{
 		width: 10%;
+		color: @color;
 		text-align: center;
 		border: 0px;
-		color: white;
 		font-size: 3rem;
+		padding: 2rem 1rem;
+	}
+	.popover{
+		color: black;
+		font-size: 2rem;
 	}
 	#submitButton{
 		border: @border;
@@ -109,55 +111,46 @@ form{
 	}
 	h2,h3, span{
 		text-align: center;
-		margin: 1px 5px;
 	}
-	h3{
-		margin-bottom: 20px;
+	.line{
+		padding: 2rem 7rem 3rem;
 	}
-	.selector{
+	.options{
 		text-align: center;
-		.options{
-			display: flex;
-			justify-content: center;
-			flex-wrap: wrap;
-			align-items: baseline;
-			span{
-				font-size: 3rem;
-			}
-			.option{
-				border: 2px solid lightgrey;
-				width: 90%;
-				height: 100px;
-				padding: 2rem;
-				margin: 2rem;
-				text-align: center;
-				color: lightgrey;
-				&:hover, &:active{
-					box-shadow: @shadow;
-				}
-			}
-			.selected{
+		padding: 0rem 10rem 2rem;
+		span{
+			font-size: 3rem;
+		}
+		.option{
+			border: 2px solid lightgrey;
+			width: 90%;
+			height: 100px;
+			padding: 2rem;
+			margin: 2rem;
+			text-align: center;
+			color: @color;
+			&:hover, &:active{
 				box-shadow: @shadow;
-				border: @border;
-				width: 90%;
-				height: 100px;
-				padding: 2rem;
-				margin: 2rem;
-				text-align: center;
-				&:hover, &:active{
-					box-shadow: none;
-				}
 			}
 		}
-		.dropdown{
-			width: 20%;
+		.selected{
+			box-shadow: @shadow;
+			border: @border;
+			width: 90%;
+			height: 100px;
+			padding: 2rem;
+			margin: 2rem;
+			text-align: center;
+			&:hover, &:active{
+				box-shadow: none;
+			}
 		}
 	}
+	.dropdown{
+		width: 20%;
+	}
 }
-.popover{
-		color: black;
-		font-size: 2rem;
-}
+
 .final{
 	background-image: url('https://media.giphy.com/media/Qh5dZDCFqr1dK/giphy.gif');
 	background-size: cover;

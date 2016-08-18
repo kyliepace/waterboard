@@ -6,7 +6,7 @@ var Button = require('react-bootstrap').Button;
 var FAQ = function(props){
 	var options = [];
 	if(!props.question.email){
-		for (var i=0; i<props.question.selection.length; i++){
+		for (var i = 0; i < props.question.selection.length; i++){
 			options.push(
 				<Button className={'option'} type='button' id={i} onClick={props.onClick}>
 					<h3 id={i} onClick={props.onClick}>{props.question.selection[i]}</h3>

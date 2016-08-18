@@ -5,7 +5,7 @@ var waterRights= {
       input: ['name', '###-###-####', 'email'],
       error: [],
       validate: ['string', 'number', 'string'],
-      popover: ['Who is responsible for this?', 'What is their phone number?', 'What is their email address?'],
+      popover: 'Please provide the contact information for the responsible party',
       next: 1
     },
     { number: 1,
@@ -15,7 +15,7 @@ var waterRights= {
       validate: ['string', 'string', 'string', 'string', 'number'],
       disabled: true,
       error: [],
-      popover: ['Give the number and street name', 'optional', 'city', 'county', 'zip'],
+      popover: 'Please locate where this project will take place',
       next: 2
     },
     { number: 2,
@@ -31,7 +31,7 @@ var waterRights= {
       selection: ['yes', 'no'],
       selected: [false, false],
       disabled: true,
-      popover: ['yes', 'no'],
+      popover: 'This includes on-stream ponds',
       changeCounter: [4,5]
     },
     { number: 4,
@@ -55,9 +55,9 @@ var waterRights= {
       labels: ['Year to begin construction', 'Year to complete construction'],
       inputs: ['YYYY', 'YYYY'],
       validate: ['number', 'number'],
-      popover: ['In what year will the construction begin? Enter past year if already begun.', 'In what year is construction expected to be complete?'],
+      popover: 'In what years will the construction begin and end? Enter past year if already begun.',
       disabled: true,
-       error: [],
+      error: [],
       next: 7
     },
     { number: 7,
@@ -66,8 +66,7 @@ var waterRights= {
       inputs: ['MM/DD', 'MM/DD'],
       validate: ['string', 'string'],
        error: [],
-      popover: ['Enter the month and day you expect to begin diverting water each year from this project',
-        'Enter the month and day you expect to cease diverting water each year from this project'],
+      popover: 'Enter the month and day you expect to begin and cease diverting water each year from this project',
       next: 8
     },
     { number: 8,
@@ -100,114 +99,51 @@ var waterRights= {
         disabled: true,
         validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
         error: [],
-    	popover: ['Tally the number of gallons of water diverted and immediately used in January. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in May.',
-    	'Tally the number of gallons of water diverted and immediately used in June. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in July. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in August. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in September. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in October. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.',
-    	'Tally the number of gallons of water diverted and immediately used in November. You may \
-    	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-    	are useful tools.'
-    	],
+    	popover: 'Tally the number of gallons of water diverted and immediately used in January. You may \
+    	need to consult online calculator tools and measure the output of your source.',
        error: [],
     	next: 11
     },
     { number: 11,
-            	line: 'How much water will you divert into storage?',
-            	labels: ['diversion to storage January (gallons)', 
-            		'diversion to storage May (gallons)', 
-            		'diversion to storage June (gallons)', 
-            		'diversion to storage July (gallons)', 
-            		'diversion to storage August (gallons)',
-            		'diversion to storage September (gallons)',  
-            		'diversion to storage October (gallons)', 
-            		'diversion to storage November (gallons)', 
-            	],
-              validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
-                disabled: true,
-                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-                error: [],
-            	popover: ['Tally the number of gallons of water diverted into storage in January. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in May.',
-            	'Tally the number of gallons of water diverted into storage in June. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in July5. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in August. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in September. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in October. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted into storage in November. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.'
-            	],
+    	line: 'How much water will you divert into storage?',
+    	labels: ['diversion to storage January (gallons)', 
+    		'diversion to storage May (gallons)', 
+    		'diversion to storage June (gallons)', 
+    		'diversion to storage July (gallons)', 
+    		'diversion to storage August (gallons)',
+    		'diversion to storage September (gallons)',  
+    		'diversion to storage October (gallons)', 
+    		'diversion to storage November (gallons)', 
+    	],
+      validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+        input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
+        disabled: true,
+        validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+        error: [],
+    	popover: 'Tally the number of gallons of water diverted into storage in January. You may \
+    	need to consult online calculator tools and measure the output of your source.',
        error: [],
       next: 13
     },
     //use for riparian claim
     {	number: 12,
-            	line: 'How much riparian water do you expect to use in each month?',
-            	labels: ['total use January (gallons)', 
-            		'direct use May (gallons)', 
-            		'direct use June (gallons)', 
-            		'direct use July (gallons)', 
-            		'direct use August (gallons)',
-            		'direct use September (gallons)',  
-            		'direct use October (gallons)', 
-            		'direct use November (gallons)', 
-            	],
-              validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-                input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
-                disabled: true,
-                validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
-                error: [],
-            	popover: ['Tally the number of gallons of water diverted and immediately used in January. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in May.',
-            	'Tally the number of gallons of water diverted and immediately used in June. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in July. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in August. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in September. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in October. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water diverted and immediately used in November. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.'
-            	],
+    	line: 'How much riparian water do you expect to use in each month?',
+    	labels: ['total use January (gallons)', 
+    		'direct use May (gallons)', 
+    		'direct use June (gallons)', 
+    		'direct use July (gallons)', 
+    		'direct use August (gallons)',
+    		'direct use September (gallons)',  
+    		'direct use October (gallons)', 
+    		'direct use November (gallons)', 
+    	],
+      validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+        input: ['gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons', 'gallons'],
+        disabled: true,
+        validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
+        error: [],
+    	popover: 'Tally the number of gallons of water diverted and immediately used in January. You may \
+    	need to consult online calculator tools and measure the output of your source.',
        error: [],
     	next: 13
     },
@@ -227,7 +163,7 @@ var waterRights= {
       validate: ['number', 'number'],
        error: [],
       disabled: true,
-      popover: ['How many people are living on the property using this water for domestic needs?', 'What is the surface area of all the lawns and gardens receiving this water?'],
+      popover: 'If water is used to irrigate crops that are sold, you need to select agricultural use',
       next: 100
     },
     { number: 15,
@@ -237,8 +173,8 @@ var waterRights= {
       validate: ['string', 'number', 'string', 'number'],
       error: [],
       disabled: true,
-      popover: ['What crop are you irrigating?', 'How many acres are being irrigated?', 'What method of irrigation will be used?', 
-      'What is the total estimated water use (in gallons per year) for this crop?'],
+      popover: 'What crop are you irrigating? How many acres are being irrigated? What method of irrigation will be used?\
+      What is the total estimated water use (in gallons per year) for this crop?',
       next: 100
     },
     { number: 16,
@@ -248,7 +184,7 @@ var waterRights= {
       validate: ['string', 'number'],
       error: [],
       disabled: true,
-      popover: ['What kind of animal will be using this water?', 'How many animals will be using this water?'],
+      popover: 'How many and what kind of animal will be using this water?',
       next: 100 //go to confirmation
     }   
   ],

@@ -33,7 +33,7 @@ var InfoOrder = React.createClass({
 		e.preventDefault();
 		var that = this;
 		var index = this.props.params.counter; //decide what value the index should be
-		if(parseInt(index) ===0){
+		if(parseInt(index) === 0){
 			that.props.actions.logIn(that.props.infoOrder.answers[0][0][0], that.props.infoOrder.answers[0][0][1]);
 		}
 		this.props.history.push('/infoOrder/'+that.props.infoOrder.questions[that.props.params.counter].next);
@@ -56,7 +56,7 @@ var InfoOrder = React.createClass({
 		this.props.actions.submitAnswer(index);
 	},
 	render: function(props){
-		document.body.style.cursor='default'; //return cursor to default
+		document.body.style.cursor = 'default'; //return cursor to default
 		var that = this; 
 		var questions = that.props.infoOrder.questions; //this is getting the blank infoOrderState, not the state
 		var index = that.props.params.counter;  
@@ -70,12 +70,12 @@ var InfoOrder = React.createClass({
 		}
 		else if(parseInt(index) === 1){
 			
-			var show=(
+			var show = (
 				<User user={that.props.infoOrder} onSubmit={that.onSubmit} onClick={that.print} question={singleQuestion}
 				toLogIn={that.toLogIn}/>
 			);
 		}
-		else if(index>=100 && index<1000){
+		else if(index >= 100 && index < 1000){
 			var show = (
 				<Confirm sendData={that.sendData} />
 			);

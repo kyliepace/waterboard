@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var jsonParser = require('body-parser').json();
 require('isomorphic-fetch');
 var PDFDocument = require('pdfkit'); 
@@ -16,7 +17,7 @@ app.post('/logIn', function(req, res){
 	//client is sending idCode and password
 	var idCode = req.body.idCode;
 	var password = req.body.password;
-	for(var i=0; i<infoOrderData.length; i++){
+	for(var i = 0; i < infoOrderData.length; i++){
 		if(infoOrderData[i].idCode === idCode && infoOrderData[i].password === password){
 			var savedData = {
 				owner: infoOrderData[i].owner, 
@@ -38,13 +39,13 @@ app.post('/infoOrder/submit', function(req, res){
 	var questions = req.body.questions;
 	//check how many sources have been reported
 	var reportedSources = 0;
-	for (var j=0; j<5; j++){ //find number of indicated sources
-		if(answers[j][4].length>1){ //this is the array of answers to the question 'what is the water source'
+	for (var j = 0; j < 5; j++){ //find number of indicated sources
+		if(answers[j][4].length > 1){ //this is the array of answers to the question 'what is the water source'
 			var reportedSources = reportedSources + 1; 
 		}
 	}
 	
-	for(var i=0; i<infoOrderData.length; i++){ //update server database
+	for(var i = 0; i < infoOrderData.length; i++){ //update server database
 		if(infoOrderData[i].idCode === idCode){
 			infoOrderData[i].answers = answers; //set equal to client's state
 			if(answers[0][3]){
@@ -57,7 +58,7 @@ app.post('/infoOrder/submit', function(req, res){
 			infoOrderData[i].reportedSources = reportedSources; //set equal to newly calculated number of reported sources
 			
 			var sources = []; //this will be an array. each element is a set of answers.
-			for (var j=0; j<reportedSources; j++){
+			for (var j = 0; j < reportedSources; j++){
 				sources.push(infoOrderData[i].answers[j]);
 			}
 			//send back pdf
@@ -89,7 +90,7 @@ var createPDF = function(questions, sources){
 	var questions = questions;
 	//define function that will be used later
 	var createPage = function(answerSet){ //create a page with 1 source's questions and corresponding answers
-		for(var i=0; i<questions.length; i++){
+		for(var i = 0; i < questions.length; i++){
 			var question = questions[i].line;
 			var answer = answerSet[i];
 		}
@@ -101,9 +102,9 @@ var createPDF = function(questions, sources){
 		pages.push(createPage(answerSet)); //create a page for each source. for waterRights data, there is just one. push to pages array
 	});
 	doc.text(pages[0]); 
-	if(sources.length>1){ //for each reportedSource after the 1st, add a page
-		var k=1;
-		while(k<sources.length){
+	if(sources.length > 1){ //for each reportedSource after the 1st, add a page
+		var k = 1;
+		while(k < sources.length){
 			doc.addPage();
 			doc.text(pages[k]);
 			k++;

@@ -8,10 +8,10 @@ var Header = function(props){
 	    <header>
 	      	<section>
 	      	<div>
-	      		<Link to='/'><h3 style={{'text-align': 'left'}}>State Water Resources Control Board</h3></Link>
+	      		<Link to='/'><h3 style={{'textAlign': 'left'}}>State Water Resources Control Board</h3></Link>
 	      	</div>
 	      	<div>
-	      		<h3 style={{'text-align': 'right'}}>California Environmental Protection Agency</h3>
+	      		<h3 style={{'textAlign': 'right'}}>California Environmental Protection Agency</h3>
 	      	</div>
 	      	</section> 
 	    </header>

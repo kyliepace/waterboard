@@ -6,14 +6,13 @@ var Router = router.Router;
 var Route = router.Route;
 var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
-var Print = require('./public/components/print.jsx');
 var store = require('./public/redux/store.js');
 var Main = require('./public/components/main.jsx');
 var Menu = require('./public/components/menu.jsx');
 var InfoOrder = require('./public/components/infoOrder.jsx');
-var WaterRights=require('./public/components/waterRights.jsx');
-var WaterRightsFaq=require('./public/components/waterRightsFaq.jsx');
-var InfoOrderFaq=require('./public/components/infoOrderFaq.jsx');
+var WaterRights = require('./public/components/waterRights.jsx');
+var WaterRightsFaq = require('./public/components/waterRightsFaq.jsx');
+var InfoOrderFaq = require('./public/components/infoOrderFaq.jsx');
 
 var routes = (
 	<Provider store={store}>
@@ -24,7 +23,6 @@ var routes = (
 	      	<Route path='/waterRights/:counter' component={WaterRights}/>
 	      	<Route path='/infoOrderFaq/:counter' component={InfoOrderFaq}/>
 	      	<Route path='/waterRightsFaq/:counter' component={WaterRightsFaq}/>
-	      	<Route path='/print' components={Print}/>
 	    </Route>    
 	  </Router>
 	</Provider>

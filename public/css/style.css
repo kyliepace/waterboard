@@ -13,7 +13,7 @@ a:hover {
 }
 .button {
   border: 0px;
-  color: white;
+  color: lightgrey;
   font-size: 3rem;
   width: 100%;
   height: 100%;
@@ -45,7 +45,7 @@ section {
 }
 .menu {
   height: 20rem;
-  border: 2px solid white;
+  border: 2px solid lightgrey;
   text-align: center;
   margin-bottom: 5rem;
   padding: 0px;
@@ -63,10 +63,11 @@ section {
   cursor: pointer;
 }
 form {
-  border: 2px solid white;
+  border: 2px solid lightgrey;
+  color: lightgrey;
   max-width: 800px;
   margin: 4rem auto 1rem auto;
-  padding: 5rem 0px 10px;
+  padding: 5rem 2rem 1rem;
   text-align: center;
 }
 @media (max-width: 500px) {
@@ -79,28 +80,28 @@ form a {
   color: lightgrey;
   text-decoration: underline;
 }
-form .flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-form .flex .input {
+form .input {
   width: 60%;
   text-align: right;
   padding: 5px;
   font-size: 2rem;
-  margin: 1rem 0px;
+  margin: 3rem auto;
   height: 5rem;
 }
 form .popoverButton {
   width: 10%;
+  color: lightgrey;
   text-align: center;
   border: 0px;
-  color: white;
   font-size: 3rem;
+  padding: 2rem 1rem;
+}
+form .popover {
+  color: black;
+  font-size: 2rem;
 }
 form #submitButton {
-  border: 2px solid white;
+  border: 2px solid lightgrey;
   border-radius: 10px;
   width: 40%;
   margin-bottom: 20px;
@@ -109,24 +110,18 @@ form h2,
 form h3,
 form span {
   text-align: center;
-  margin: 1px 5px;
 }
-form h3 {
-  margin-bottom: 20px;
+form .line {
+  padding: 2rem 7rem 3rem;
 }
-form .selector {
+form .options {
   text-align: center;
+  padding: 0rem 10rem 2rem;
 }
-form .selector .options {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: baseline;
-}
-form .selector .options span {
+form .options span {
   font-size: 3rem;
 }
-form .selector .options .option {
+form .options .option {
   border: 2px solid lightgrey;
   width: 90%;
   height: 100px;
@@ -135,29 +130,25 @@ form .selector .options .option {
   text-align: center;
   color: lightgrey;
 }
-form .selector .options .option:hover,
-form .selector .options .option:active {
+form .options .option:hover,
+form .options .option:active {
   box-shadow: 1px 0px 20px white;
 }
-form .selector .options .selected {
+form .options .selected {
   box-shadow: 1px 0px 20px white;
-  border: 2px solid white;
+  border: 2px solid lightgrey;
   width: 90%;
   height: 100px;
   padding: 2rem;
   margin: 2rem;
   text-align: center;
 }
-form .selector .options .selected:hover,
-form .selector .options .selected:active {
+form .options .selected:hover,
+form .options .selected:active {
   box-shadow: none;
 }
-form .selector .dropdown {
+form .dropdown {
   width: 20%;
-}
-.popover {
-  color: black;
-  font-size: 2rem;
 }
 .final {
   background-image: url('https://media.giphy.com/media/Qh5dZDCFqr1dK/giphy.gif');

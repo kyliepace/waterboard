@@ -9,7 +9,7 @@ var infoOrderState = {
                 validate: ['number', 'number'],
                 length: [1,1],
                 error: [],
-                popover: ['1', '1'],
+                popover: '1',
                 next: 1
              	
              }, 
@@ -36,9 +36,8 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['number'],
                 error: [],
-                popover: ['Examples of water sources include water companies, rivers or streams, \
-                	wells, springs, ponds...'
-               	],
+                popover: 'Examples of water sources include water companies, rivers or streams, \
+                	wells, springs, ponds...',
                 next: 4
          
             },
@@ -68,15 +67,9 @@ var infoOrderState = {
                 length: [8, 10, 4],
                 validate: ['number', 'number', 'number', 'string'],
                 error: ["","","",""],
-                popover: [
-	                'Please use the linked mapping tool to find the coordinates',
-	                'Enter the approximate year of construction',
-	                'Enter the approximate depth, in feet, of your well',
-	                'Even just a last name will help us locate the record, if one exists.'
-                ],
-                link: "http://www.mapcoordinates.net/en",
+                popover:  'Please use the linked mapping tool to find the coordinates, and enter well information to the extent of your knowledge',
+                link: ["http://www.mapcoordinates.net/en"],
                 next: 13//go to water use
-               
            },
               
             {	number: 6,
@@ -100,9 +93,7 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['string', 'number'],
                 error: [],
-                popover: ['If you don\'t know some details, that\'s ok.',
-                	'The APN is also the 12-digit ID Code used to log into this form'
-                ],
+                popover: 'If you don\'t know some details, that\'s ok.',
                 next: 13 //go to water use
              },
                 
@@ -127,9 +118,8 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['string'],
                 error: [],
-                popover: ['The application number usually starts with a letter and looks like \
-                	A111111 or S111111, for example'
-                ],
+                popover: 'The application number usually starts with a letter and looks like \
+                	A111111 or S111111, for example',
                 next: 100 //go to confirmation
             },
             {	number: 10,
@@ -149,11 +139,9 @@ var infoOrderState = {
                 ],
                 selected: [false, false],
                 disabled: true,
-                popover: ['Filing the statement of use is free and is required if you are using \
-	                surface water from an adjacent stream. Claiming this water right will protect your \
-	                water source from over-allocation.', '', 'Springs are only exempt from surface water requirements if the water \
-	                does not flow off the property, even in the winter, even if you were diverting none of it.'
-	            ],
+                popover: 'Filing the statement of use is free and is required if you are using \
+	                surface water from an adjacent stream. Springs are only exempt from surface water requirements if the water \
+	                does not flow off the property, even in the winter, even if you were diverting none of it.',
                 changeCounter: [100, 100] //confirm and go to water rights, go back to new source, or go to water use
             },
             {	number: 12,
@@ -192,29 +180,8 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                 error: [],
-            	popover: ['Tally the number of gallons of water used from this water source in January of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in May of 2015.',
-            	'Tally the number of gallons of water used from this water source in June of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in July of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in August of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in September of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in October of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.',
-            	'Tally the number of gallons of water used from this water source in November of 2015. You may \
-            	need to consult online calculator tools and measure the output of your source. Pro-tip: a bucket and a stopwatch \
-            	are useful tools.'
-            	],
+            	popover: 'Tally the number of gallons of water used from this water source for each indicated month of 2015. You may \
+            	may need to measure the output from your well using a bucket and stopwatch, or consult online tools to estimate volume from lifestyle',
             	next: 100
 
             },
@@ -244,15 +211,7 @@ var infoOrderState = {
                 disabled: true,
                 validate: ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number'],
                 error: [],
-            	popover: ['If a person was only living there for 1/2 the month, add them as 0.5',
-            	'We know they are a full person',
-            	'but we will multiply the estimated water use per person per month by 0.5',
-            	'The estimates were calculated from measured water use in part of Sonoma County',
-            	'If you think you use less water but you don\'t know exactly how much, now\'s a good time to get your calculator out.',
-            	'Thanks',
-            	'Hope that wasn\'t so bad',
-            	'Learn how much water you use each month!'
-            	],
+            	popover: 'If a person was only living there for 1/2 the month, add them as 0.5',
             	next: 100
             }
         ],

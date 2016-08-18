@@ -22,7 +22,7 @@ var WaterRights = React.createClass({
 		e.preventDefault();
 		var that = this;
 		var index = this.props.params.counter; //decide what value the index should be
-		this.props.history.push('/waterRights/'+that.props.waterRights.questions[that.props.params.counter].next);
+		this.props.history.push('/waterRights/' + that.props.waterRights.questions[that.props.params.counter].next);
 		this.props.actions.submitAnswerWr(index);
 	},
 	sendData: function(){

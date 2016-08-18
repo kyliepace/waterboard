@@ -15,25 +15,15 @@ var LogIn = function(props){
 	<form onSubmit={props.onSubmit}>
 		<FormGroup> 
 			<h3>Please Log In</h3>
-			<div>
-					<ButtonToolbar className='flex'>
-						<FormControl placeholder='APN/ID Code' name={0} className='input' type='text' onChange={props.handleChange}/>
-						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>1</Popover>}>
-							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
-						</OverlayTrigger>
-					</ButtonToolbar>
-					<HelpBlock className={props.question.error[0]? '': 'hidden'}>{props.question.error[0]}</HelpBlock>
-				</div>
-
-				<div>
-					<ButtonToolbar className='flex'>
-						<FormControl placeholder='Password' name={1} className='input' type='password' onChange={props.handleChange}/>
-						<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>1</Popover>}>
-							<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
-						</OverlayTrigger>
-					</ButtonToolbar>
-					<HelpBlock className={props.question.error[1]? '': 'hidden'}>{props.question.error[1]}</HelpBlock>
-				</div>
+			<OverlayTrigger trigger='click' placement='top' overlay={ <Popover id='popover-trigger-click'>1</Popover>}>
+				<Button className={'popoverButton'}><span className='glyphicon glyphicon-question-sign' aria-hidden='true' ></span></Button>
+			</OverlayTrigger>
+			
+			<FormControl placeholder='APN/ID Code' name={0} className='input' type='text' onChange={props.handleChange}/>
+			<HelpBlock className={props.question.error[0] ? '': 'hidden'}>{props.question.error[0]}</HelpBlock>
+		
+			<FormControl placeholder='Password' name={1} className='input' type='password' onChange={props.handleChange}/>
+			<HelpBlock className={props.question.error[1] ? '': 'hidden'}>{props.question.error[1]}</HelpBlock>
 		</FormGroup>	
 		<Button className='button' id='submitButton' disabled={props.question.disabled} type='submit'>Log In<span className='glyphicon glyphicon-arrow-right' aria-hidden='true'></span></Button>
 	</form>

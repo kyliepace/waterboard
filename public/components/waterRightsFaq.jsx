@@ -11,7 +11,7 @@ var WaterRightsFaq = React.createClass({
 		var index = this.props.params.counter; //decide what value the index should be
 		//calculate where the page should go next
 		var next = that.props.waterRightsFAQ.questions[index].changeCounter[e.target.id];
-		this.props.history.push('/waterRightsFAQ/'+next); //push browser history
+		this.props.history.push('/waterRightsFAQ/' + next); //push browser history
 	},
 
 	render: function(props){
