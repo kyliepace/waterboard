@@ -30606,7 +30606,7 @@
 	                    null,
 	                    React.createElement(
 	                        'a',
-	                        { href: 'https://www.linkedin.com/in/kyliepace' },
+	                        { href: 'https://www.linkedin.com/in/kyliepace', target: '_blank' },
 	                        React.createElement('i', { className: 'icon-linkedin-squared', 'aria-hidden': 'true' })
 	                    ),
 	                    React.createElement(

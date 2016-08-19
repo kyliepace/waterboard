@@ -26,7 +26,7 @@ var Main = React.createClass({
         		</div>
                 <footer>
                     <p>
-                        <a href='https://www.linkedin.com/in/kyliepace'>
+                        <a href='https://www.linkedin.com/in/kyliepace' target='_blank'>
                             <i className='icon-linkedin-squared' aria-hidden='true'></i>
                         </a>
                         <a href='http://shinecloud.wordpress.com' target='_blank'>
